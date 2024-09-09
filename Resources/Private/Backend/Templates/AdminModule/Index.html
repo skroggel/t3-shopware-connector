@@ -1,0 +1,33 @@
+<html xmlns:f="http://typo3.org/ns/TYPO3/CMS/Fluid/ViewHelpers"
+      data-namespace-typo3-fluid="true">
+
+    <f:layout name="Default" />
+
+
+    <f:section name="Head">
+
+    </f:section>
+
+
+    <f:section name="Main">
+
+        <h1>{f:translate(key: 'module.title')}</h1>
+        <f:render partial="FlashMessages" arguments="{_all}" />
+
+        <f:form action="save" name="shopwareConfig" method="post" class="form">
+
+            <div class="form-group">
+                <label><f:translate key="module.apiUrl" />:</label>
+                <f:form.textfield property="apiUrl" value="{shopwareConfig.apiUrl}"/>
+            </div>
+
+            <div class="form-group">
+                <label><f:translate key="module.apiKey" />:</label>
+                <f:form.textfield property="apiKey" value="{shopwareConfig.apiKey}"/>
+            </div>
+
+            <f:form.submit value="{f:translate(key:'module.saveButton')}"
+                           name="save" class="btn btn-default"/>
+        </f:form>
+    </f:section>
+</html>

@@ -1,0 +1,37 @@
+plugin.tx_shopwareconnector {
+
+	view {
+		# cat=plugin.tx_shopwareconnector/file; type=string; label=Path to template root (FE)
+		templateRootPath = EXT:shopware_connector/Resources/Private/Templates/
+
+		# cat=plugin.tx_shopwareconnector/file; type=string; label=Path to template partials (FE)
+		partialRootPath = EXT:shopware_connector/Resources/Private/Partials/
+
+		# cat=plugin.tx_shopwareconnector/file; type=string; label=Path to template layouts (FE)
+		layoutRootPath = EXT:shopware_connector/Resources/Private/Layouts/
+	}
+
+	persistence {
+		# cat=plugin.tx_shopwareconnector//a; type=string; label=Default storage PID
+		storagePid =
+	}
+
+	settings {
+
+	}
+}
+
+
+module.tx_shopwareconnector {
+
+	view {
+		# cat=plugin.tx_shopwareconnector/file; type=string; label=Path to template root (FE)
+		templateRootPath = EXT:shopware_connector/Resources/Private/Backend/Templates/
+
+		# cat=plugin.tx_shopwareconnector/file; type=string; label=Path to template partials (FE)
+		partialRootPath = EXT:shopware_connector/Resources/Private/Backend/Partials/
+
+		# cat=plugin.tx_shopwareconnector/file; type=string; label=Path to template layouts (FE)
+		layoutRootPath = EXT:shopware_connector/Resources/Private/Backend/Layouts/
+	}
+}

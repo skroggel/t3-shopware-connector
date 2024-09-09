@@ -1,0 +1,12 @@
+elements:
+  - id: '12345'
+    productNumber: '12345'
+    translated:
+      name: 'Product 1'
+    categories:
+      - id: '67890'
+        translated:
+          name: 'Category 1'
+      - id: '54321'
+        translated:
+          name: 'Category 2'

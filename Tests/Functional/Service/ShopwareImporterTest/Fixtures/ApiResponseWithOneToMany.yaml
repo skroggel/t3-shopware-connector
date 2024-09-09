@@ -1,0 +1,19 @@
+elements:
+  - id: '12345'
+    productNumber: '12345'
+    translated:
+      name: 'Product 1'
+    price: 49.99
+    stock: 150
+    active: true
+    properties:
+      - id: 'prop123'
+        translated:
+          name: 'Size'
+        active: true
+        value: 'Large'
+      - id: 'prop456'
+        translated:
+          name: 'Color'
+        active: true
+        value: 'Red'

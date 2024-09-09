@@ -1,0 +1,17 @@
+elements:
+  - id: '12345'
+    productNumber: '12345'
+    translated:
+      name: 'Product 1'
+    price: 49.99
+    stock: 150
+    active: true
+    categories:
+      - id: '67890'
+        active: true
+        translated:
+          name: 'Category 1'
+      - id: '54321'
+        active: true
+        translated:
+          name: 'Category 2'

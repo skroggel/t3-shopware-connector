@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<xliff version="1.0">
+    <file source-language="en" target-language="de" datatype="plaintext" original="messages" date="2024-08-28T17:42:00Z" product-name="shopware_connector">
+        <header/>
+        <body>
+			<trans-unit id="mlang_tabs_tab">
+				<source>Shopware Connector</source>
+				<target>Shopware Connector</target>
+			</trans-unit>
+			<trans-unit id="mlang_labels_tabdescr">
+				<source>Manage Shopware API connections and data import.</source>
+				<target>Verwalten Sie die Shopware API-Verbindungen und den Datenimport.</target>
+			</trans-unit>
+			<trans-unit id="scheduler.shopwareImportTask.name">
+				<source>Import products and categories from Shopware</source>
+				<target>Produkte und Kategorien aus Shopware importieren</target>
+			</trans-unit>
+			<trans-unit id="scheduler.shopwareImportTask.description">
+				<source>Automatically imports products and categories from the connected Shopware store.</source>
+				<target>Importiert automatisch Produkte und Kategorien aus dem verbundenen Shopware-Shop.</target>
+			</trans-unit>
+        </body>
+    </file>
+</xliff>

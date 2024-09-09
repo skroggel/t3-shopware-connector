@@ -1,0 +1,301 @@
+product:
+  table: 'tx_shopwareconnector_domain_model_product'
+  apiEndpoint: '/product'
+  fields:
+    id:
+      apiField: 'id'
+      tableField: 'sw_id'
+      type: 'string'
+
+    # 1. Produkt-Identifikation, Grundinformationen und Zeitstempel
+    productNumber:
+      apiField: 'productNumber'
+      tableField: 'product_number'
+      type: 'string'
+    name:
+      apiField: 'translated.name'
+      tableField: 'name'
+      type: 'string'
+    manufacturerId:
+      apiField: 'manufacturerId'
+      tableField: 'sw_manufacturer_id'
+      type: 'string'
+    ean:
+      apiField: 'ean'
+      tableField: 'ean'
+      type: 'string'
+    active:
+      apiField: 'active'
+      tableField: 'hidden'
+      type: 'booleanInverted'
+    isNew:
+      apiField: 'isNew'
+      tableField: 'is_new'
+      type: 'bool'
+    releaseDate:
+      apiField: 'releaseDate'
+      tableField: 'release_date'
+      type: 'timestamp'
+    createdAt:
+      apiField: 'createdAt'
+      tableField: 'crdate'
+      type: 'timestamp'
+    updatedAt:
+      apiField: 'updatedAt'
+      tableField: 'tstamp'
+      type: 'timestamp'
+    customFields:
+      apiField: 'customFields'
+      tableField: 'custom_fields'
+      type: 'json'
+
+    # 2. Preis
+    price:
+      apiField: 'calculatedPrice.unitPrice'
+      tableField: 'price'
+      type: 'float'
+    calculatedPrice:
+      apiField: 'calculatedPrice'
+      tableField: 'calculated_price'
+      type: 'json'
+
+    # 3. Versand und Bestand
+    availableStock:
+      apiField: 'availableStock'
+      tableField: 'available_stock'
+      type: 'int'
+    stock:
+      apiField: 'stock'
+      tableField: 'stock'
+      type: 'int'
+    available:
+      apiField: 'available'
+      tableField: 'available'
+      type: 'boolean'
+    restockTime:
+      apiField: 'restockTime'
+      tableField: 'restock_time'
+      type: 'int'
+    shippingFree:
+      apiField: 'shippingFree'
+      tableField: 'shipping_free'
+      type: 'bool'
+    deliveryTime:
+      apiField: 'deliveryTime'
+      tableField: 'delivery_time'
+      type: 'json'
+    purchaseSteps:
+      apiField: 'purchaseSteps'
+      tableField: 'purchase_steps'
+      type: 'int'
+    maxPurchase:
+      apiField: 'maxPurchase'
+      tableField: 'max_purchase'
+      type: 'int'
+    minPurchase:
+      apiField: 'minPurchase'
+      tableField: 'min_purchase'
+      type: 'int'
+    purchaseUnit:
+      apiField: 'purchaseUnit'
+      tableField: 'purchase_unit'
+      type: 'string'
+    packUnit:
+      apiField: 'translated.packUnit'
+      tableField: 'pack_unit'
+      type: 'string'
+    packUnitPlural:
+      apiField: 'translated.packUnitPlural'
+      tableField: 'pack_unit_plural'
+      type: 'string'
+
+    # 4. Dimensionen und Gewicht
+    weight:
+      apiField: 'weight'
+      tableField: 'weight'
+      type: 'float'
+    width:
+      apiField: 'width'
+      tableField: 'width'
+      type: 'float'
+    height:
+      apiField: 'height'
+      tableField: 'height'
+      type: 'float'
+    length:
+      apiField: 'length'
+      tableField: 'length'
+      type: 'float'
+
+    # 5. Beschreibungen
+    tags:
+      apiField: 'tags'
+      tableField: 'tags'
+      type: 'json'
+    cover:
+      apiField: 'cover.media.url'
+      tableField: 'cover'
+      type: 'string'
+    coverMimeType:
+      apiField: 'cover.media.mimeType'
+      tableField: 'cover_mime_type'
+      type: 'string'
+    description:
+      apiField: 'translated.description'
+      tableField: 'description'
+      type: 'string'
+    metaTitle:
+      apiField: 'translated.metaTitle'
+      tableField: 'meta_title'
+      type: 'string'
+    metaDescription:
+      apiField: 'translated.metaDescription'
+      tableField: 'meta_description'
+      type: 'string'
+    metaKeywords:
+      apiField: 'translated.keywords'
+      tableField: 'meta_keywords'
+      type: 'string'
+  associations:
+    children:
+      reference: 'product'
+      apiField: 'children'
+      localField: 'parent_uid'
+    categories:
+      reference: 'category'
+      apiField: 'categories'
+      localField: 'categories'
+      foreignField: 'products'
+      mmTable: 'tx_shopwareconnector_product_category_mm'
+    properties:
+      reference: 'property'
+      apiField: 'properties'
+      localField: 'product_uid'
+    media:
+      reference: 'media'
+      apiField: 'media'
+      localField: 'media'
+      foreignField: 'products'
+      mmTable: 'tx_shopwareconnector_product_downloads_mm'
+
+property:
+  table: 'tx_shopwareconnector_domain_model_property'
+  fields:
+    id:
+      apiField: 'id'
+      tableField: 'sw_id'
+      type: 'string'
+    name:
+      apiField: 'translated.name'
+      tableField: 'name'
+      type: 'string'
+    value:
+      apiField: 'value'
+      tableField: 'value'
+      type: 'string'
+    groupName:
+      apiField: 'group.name'
+      tableField: 'group_name'
+      type: 'string'
+    sorting:
+      apiField: 'position'
+      tableField: 'sorting'
+      type: 'int'
+    createdAt:
+      apiField: 'createdAt'
+      tableField: 'crdate'
+      type: 'timestamp'
+    updatedAt:
+      apiField: 'updatedAt'
+      tableField: 'tstamp'
+      type: 'timestamp'
+
+category:
+  table: 'tx_shopwareconnector_domain_model_category'
+  apiEndpoint: '/category'
+  fields:
+    id:
+      apiField: 'id'
+      tableField: 'sw_id'
+      type: 'string'
+    name:
+      apiField: 'translated.name'
+      tableField: 'name'
+      type: 'string'
+    description:
+      apiField: 'description'
+      tableField: 'description'
+      type: 'string'
+    slug:
+      api_field: 'slug'
+      tableField: 'slug'
+      type: 'string'
+    active:
+      apiField: 'active'
+      tableField: 'hidden'
+      type: 'booleanInverted'
+    hideInMenu:
+      apiField: 'visible'
+      tableField: 'hide_in_menu'
+      type: 'boolean'
+    createdAt:
+      apiField: 'createdAt'
+      tableField: 'crdate'
+      type: 'timestamp'
+    updatedAt:
+      apiField: 'updatedAt'
+      tableField: 'tstamp'
+      type: 'timestamp'
+  associations:
+    children:
+      reference: 'category'
+      apiField: 'children'
+      localField: 'parent_uid'
+
+media:
+  table: 'tx_shopwareconnector_domain_model_media'
+  fields:
+    id:
+      apiField: 'mediaId'
+      tableField: 'sw_id'
+      type: 'string'
+    mimeType:
+      apiField: 'media.mimeType'
+      tableField: 'mime_type'
+      type: 'string'
+    fileName:
+      apiField: 'media.fileName'
+      tableField: 'file_name'
+      type: 'string'
+    fileExtension:
+      apiField: 'media.fileExtension'
+      tableField: 'file_extension'
+      type: 'string'
+    fileSize:
+      apiField: 'media.fileSize'
+      tableField: 'file_size'
+      type: 'int'
+    title:
+      apiField: 'media.translated.title'
+      tableField: 'title'
+      type: 'string'
+    alternative:
+      apiField: 'media.translated.alt'
+      tableField: 'alternative'
+      type: 'string'
+    url:
+      apiField: 'media.url'
+      tableField: 'url'
+      type: 'string'
+    sorting:
+      apiField: 'position'
+      tableField: 'sorting'
+      type: 'int'
+    createdAt:
+      apiField: 'createdAt'
+      tableField: 'crdate'
+      type: 'timestamp'
+    updatedAt:
+      apiField: 'updatedAt'
+      tableField: 'tstamp'
+      type: 'timestamp'

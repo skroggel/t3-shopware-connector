@@ -1,0 +1,117 @@
+/* Allgemeine Container-Stile */
+.typo3-module {
+    margin: 20px;
+    padding: 20px;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    font-family: 'Inter', sans-serif; /* TYPO3 Schriftart */
+}
+
+/* Überschriften */
+.typo3-module h1 {
+    font-size: 24px;
+    font-weight: 600;
+    margin-bottom: 20px;
+    color: #333;
+    border-bottom: 1px solid #ddd;
+    padding-bottom: 10px;
+}
+
+/* Formularelemente */
+.typo3-module .form-group {
+    margin-bottom: 20px;
+}
+
+.typo3-module label {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 5px;
+    color: #000;
+    font-size: 14px;
+}
+
+.typo3-module input[type="text"],
+.typo3-module input[type="password"],
+.typo3-module textarea,
+.typo3-module select {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-shadow: inset 0 1px 3px rgba(0,0,0,0.1);
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+}
+
+/* Buttons */
+.typo3-module .btn {
+    padding: 10px 20px;
+    font-size: 14px;
+    font-weight: 600;
+    color: #fff;
+    background-color: #007bff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-family: 'Inter', sans-serif;
+}
+
+.typo3-module .btn:hover {
+    background-color: #0056b3;
+}
+
+/* Flash Messages */
+.typo3-messages {
+    margin-bottom: 20px;
+}
+
+.typo3-messages .alert {
+    padding: 15px;
+    margin-bottom: 20px;
+    border: 1px solid transparent;
+    border-radius: 4px;
+    font-family: 'Inter', sans-serif;
+    color: #333;
+}
+
+/* Stile für unterschiedliche Schweregrade */
+.typo3-messages .alert-dark {
+    background-color: #e7e7e7;
+    border-color: #d6d6d6;
+    color: #555;
+}
+
+.typo3-messages .alert-info {
+    background-color: #d9edf7;
+    border-color: #bce8f1;
+    color: #31708f;
+}
+
+.typo3-messages .alert-success {
+    background-color: #dff0d8;
+    border-color: #d6e9c6;
+    color: #3c763d;
+}
+
+.typo3-messages .alert-warning {
+    background-color: #fcf8e3;
+    border-color: #faebcc;
+    color: #8a6d3b;
+}
+
+.typo3-messages .alert-danger {
+    background-color: #f2dede;
+    border-color: #ebccd1;
+    color: #a94442;
+}
+
+.typo3-messages .alert-title {
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.typo3-messages .alert-message {
+    margin: 0;
+}

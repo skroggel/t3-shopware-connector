@@ -1,0 +1,110 @@
+CREATE TABLE tx_shopwareconnector_domain_model_category
+(
+	uid             int(11) NOT NULL auto_increment,
+	pid             int(11) DEFAULT '0' NOT NULL,
+	tstamp          int(11) DEFAULT '0' NOT NULL,
+	crdate          int(11) DEFAULT '0' NOT NULL,
+	cruser_id       int(11) DEFAULT '0' NOT NULL,
+	deleted         tinyint(4) DEFAULT '0' NOT NULL,
+	hidden          tinyint(4) DEFAULT '0' NOT NULL,
+	hide_in_menu    tinyint(4) DEFAULT '0' NOT NULL,
+	name            varchar(255) DEFAULT '' NOT NULL,
+	slug            varchar(255) DEFAULT '' NOT NULL,
+	description     text                    NOT NULL,
+	parent_category int(11) DEFAULT '0' NOT NULL,
+	shopware_id     varchar(255) DEFAULT '' NOT NULL,
+	checksum        varchar(255) DEFAULT '' NOT NULL,
+	PRIMARY KEY (uid),
+	KEY             parent (pid),
+	KEY             tstamp (tstamp),
+	KEY             shopware_id (shopware_id)
+);
+
+CREATE TABLE tx_shopwareconnector_domain_model_product
+(
+	uid               int(11) NOT NULL auto_increment,
+	pid               int(11) DEFAULT '0' NOT NULL,
+	tstamp            int(11) DEFAULT '0' NOT NULL,
+	crdate            int(11) DEFAULT '0' NOT NULL,
+	cruser_id         int(11) DEFAULT '0' NOT NULL,
+	deleted           tinyint(4) DEFAULT '0' NOT NULL,
+	hidden            tinyint(4) DEFAULT '0' NOT NULL,
+	name              varchar(255)   DEFAULT ''                    NOT NULL,
+	description       text                                         NOT NULL,
+	price             decimal(10, 2) DEFAULT '0.00'                NOT NULL,
+	shopware_id       varchar(255)   DEFAULT ''                    NOT NULL,
+	product_number    varchar(255)   DEFAULT ''                    NOT NULL,
+	sku               varchar(255)   DEFAULT ''                    NOT NULL,
+	stock             int(11) DEFAULT '0' NOT NULL,
+	available_stock   int(11) DEFAULT '0' NOT NULL,
+	restock_time      int(11) DEFAULT '0' NOT NULL,
+	purchase_unit     float          DEFAULT '0.00'                NOT NULL,
+	shipping_free     tinyint(1) DEFAULT '0' NOT NULL,
+	mark_as_topseller tinyint(1) DEFAULT '0' NOT NULL,
+	release_date      datetime       DEFAULT '0000-00-00 00:00:00' NOT NULL,
+	pack_unit         varchar(255)   DEFAULT ''                    NOT NULL,
+	pack_unit_plural  varchar(255)   DEFAULT ''                    NOT NULL,
+	is_new            tinyint(1) DEFAULT '0' NOT NULL,
+	width             float          DEFAULT '0.00'                NOT NULL,
+	height            float          DEFAULT '0.00'                NOT NULL,
+	length            float          DEFAULT '0.00'                NOT NULL,
+	weight            decimal(10, 2) DEFAULT '0.00'                NOT NULL,
+	minimum_purchase  int(11) DEFAULT '0' NOT NULL,
+	maximum_purchase  int(11) DEFAULT '0' NOT NULL,
+	purchase_steps    int(11) DEFAULT '0' NOT NULL,
+	shipping_time     varchar(255)   DEFAULT ''                    NOT NULL,
+	meta_title        varchar(255)   DEFAULT ''                    NOT NULL,
+	meta_description  text                                         NOT NULL,
+	meta_keywords     text                                         NOT NULL,
+	slug              varchar(255)   DEFAULT ''                    NOT NULL,
+	custom_fields     text                                         NOT NULL,
+	calculated_price  text                                         NOT NULL,
+	delivery_time     text                                         NOT NULL,
+	unit              text                                         NOT NULL,
+	tags              text                                         NOT NULL,
+	media             text                                         NOT NULL,
+	cover             text                                         NOT NULL,
+	manufacturer_id   varchar(255)   DEFAULT ''                    NOT NULL,
+	manufacturer_name varchar(255)   DEFAULT ''                    NOT NULL,
+	parent_id         varchar(255)   DEFAULT ''                    NOT NULL,
+	checksum          varchar(255)   DEFAULT ''                    NOT NULL,
+	PRIMARY KEY (uid),
+	KEY               parent (pid),
+	KEY               shopware_id (shopware_id)
+
+);
+
+
+
+CREATE TABLE tx_shopwareconnector_domain_model_property
+(
+	uid         int(11) NOT NULL auto_increment,
+	pid         int(11) DEFAULT '0' NOT NULL,
+	tstamp      int(11) DEFAULT '0' NOT NULL,
+	crdate      int(11) DEFAULT '0' NOT NULL,
+	cruser_id   int(11) DEFAULT '0' NOT NULL,
+	deleted     tinyint(4) DEFAULT '0' NOT NULL,
+	hidden      tinyint(4) DEFAULT '0' NOT NULL,
+	name        varchar(255) DEFAULT '' NOT NULL,
+	value       text                    NOT NULL,
+	group_name  varchar(255) DEFAULT NULL,
+	product     int(11) DEFAULT '0' NOT NULL,
+	checksum    varchar(255) DEFAULT '' NOT NULL,
+	shopware_id varchar(255) DEFAULT '' NOT NULL,
+
+	PRIMARY KEY (uid),
+	KEY         parent (pid),
+	KEY         tstamp (tstamp),
+	KEY         product (product),
+	UNIQUE KEY unique_property (product, shopware_id)
+
+);
+
+CREATE TABLE tx_shopwareconnector_product_category_mm
+(
+	uid_local   int(11) NOT NULL,
+	uid_foreign int(11) NOT NULL,
+	sorting     int(11) DEFAULT '0' NOT NULL,
+	KEY         uid_local (uid_local),
+	KEY         uid_foreign (uid_foreign)
+);

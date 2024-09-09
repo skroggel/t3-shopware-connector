@@ -1,0 +1,10 @@
+elements:
+  - id: '12345'
+    productNumber: '12345'
+    translated:
+      name: 'Product 1'
+    price: 49.99
+    stock: 150
+    active: true
+    isNew: false
+    releaseDate: '2023-01-01'

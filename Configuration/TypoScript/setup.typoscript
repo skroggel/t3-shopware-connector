@@ -1,0 +1,51 @@
+plugin.tx_shopwareconnector {
+
+	view {
+		layoutRootPaths {
+			0 = EXT:shopware_connector/Resources/Private/Layouts/
+			10 = {$plugin.tx_shopwareconnector.view.layoutRootPath}
+
+		}
+		templateRootPaths {
+			0 = EXT:shopware_connector/Resources/Private/Templates/
+            10 = {$plugin.tx_shopwareconnector.view.templateRootPath}
+
+        }
+		partialRootPaths {
+			0 = EXT:shopware_connector/Resources/Private/Partials/
+			10 = {$plugin.tx_shopwareconnector.view.partialRootPath}
+        }
+	}
+
+	persistence {
+		storagePid = {$plugin.tx_shopwareconnector.persistence.storagePid}
+
+		# In order to make the manual selection in BE work, we need to completely remove this setting here
+		# storagePid >
+	}
+
+	settings {
+
+	}
+}
+
+module.tx_shopwareconnector < plugin.tx_shopwareconnector
+module.tx_shopwareconnector {
+
+	view {
+		layoutRootPaths {
+			0 = EXT:shopware_connector/Resources/Private/Backend/Layouts/
+			10 = {$module.tx_shopwareconnector.view.layoutRootPath}
+
+		}
+		templateRootPaths {
+			0 = EXT:shopware_connector/Resources/Private/Backend/Templates/
+            10 = {$module.tx_shopwareconnector.view.templateRootPath}
+
+        }
+		partialRootPaths {
+			0 = EXT:shopware_connector/Resources/Private/Backend/Partials/
+			10 = {$module.tx_shopwareconnector.view.partialRootPath}
+        }
+	}
+}

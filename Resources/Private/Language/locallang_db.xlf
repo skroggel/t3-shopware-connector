@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff version="1.0">
+    <file source-language="en" target-language="de" datatype="plaintext" original="messages" date="2024-08-28T17:42:00Z" product-name="shopware_connector">
+        <header/>
+        <body>
+            <trans-unit id="module.title">
+                <source>Shopware Connector</source>
+                <target>Shopware Connector</target>
+            </trans-unit>
+            <trans-unit id="module.description">
+                <source>Manage Shopware API connections and data import.</source>
+                <target>Verwalten Sie die Shopware API-Verbindungen und den Datenimport.</target>
+            </trans-unit>
+            <trans-unit id="scheduler.shopwareImportTask.name">
+                <source>Import products and categories from Shopware</source>
+                <target>Produkte und Kategorien aus Shopware importieren</target>
+            </trans-unit>
+            <trans-unit id="scheduler.shopwareImportTask.description">
+                <source>Automatically imports products and categories from the connected Shopware store.</source>
+                <target>Importiert automatisch Produkte und Kategorien aus dem verbundenen Shopware-Shop.</target>
+            </trans-unit>
+            <trans-unit id="module.save_button">
+                <source>Save Settings</source>
+                <target>Einstellungen speichern</target>
+            </trans-unit>
+            <trans-unit id="module.success_message">
+                <source>Settings saved successfully!</source>
+                <target>Einstellungen erfolgreich gespeichert!</target>
+            </trans-unit>
+            <trans-unit id="module.error_message">
+                <source>Error saving settings. Please try again.</source>
+                <target>Fehler beim Speichern der Einstellungen. Bitte versuchen Sie es erneut.</target>
+            </trans-unit>
+
+
+            <!-- tx_shopwareconnector_domain_model_category -->
+ 			<trans-unit id="tx_shopwareconnector_domain_model_category">
+        		<source>Kategorie</source>
+       			<target>Category</target>
+      		</trans-unit>
+      		<trans-unit id="tx_shopwareconnector_domain_model_category.name">
+        		<source>Name</source>
+        		<target>Name</target>
+			</trans-unit>
+      		<trans-unit id="tx_shopwareconnector_domain_model_category.description">
+        		<source>Beschreibung</source>
+        		<target>Description</target>
+      		</trans-unit>
+      		<trans-unit id="tx_shopwareconnector_domain_model_category.slug">
+        		<source>Slug</source>
+        		<target>Slug</target>
+      		</trans-unit>
+      		<trans-unit id="tx_shopwareconnector_domain_model_category.hide_in_menu">
+        		<source>In Menü verstecken</source>
+        		<target>Hide in menu</target>
+      		</trans-unit>
+
+
+
+        </body>
+    </file>
+</xliff>
