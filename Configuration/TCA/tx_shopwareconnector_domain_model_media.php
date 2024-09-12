@@ -1,132 +1,221 @@
 <?php
+
 $ll = 'LLL:EXT:shopware_connector/Resources/Private/Language/locallang_db.xlf:';
+
 return [
     'ctrl' => [
         'title' => $ll . 'tx_shopwareconnector_domain_model_media',
-        'label' => 'title',
-        'label_alt' => 'file_name',
-        'label_alt_force' => true,
+        'label' => 'file_name',
         'tstamp' => 'tstamp',
         'crdate' => 'crdate',
-        'languageField' => 'sw_language_id',
-        'transOrigDiffSourceField' => 'l10n_diffsource',
+        'sortby' => 'sorting',
         'versioningWS' => true,
+        'origUid' => 'l10n_parent',
+        'languageField' => 'sys_language_uid',
+        'transOrigPointerField' => 'l10n_parent',
+        'transOrigDiffSourceField' => 'l10n_diffsource',
         'delete' => 'deleted',
         'enablecolumns' => [
             'disabled' => 'hidden',
+            'starttime' => 'starttime',
+            'endtime' => 'endtime',
         ],
-        'searchFields' => 'title, file_name, mime_type, url',
         'iconfile' => 'EXT:shopware_connector/Resources/Public/Icons/tx_shopwareconnector_domain_model_media.svg',
+        'searchFields' => 'file_name, title, alternative, mime_type, url',
     ],
     'types' => [
         '1' => [
             'showitem' => '
-                title, alternative, mime_type, file_name, file_extension, file_size, url, sorting,
-                --div--;' . $ll . 'tabs.checksum, sw_id, sw_language_id, checksum,
-                --div--;LLL:EXT:core/Resources/Private/Language/Form/locallang_tabs.xlf:language, sw_language_id, l10n_diffsource,
-                --div--;LLL:EXT:core/Resources/Private/Language/Form/locallang_tabs.xlf:access, hidden, crdate, tstamp
-            ',
+                --palette--;' . $ll . 'palette.general;general,
+                --palette--;' . $ll . 'palette.meta;meta,
+                --div--;' . $ll . 'tab.shopware,
+                    --palette--;' . $ll . 'palette.shopware;shopware,
+                --div--;LLL:EXT:core/Resources/Private/Language/Form/locallang_tabs.xlf:language,
+                    sys_language_uid, l10n_parent, l10n_diffsource,
+                --div--;LLL:EXT:core/Resources/Private/Language/Form/locallang_tabs.xlf:access,
+                    hidden, starttime, endtime'
         ],
     ],
+    'palettes' => [
+        'general' => ['showitem' => 'title, --linebreak--,alternative, --linebreak--, file_name, --linebreak--, url', 'label' => $ll . 'palette.general'],
+        'meta' => ['showitem' => 'mime_type, file_extension, file_size, sorting', 'label' => $ll . 'palette.meta'],
+        'shopware' => ['showitem' => 'sw_id, --linebreak--, sw_language_id', 'label' => $ll . 'palette.shopware'],
+    ],
     'columns' => [
-        'title' => [
-            'exclude' => 0,
-            'label' => $ll . 'tx_shopwareconnector_domain_model_media.title',
+        'hidden' => [
+            'exclude' => false,
+            'label' => 'LLL:EXT:core/Resources/Private/Language/locallang_general.xlf:LGL.hidden',
             'config' => [
+				'readOnly' => true,
+                'type' => 'check',
+                'renderType' => 'checkboxToggle'
+            ],
+        ],
+        'starttime' => [
+            'exclude' => false,
+            'label' => 'LLL:EXT:core/Resources/Private/Language/locallang_general.xlf:LGL.starttime',
+            'config' => [
+				'readOnly' => true,
+                'type' => 'input',
+                'renderType' => 'inputDateTime',
+                'eval' => 'datetime',
+                'default' => 0,
+            ],
+        ],
+        'endtime' => [
+            'exclude' => false,
+            'label' => 'LLL:EXT:core/Resources/Private/Language/locallang_general.xlf:LGL.endtime',
+            'config' => [
+				'readOnly' => true,
+                'type' => 'input',
+                'renderType' => 'inputDateTime',
+                'eval' => 'datetime',
+                'default' => 0,
+            ],
+        ],
+        'sys_language_uid' => [
+            'exclude' => false,
+            'label' => 'LLL:EXT:core/Resources/Private/Language/locallang_general.xlf:LGL.language',
+            'config' => [
+				'readOnly' => true,
+                'type' => 'select',
+                'renderType' => 'selectSingle',
+                'special' => 'languages',
+                'default' => 0,
+            ],
+        ],
+        'l10n_parent' => [
+            'exclude' => false,
+            'label' => 'LLL:EXT:core/Resources/Private/Language/locallang_general.xlf:LGL.l10n_parent',
+            'config' => [
+				'readOnly' => true,
+                'type' => 'select',
+                'renderType' => 'selectSingle',
+                'foreign_table' => 'tx_shopwareconnector_domain_model_media',
+                'foreign_table_where' => 'AND tx_shopwareconnector_domain_model_media.pid=###CURRENT_PID### AND tx_shopwareconnector_domain_model_media.sys_language_uid IN (-1,0)',
+                'items' => [
+                    ['', 0],
+                ],
+            ],
+        ],
+        'l10n_diffsource' => [
+            'config' => [
+				'readOnly' => true,
+                'type' => 'passthrough',
+            ],
+        ],
+        'sw_id' => [
+            'exclude' => false,
+            'readOnly' => true,
+            'label' => $ll . 'tx_shopwareconnector_domain_model_media.sw_id',
+            'config' => [
+				'readOnly' => true,
                 'type' => 'input',
                 'size' => 30,
                 'eval' => 'trim,required',
             ],
         ],
-        'alternative' => [
-            'exclude' => 0,
-            'label' => $ll . 'tx_shopwareconnector_domain_model_media.alternative',
+        'sw_language_id' => [
+            'exclude' => false,
+            'readOnly' => true,
+            'label' => $ll . 'tx_shopwareconnector_domain_model_media.sw_language_id',
             'config' => [
+				'readOnly' => true,
+                'type' => 'input',
+                'size' => 30,
+                'eval' => 'trim,required',
+            ],
+        ],
+        'checksum' => [
+            'config' => [
+				'readOnly' => true,
+                'type' => 'passthrough',
+            ],
+        ],
+        'mime_type' => [
+            'exclude' => false,
+            'label' => $ll . 'tx_shopwareconnector_domain_model_media.mime_type',
+            'config' => [
+				'readOnly' => true,
                 'type' => 'input',
                 'size' => 30,
                 'eval' => 'trim',
             ],
         ],
-        'mime_type' => [
-            'exclude' => 0,
-            'label' => $ll . 'tx_shopwareconnector_domain_model_media.mime_type',
-            'config' => [
-                'type' => 'input',
-                'size' => 30,
-                'eval' => 'trim,required',
-            ],
-        ],
         'file_name' => [
-            'exclude' => 0,
+            'exclude' => false,
             'label' => $ll . 'tx_shopwareconnector_domain_model_media.file_name',
             'config' => [
+				'readOnly' => true,
                 'type' => 'input',
-                'size' => 30,
+                'size' => 255,
                 'eval' => 'trim,required',
             ],
         ],
         'file_extension' => [
-            'exclude' => 0,
+            'exclude' => false,
             'label' => $ll . 'tx_shopwareconnector_domain_model_media.file_extension',
             'config' => [
-                'type' => 'input',
-                'size' => 10,
-                'eval' => 'trim,required',
-            ],
-        ],
-        'file_size' => [
-            'exclude' => 0,
-            'label' => $ll . 'tx_shopwareconnector_domain_model_media.file_size',
-            'config' => [
-                'type' => 'input',
-                'size' => 10,
-                'eval' => 'int,required',
-            ],
-        ],
-        'url' => [
-            'exclude' => 0,
-            'label' => $ll . 'tx_shopwareconnector_domain_model_media.url',
-            'config' => [
-                'type' => 'input',
-                'size' => 50,
-                'eval' => 'trim,required',
-            ],
-        ],
-        'sorting' => [
-            'exclude' => 1,
-            'label' => $ll . 'tx_shopwareconnector_domain_model_media.sorting',
-            'config' => [
-                'type' => 'input',
-                'size' => 5,
-                'eval' => 'int',
-                'default' => 0,
-            ],
-        ],
-        'sw_id' => [
-            'exclude' => 0,
-            'label' => $ll . 'tx_shopwareconnector_domain_model_media.sw_id',
-            'config' => [
-                'type' => 'input',
-                'size' => 10,
-                'eval' => 'trim',
-            ],
-        ],
-        'sw_language_id' => [
-            'exclude' => 0,
-            'label' => $ll . 'tx_shopwareconnector_domain_model_media.sw_language_id',
-            'config' => [
-                'type' => 'input',
-                'size' => 10,
-                'eval' => 'trim',
-            ],
-        ],
-        'checksum' => [
-            'exclude' => 0,
-            'label' => $ll . 'tx_shopwareconnector_domain_model_media.checksum',
-            'config' => [
+				'readOnly' => true,
                 'type' => 'input',
                 'size' => 30,
                 'eval' => 'trim',
+            ],
+        ],
+        'file_size' => [
+            'exclude' => false,
+            'label' => $ll . 'tx_shopwareconnector_domain_model_media.file_size',
+            'config' => [
+				'readOnly' => true,
+                'type' => 'input',
+                'size' => 10,
+                'eval' => 'int',
+            ],
+        ],
+        'title' => [
+            'exclude' => false,
+            'label' => $ll . 'tx_shopwareconnector_domain_model_media.title',
+            'config' => [
+				'readOnly' => true,
+                'type' => 'input',
+                'size' => 255,
+                'eval' => 'trim',
+            ],
+        ],
+        'alternative' => [
+            'exclude' => false,
+            'label' => $ll . 'tx_shopwareconnector_domain_model_media.alternative',
+            'config' => [
+				'readOnly' => true,
+                'type' => 'input',
+                'size' => 255,
+                'eval' => 'trim',
+            ],
+        ],
+        'url' => [
+            'exclude' => false,
+            'label' => $ll . 'tx_shopwareconnector_domain_model_media.url',
+            'config' => [
+				'readOnly' => true,
+                'type' => 'input',
+                'renderType' => 'inputLink',
+                'fieldControl' => [
+                    'linkPopup' => [
+                        'options' => [
+                            'blindLinkOptions' => 'file,folder,page,mail,telephone',
+                        ],
+                    ],
+                ],
+            ],
+        ],
+        'sorting' => [
+            'exclude' => false,
+            'label' => $ll . 'tx_shopwareconnector_domain_model_media.sorting',
+            'config' => [
+				'readOnly' => true,
+                'type' => 'input',
+                'size' => 10,
+                'eval' => 'int',
             ],
         ],
     ],

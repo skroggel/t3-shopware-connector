@@ -160,7 +160,7 @@ product:
     children:
       reference: 'product'
       apiField: 'children'
-      localField: 'parent_uid'
+      localField: 'parent'
     categories:
       reference: 'category'
       apiField: 'categories'
@@ -170,7 +170,7 @@ product:
     properties:
       reference: 'property'
       apiField: 'properties'
-      localField: 'product_uid'
+      localField: 'product'
     media:
       reference: 'media'
       apiField: 'media'
@@ -250,7 +250,7 @@ category:
     children:
       reference: 'category'
       apiField: 'children'
-      localField: 'parent_uid'
+      localField: 'parent'
 
 media:
   table: 'tx_shopwareconnector_domain_model_media'

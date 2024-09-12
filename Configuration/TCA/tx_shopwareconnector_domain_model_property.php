@@ -4,10 +4,8 @@ $ll = 'LLL:EXT:shopware_connector/Resources/Private/Language/locallang_db.xlf:';
 
 return [
     'ctrl' => [
-        'title' => $ll . 'tx_shopwareconnector_domain_model_category',
+        'title' => $ll . 'tx_shopwareconnector_domain_model_property',
         'label' => 'name',
-        'label_alt' => 'sw_id',
-        'label_alt_force' => 1,
         'tstamp' => 'tstamp',
         'crdate' => 'crdate',
         'sortby' => 'sorting',
@@ -22,29 +20,27 @@ return [
             'starttime' => 'starttime',
             'endtime' => 'endtime',
         ],
-        'iconfile' => 'EXT:shopware_connector/Resources/Public/Icons/tx_shopwareconnector_domain_model_category.svg',
-        'searchFields' => 'name,description,slug',
+        'iconfile' => 'EXT:shopware_connector/Resources/Public/Icons/tx_shopwareconnector_domain_model_property.svg',
+        'searchFields' => 'name, value, group_name',
     ],
     'types' => [
         '1' => [
             'showitem' => '
                 --palette--;' . $ll . 'palette.general;general,
-                --palette--;' . $ll . 'palette.relations;relations,
                 --div--;' . $ll . 'tab.shopware,
                     --palette--;' . $ll . 'palette.shopware;shopware,
                 --div--;LLL:EXT:core/Resources/Private/Language/Form/locallang_tabs.xlf:language,
                     sys_language_uid, l10n_parent, l10n_diffsource,
                 --div--;LLL:EXT:core/Resources/Private/Language/Form/locallang_tabs.xlf:access,
-                    hide_in_menu, hidden, starttime, endtime'
+                    hidden, starttime, endtime'
         ],
     ],
     'palettes' => [
-        'general' => ['showitem' => 'name, --linebreak--, slug, --linebreak--, description', 'label' => $ll . 'palette.general'],
-        'relations' => ['showitem' => 'parent', 'label' => $ll . 'palette.relations'],
+        'general' => ['showitem' => 'name, --linebreak--, value, --linebreak--, group_name, --linebreak--, sorting', 'label' => $ll . 'palette.general'],
         'shopware' => ['showitem' => 'sw_id, --linebreak--, sw_language_id', 'label' => $ll . 'palette.shopware'],
-
     ],
     'columns' => [
+
         'hidden' => [
             'exclude' => false,
             'label' => 'LLL:EXT:core/Resources/Private/Language/locallang_general.xlf:LGL.hidden',
@@ -89,13 +85,13 @@ return [
         ],
         'l10n_parent' => [
             'exclude' => false,
-            'label' => 'LLL:EXT:core/Resources/Private/Language/locallang_general.xlf:LGL.l18n_parent',
+            'label' => 'LLL:EXT:core/Resources/Private/Language/locallang_general.xlf:LGL.l10n_parent',
             'config' => [
 				'readOnly' => true,
                 'type' => 'select',
                 'renderType' => 'selectSingle',
-                'foreign_table' => 'tx_shopwareconnector_domain_model_category',
-                'foreign_table_where' => 'AND tx_shopwareconnector_domain_model_category.pid=###CURRENT_PID### AND tx_shopwareconnector_domain_model_category.sys_language_uid IN (-1,0)',
+                'foreign_table' => 'tx_shopwareconnector_domain_model_property',
+                'foreign_table_where' => 'AND tx_shopwareconnector_domain_model_property.pid=###CURRENT_PID### AND tx_shopwareconnector_domain_model_property.sys_language_uid IN (-1,0)',
                 'items' => [
                     ['', 0],
                 ],
@@ -107,10 +103,10 @@ return [
                 'type' => 'passthrough',
             ],
         ],
-        'sw_id' => [
+        'shopware_id' => [
             'exclude' => false,
             'readOnly' => true,
-            'label' => $ll . 'tx_shopwareconnector_domain_model_category.sw_id',
+            'label' => $ll . 'tx_shopwareconnector_domain_model_property.shopware_id',
             'config' => [
 				'readOnly' => true,
                 'type' => 'input',
@@ -121,7 +117,7 @@ return [
         'sw_language_id' => [
             'exclude' => false,
             'readOnly' => true,
-            'label' => $ll . 'tx_shopwareconnector_domain_model_category.sw_language_id',
+            'label' => $ll . 'tx_shopwareconnector_domain_model_property.sw_language_id',
             'config' => [
 				'readOnly' => true,
                 'type' => 'input',
@@ -135,58 +131,44 @@ return [
                 'type' => 'passthrough',
             ],
         ],
-        'parent' => [
-            'exclude' => false,
-            'label' => $ll . 'tx_shopwareconnector_domain_model_category.parent',
-            'config' => [
-				'readOnly' => true,
-                'type' => 'select',
-                'renderType' => 'selectSingle',
-                'foreign_table' => 'tx_shopwareconnector_domain_model_category',
-                'foreign_table_where' => 'AND tx_shopwareconnector_domain_model_category.pid=###CURRENT_PID### AND tx_shopwareconnector_domain_model_category.sys_language_uid IN (-1,0)',
-                'minitems' => 0,
-                'maxitems' => 1,
-            ],
-        ],
         'name' => [
             'exclude' => false,
-            'label' => $ll . 'tx_shopwareconnector_domain_model_category.name',
+            'label' => $ll . 'tx_shopwareconnector_domain_model_property.name',
             'config' => [
 				'readOnly' => true,
                 'type' => 'input',
-                'size' => 30,
+                'size' => 255,
                 'eval' => 'trim,required',
             ],
         ],
-        'description' => [
+        'value' => [
             'exclude' => false,
-            'label' => $ll . 'tx_shopwareconnector_domain_model_category.description',
-            'config' => [
-				'readOnly' => true,
-                'type' => 'text',
-                'cols' => 40,
-                'rows' => 15,
-                'eval' => 'trim',
-                'enableRichtext' => true,
-            ],
-        ],
-        'slug' => [
-            'exclude' => false,
-            'label' => $ll . 'tx_shopwareconnector_domain_model_category.slug',
+            'label' => $ll . 'tx_shopwareconnector_domain_model_property.value',
             'config' => [
 				'readOnly' => true,
                 'type' => 'input',
-                'size' => 30,
-                'eval' => 'trim,unique',
+                'size' => 255,
+                'eval' => 'trim',
             ],
         ],
-        'hide_in_menu' => [
+        'group_name' => [
             'exclude' => false,
-            'label' => $ll . 'tx_shopwareconnector_domain_model_category.hide_in_menu',
+            'label' => $ll . 'tx_shopwareconnector_domain_model_property.group_name',
             'config' => [
 				'readOnly' => true,
-                'type' => 'check',
-                'renderType' => 'checkboxToggle'
+                'type' => 'input',
+                'size' => 255,
+                'eval' => 'trim',
+            ],
+        ],
+        'sorting' => [
+            'exclude' => false,
+            'label' => $ll . 'tx_shopwareconnector_domain_model_property.sorting',
+            'config' => [
+				'readOnly' => true,
+                'type' => 'input',
+                'size' => 10,
+                'eval' => 'int',
             ],
         ],
     ],

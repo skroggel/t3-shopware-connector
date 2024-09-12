@@ -1,6 +1,5 @@
 <?php
 declare(strict_types=1);
-namespace Madj2k\ShopwareConnector\Domain\Model;
 
 /**
  * This file is part of the TYPO3 CMS project.
@@ -12,47 +11,69 @@ namespace Madj2k\ShopwareConnector\Domain\Model;
  * The TYPO3 project - inspiring people to share!
  */
 
+
+namespace Madj2k\ShopwareConnector\Domain\Model;
+
 use TYPO3\CMS\Extbase\DomainObject\AbstractEntity;
 
 /**
  * Class Property
  *
- * Represents a property of a product imported from Shopware.
- *
  * @author Steffen Kroggel <developer@steffenkroggel.de>
- * @copyright Steffen Kroggel
  * @package Madj2k_ShopwareConnector
  * @license http://www.gnu.org/licenses/gpl.html GNU General Public License, version 3 or later
  */
 class Property extends AbstractEntity
 {
+    /**
+     * @var string
+     */
+    protected string $shopwareId = '';
 
     /**
      * @var string
      */
     protected string $name = '';
 
-
     /**
      * @var string
      */
     protected string $value = '';
 
-
     /**
-     * @var string|null
+     * @var string
      */
-    protected ?string $group = null;
-
+    protected string $groupName = '';
 
     /**
-     * @var \Madj2k\ShopwareConnector\Domain\Model\Product|null
+     * @var int
      */
-    protected ?Product $product = null;
+    protected int $sorting = 0;
 
 
     /**
-     * Get the property name.
+     * Get the Shopware ID
+     *
+     * @return string
+     */
+    public function getShopwareId(): string
+    {
+        return $this->shopwareId;
+    }
+
+    /**
+     * Set the Shopware ID
+     *
+     * @param string $shopwareId
+     * @return void
+     */
+    public function setShopwareId(string $shopwareId): void
+    {
+        $this->shopwareId = $shopwareId;
+    }
+
+    /**
+     * Get the property name
      *
      * @return string
      */
@@ -61,9 +82,8 @@ class Property extends AbstractEntity
         return $this->name;
     }
 
-
     /**
-     * Set the property name.
+     * Set the property name
      *
      * @param string $name
      * @return void
@@ -73,9 +93,8 @@ class Property extends AbstractEntity
         $this->name = $name;
     }
 
-
     /**
-     * Get the property value.
+     * Get the property value
      *
      * @return string
      */
@@ -84,9 +103,8 @@ class Property extends AbstractEntity
         return $this->value;
     }
 
-
     /**
-     * Set the property value.
+     * Set the property value
      *
      * @param string $value
      * @return void
@@ -96,49 +114,45 @@ class Property extends AbstractEntity
         $this->value = $value;
     }
 
-
     /**
-     * Get the property group.
+     * Get the group name
      *
-     * @return string|null
+     * @return string
      */
-    public function getGroup(): ?string
+    public function getGroupName(): string
     {
-        return $this->group;
+        return $this->groupName;
     }
 
-
     /**
-     * Set the property group.
+     * Set the group name
      *
-     * @param string|null $group
+     * @param string $groupName
      * @return void
      */
-    public function setGroup(?string $group): void
+    public function setGroupName(string $groupName): void
     {
-        $this->group = $group;
+        $this->groupName = $groupName;
     }
 
-
     /**
-     * Get the associated product.
+     * Get the sorting value
      *
-     * @return \Madj2k\ShopwareConnector\Domain\Model\Product|null
+     * @return int
      */
-    public function getProduct(): ?Product
+    public function getSorting(): int
     {
-        return $this->product;
+        return $this->sorting;
     }
 
-
     /**
-     * Set the associated product.
+     * Set the sorting value
      *
-     * @param \Madj2k\ShopwareConnector\Domain\Model\Product|null $product
+     * @param int $sorting
      * @return void
      */
-    public function setProduct(?Product $product): void
+    public function setSorting(int $sorting): void
     {
-        $this->product = $product;
+        $this->sorting = $sorting;
     }
 }

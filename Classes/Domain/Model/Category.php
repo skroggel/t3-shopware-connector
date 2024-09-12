@@ -1,6 +1,5 @@
 <?php
 declare(strict_types=1);
-namespace Madj2k\ShopwareConnector\Domain\Model;
 
 /**
  * This file is part of the TYPO3 CMS project.
@@ -12,21 +11,36 @@ namespace Madj2k\ShopwareConnector\Domain\Model;
  * The TYPO3 project - inspiring people to share!
  */
 
+namespace Madj2k\ShopwareConnector\Domain\Model;
+
 use TYPO3\CMS\Extbase\DomainObject\AbstractEntity;
-use TYPO3\CMS\Extbase\Persistence\ObjectStorage;
 
 /**
  * Class Category
  *
- * Represents a category imported from Shopware.
- *
  * @author Steffen Kroggel <developer@steffenkroggel.de>
- * @copyright Steffen Kroggel
  * @package Madj2k_ShopwareConnector
  * @license http://www.gnu.org/licenses/gpl.html GNU General Public License, version 3 or later
  */
 class Category extends AbstractEntity
 {
+    /**
+     * @var string
+     */
+    protected string $swId = '';
+
+
+    /**
+     * @var string
+     */
+    protected string $swLanguageId = '';
+
+
+    /**
+     * @var Category|null
+     */
+    protected ?Category $parent = null;
+
 
     /**
      * @var string
@@ -37,38 +51,93 @@ class Category extends AbstractEntity
     /**
      * @var string
      */
-    protected string $slug = '';
+    protected string $description = '';
 
 
     /**
      * @var string
      */
-    protected string $description = '';
+    protected string $slug = '';
 
 
     /**
-     * @var \Madj2k\ShopwareConnector\Domain\Model\Category|null
+     * @var bool
      */
-    protected ?Category $parentCategory = null;
+    protected bool $hideInMenu = false;
+
 
 
     /**
-     * @var \TYPO3\CMS\Extbase\Persistence\ObjectStorage<\Madj2k\ShopwareConnector\Domain\Model\Category>
+     * Get the Shopware ID of the category
+     *
+     * @return string
      */
-    protected ObjectStorage $subCategories;
-
-
-    /**
-     * Category constructor.
-     */
-    public function __construct()
+    public function getSwId(): string
     {
-        $this->subCategories = new ObjectStorage();
+        return $this->swId;
     }
 
 
     /**
-     * Get the category name.
+     * Set the Shopware ID of the category
+     *
+     * @param string $swId
+     * @return void
+     */
+    public function setSwId(string $swId): void
+    {
+        $this->swId = $swId;
+    }
+
+
+    /**
+     * Get the Shopware language ID
+     *
+     * @return string
+     */
+    public function getSwLanguageId(): string
+    {
+        return $this->swLanguageId;
+    }
+
+
+    /**
+     * Set the Shopware language ID
+     *
+     * @param string $swLanguageId
+     * @return void
+     */
+    public function setSwLanguageId(string $swLanguageId): void
+    {
+        $this->swLanguageId = $swLanguageId;
+    }
+
+
+    /**
+     * Get the parent category
+     *
+     * @return \Madj2k\ShopwareConnector\Domain\Model\Category|null
+     */
+    public function getParent(): ?Category
+    {
+        return $this->parent;
+    }
+
+
+    /**
+     * Set the parent category
+     *
+     * @param \Madj2k\ShopwareConnector\Domain\Model\Category|null $parent
+     * @return void
+     */
+    public function setParent(?Category $parent): void
+    {
+        $this->parent = $parent;
+    }
+
+
+    /**
+     * Get the name of the category
      *
      * @return string
      */
@@ -79,7 +148,7 @@ class Category extends AbstractEntity
 
 
     /**
-     * Set the category name.
+     * Set the name of the category
      *
      * @param string $name
      * @return void
@@ -91,30 +160,7 @@ class Category extends AbstractEntity
 
 
     /**
-     * Get the category slug.
-     *
-     * @return string
-     */
-    public function getSlug(): string
-    {
-        return $this->slug;
-    }
-
-
-    /**
-     * Set the category slug.
-     *
-     * @param string $slug
-     * @return void
-     */
-    public function setSlug(string $slug): void
-    {
-        $this->slug = $slug;
-    }
-
-
-    /**
-     * Get the category description.
+     * Get the description of the category
      *
      * @return string
      */
@@ -125,7 +171,7 @@ class Category extends AbstractEntity
 
 
     /**
-     * Set the category description.
+     * Set the description of the category
      *
      * @param string $description
      * @return void
@@ -137,59 +183,48 @@ class Category extends AbstractEntity
 
 
     /**
-     * Get the parent category.
+     * Get the slug (URL identifier) of the category
      *
-     * @return \Madj2k\ShopwareConnector\Domain\Model\Category|null
+     * @return string
      */
-    public function getParentCategory(): ?Category
+    public function getSlug(): string
     {
-        return $this->parentCategory;
+        return $this->slug;
     }
 
 
     /**
-     * Set the parent category.
+     * Set the slug (URL identifier) of the category
      *
-     * @param \Madj2k\ShopwareConnector\Domain\Model\Category|null $parentCategory
+     * @param string $slug
      * @return void
      */
-    public function setParentCategory(?Category $parentCategory): void
+    public function setSlug(string $slug): void
     {
-        $this->parentCategory = $parentCategory;
+        $this->slug = $slug;
     }
 
 
     /**
-     * Get the subcategories.
+     * Get whether the category is hidden in the menu
      *
-     * @return \TYPO3\CMS\Extbase\Persistence\ObjectStorage<\Madj2k\ShopwareConnector\Domain\Model\Category>
+     * @return bool
      */
-    public function getSubCategories(): ObjectStorage
+    public function getHideInMenu(): bool
     {
-        return $this->subCategories;
+        return $this->hideInMenu;
     }
 
 
     /**
-     * Adds a subcategory.
+     * Set whether the category is hidden in the menu
      *
-     * @param \Madj2k\ShopwareConnector\Domain\Model\Category $category
+     * @param bool $hideInMenu
      * @return void
      */
-    public function addSubCategory(Category $category): void
+    public function setHideInMenu(bool $hideInMenu): void
     {
-        $this->subCategories->attach($category);
+        $this->hideInMenu = $hideInMenu;
     }
 
-
-    /**
-     * Removes a subcategory.
-     *
-     * @param \Madj2k\ShopwareConnector\Domain\Model\Category $category
-     * @return void
-     */
-    public function removeSubCategory(Category $category): void
-    {
-        $this->subCategories->detach($category);
-    }
 }

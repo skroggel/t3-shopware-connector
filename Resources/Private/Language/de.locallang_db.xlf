@@ -3,225 +3,347 @@
     <file source-language="en" target-language="de" datatype="plaintext" original="messages" date="2024-08-28T17:42:00Z" product-name="shopware_connector">
         <header/>
         <body>
-            <trans-unit id="module.title">
-                <source>Shopware Connector</source>
-                <target>Shopware Connector</target>
-            </trans-unit>
-            <trans-unit id="module.description">
-                <source>Manage Shopware API connections and data import.</source>
-                <target>Verwalten Sie die Shopware API-Verbindungen und den Datenimport.</target>
-            </trans-unit>
-            <trans-unit id="scheduler.shopwareImportTask.name">
-                <source>Import products and categories from Shopware</source>
-                <target>Produkte und Kategorien aus Shopware importieren</target>
-            </trans-unit>
-            <trans-unit id="scheduler.shopwareImportTask.description">
-                <source>Automatically imports products and categories from the connected Shopware store.</source>
-                <target>Importiert automatisch Produkte und Kategorien aus dem verbundenen Shopware-Shop.</target>
-            </trans-unit>
-            <trans-unit id="module.save_button">
-                <source>Save Settings</source>
-                <target>Einstellungen speichern</target>
-            </trans-unit>
-            <trans-unit id="module.success_message">
-                <source>Settings saved successfully!</source>
-                <target>Einstellungen erfolgreich gespeichert!</target>
-            </trans-unit>
-            <trans-unit id="module.error_message">
-                <source>Error saving settings. Please try again.</source>
-                <target>Fehler beim Speichern der Einstellungen. Bitte versuchen Sie es erneut.</target>
-            </trans-unit>
+
+			<!-- Palettes -->
+			<trans-unit id="palette.general">
+				<source>General</source>
+				<target>Allgemein</target>
+			</trans-unit>
+			<trans-unit id="palette.relations">
+				<source>Relations</source>
+				<target>Beziehungen</target>
+			</trans-unit>
+			<trans-unit id="palette.meta">
+				<source>Meta Information</source>
+				<target>Meta-Informationen</target>
+			</trans-unit>
+			<trans-unit id="palette.pricing">
+				<source>Pricing</source>
+				<target>Preise</target>
+			</trans-unit>
+			<trans-unit id="palette.stock">
+				<source>Stock</source>
+				<target>Lagerbestand</target>
+			</trans-unit>
+			<trans-unit id="palette.shipping">
+				<source>Shipping</source>
+				<target>Versand</target>
+			</trans-unit>
+			<trans-unit id="palette.dimensions">
+				<source>Dimensions</source>
+				<target>Maße</target>
+			</trans-unit>
+			<trans-unit id="palette.media">
+				<source>Media</source>
+				<target>Medien</target>
+			</trans-unit>
 
 
-            <!-- tx_shopwareconnector_domain_model_category -->
-            <trans-unit id="tx_shopwareconnector_domain_model_category">
-                <source>Category</source>
-                <target>Kategorie</target>
-            </trans-unit>
-            <trans-unit id="tx_shopwareconnector_domain_model_category.name">
-                <source>Name</source>
-                <target>Name</target>
-            </trans-unit>
-            <trans-unit id="tx_shopwareconnector_domain_model_category.description">
-                <source>Description</source>
-                <target>Beschreibung</target>
-            </trans-unit>
-            <trans-unit id="tx_shopwareconnector_domain_model_category.slug">
-                <source>Slug</source>
-                <target>Slug</target>
-            </trans-unit>
-            <trans-unit id="tx_shopwareconnector_domain_model_category.hide_in_menu">
-                <source>Hide in menu</source>
-                <target>In Menü verstecken</target>
-            </trans-unit>
+			<!-- Tabs -->
+			<trans-unit id="tab.shopware">
+				<source>Shopware</source>
+				<target>Shopware</target>
+			</trans-unit>
+			<trans-unit id="tab.relations">
+				<source>Relations</source>
+				<target>Beziehungen</target>
+			</trans-unit>
+			<trans-unit id="tab.pricing">
+				<source>Pricing</source>
+				<target>Preise</target>
+			</trans-unit>
+			<trans-unit id="tab.stock">
+				<source>Stock</source>
+				<target>Lagerbestand</target>
+			</trans-unit>
+			<trans-unit id="tab.shipping">
+				<source>Shipping</source>
+				<target>Versand</target>
+			</trans-unit>
+			<trans-unit id="tab.dimensions">
+				<source>Dimensions</source>
+				<target>Maße</target>
+			</trans-unit>
+			<trans-unit id="tab.media">
+				<source>Media</source>
+				<target>Medien</target>
+			</trans-unit>
 
-            <!-- tx_shopwareconnector_domain_model_media -->
-            <trans-unit id="tx_shopwareconnector_domain_model_media">
-                <source>Media</source>
-                <target>Medien</target>
-            </trans-unit>
-            <trans-unit id="tx_shopwareconnector_domain_model_media.title">
-                <source>Title</source>
-                <target>Titel</target>
-            </trans-unit>
-            <trans-unit id="tx_shopwareconnector_domain_model_media.alternative">
-                <source>Alternative</source>
-                <target>Alternative</target>
-            </trans-unit>
-            <trans-unit id="tx_shopwareconnector_domain_model_media.mime_type">
-                <source>MIME Type</source>
-                <target>MIME-Typ</target>
-            </trans-unit>
-            <trans-unit id="tx_shopwareconnector_domain_model_media.file_name">
-                <source>File Name</source>
-                <target>Dateiname</target>
-            </trans-unit>
-            <trans-unit id="tx_shopwareconnector_domain_model_media.file_extension">
-                <source>File Extension</source>
-                <target>Dateiendung</target>
-            </trans-unit>
-            <trans-unit id="tx_shopwareconnector_domain_model_media.file_size">
-                <source>File Size</source>
-                <target>Dateigröße</target>
-            </trans-unit>
-            <trans-unit id="tx_shopwareconnector_domain_model_media.url">
-                <source>URL</source>
-                <target>URL</target>
-            </trans-unit>
-            <trans-unit id="tx_shopwareconnector_domain_model_media.sorting">
-                <source>Sorting</source>
-                <target>Sortierung</target>
-            </trans-unit>
 
-            <!-- tx_shopwareconnector_domain_model_product -->
-            <trans-unit id="tx_shopwareconnector_domain_model_product">
-                <source>Product</source>
-                <target>Produkt</target>
-            </trans-unit>
+			<!-- tx_shopwareconnector_domain_model_category -->
+			<trans-unit id="tx_shopwareconnector_domain_model_category">
+				<source>Shopware Category</source>
+				<target>Shopware Kategorie</target>
+			</trans-unit>
+			<trans-unit id="tx_shopwareconnector_domain_model_category.sw_id">
+				<source>Shopware ID</source>
+				<target>Shopware-ID</target>
+			</trans-unit>
+			<trans-unit id="tx_shopwareconnector_domain_model_category.sw_language_id">
+				<source>Shopware Language ID</source>
+				<target>Shopware-Sprach-ID</target>
+			</trans-unit>
+			<trans-unit id="tx_shopwareconnector_domain_model_category.parent">
+				<source>Parent Category</source>
+				<target>Übergeordnete Kategorie</target>
+			</trans-unit>
+			<trans-unit id="tx_shopwareconnector_domain_model_category.checksum">
+				<source>Checksum</source>
+				<target>Prüfsumme</target>
+			</trans-unit>
+			<trans-unit id="tx_shopwareconnector_domain_model_category.name">
+				<source>Name</source>
+				<target>Name</target>
+			</trans-unit>
+			<trans-unit id="tx_shopwareconnector_domain_model_category.description">
+				<source>Description</source>
+				<target>Beschreibung</target>
+			</trans-unit>
+			<trans-unit id="tx_shopwareconnector_domain_model_category.slug">
+				<source>Slug</source>
+				<target>Slug</target>
+			</trans-unit>
+			<trans-unit id="tx_shopwareconnector_domain_model_category.hide_in_menu">
+				<source>Hide in Menu</source>
+				<target>Im Menü verbergen</target>
+			</trans-unit>
 
-            <!-- Allgemeine Felder -->
-            <trans-unit id="tx_shopwareconnector_domain_model_product.product_number">
-                <source>Product Number</source>
-                <target>Produktnummer</target>
-            </trans-unit>
-            <trans-unit id="tx_shopwareconnector_domain_model_product.name">
-                <source>Name</source>
-                <target>Name</target>
-            </trans-unit>
-            <trans-unit id="tx_shopwareconnector_domain_model_product.ean">
-                <source>EAN</source>
-                <target>EAN</target>
-            </trans-unit>
-            <trans-unit id="tx_shopwareconnector_domain_model_product.is_new">
-                <source>New</source>
-                <target>Neu</target>
-            </trans-unit>
-            <trans-unit id="tx_shopwareconnector_domain_model_product.custom_fields">
-                <source>Custom Fields</source>
-                <target>Benutzerdefinierte Felder</target>
-            </trans-unit>
-            <trans-unit id="tx_shopwareconnector_domain_model_product.release_date">
-                <source>Release Date</source>
-                <target>Veröffentlichungsdatum</target>
-            </trans-unit>
-            <trans-unit id="tx_shopwareconnector_domain_model_product.price">
-                <source>Price</source>
-                <target>Preis</target>
-            </trans-unit>
-            <trans-unit id="tx_shopwareconnector_domain_model_product.calculated_price">
-                <source>Calculated Price</source>
-                <target>Kalkulierter Preis</target>
-            </trans-unit>
-            <trans-unit id="tx_shopwareconnector_domain_model_product.available_stock">
-                <source>Available Stock</source>
-                <target>Verfügbarer Lagerbestand</target>
-            </trans-unit>
-            <trans-unit id="tx_shopwareconnector_domain_model_product.stock">
-                <source>Stock</source>
-                <target>Lagerbestand</target>
-            </trans-unit>
-            <trans-unit id="tx_shopwareconnector_domain_model_product.available">
-                <source>Available</source>
-                <target>Verfügbar</target>
-            </trans-unit>
-            <trans-unit id="tx_shopwareconnector_domain_model_product.restock_time">
-                <source>Restock Time</source>
-                <target>Wiederauffüllzeit</target>
-            </trans-unit>
-            <trans-unit id="tx_shopwareconnector_domain_model_product.shipping_free">
-                <source>Shipping Free</source>
-                <target>Versandkostenfrei</target>
-            </trans-unit>
-            <trans-unit id="tx_shopwareconnector_domain_model_product.delivery_time">
-                <source>Delivery Time</source>
-                <target>Lieferzeit</target>
-            </trans-unit>
-            <trans-unit id="tx_shopwareconnector_domain_model_product.weight">
-                <source>Weight</source>
-                <target>Gewicht</target>
-            </trans-unit>
-            <trans-unit id="tx_shopwareconnector_domain_model_product.width">
-                <source>Width</source>
-                <target>Breite</target>
-            </trans-unit>
-            <trans-unit id="tx_shopwareconnector_domain_model_product.height">
-                <source>Height</source>
-                <target>Höhe</target>
-            </trans-unit>
-            <trans-unit id="tx_shopwareconnector_domain_model_product.length">
-                <source>Length</source>
-                <target>Länge</target>
-            </trans-unit>
-            <trans-unit id="tx_shopwareconnector_domain_model_product.tags">
-                <source>Tags</source>
-                <target>Tags</target>
-            </trans-unit>
-            <trans-unit id="tx_shopwareconnector_domain_model_product.description">
-                <source>Description</source>
-                <target>Beschreibung</target>
-            </trans-unit>
-            <trans-unit id="tx_shopwareconnector_domain_model_product.cover">
-                <source>Cover</source>
-                <target>Titelseite</target>
-            </trans-unit>
-            <trans-unit id="tx_shopwareconnector_domain_model_product.cover_mime_type">
-                <source>Cover MIME Type</source>
-                <target>Titelseiten-MIME-Typ</target>
-            </trans-unit>
-            <trans-unit id="tx_shopwareconnector_domain_model_product.meta_title">
-                <source>Meta Title</source>
-                <target>Meta-Titel</target>
-            </trans-unit>
-            <trans-unit id="tx_shopwareconnector_domain_model_product.meta_description">
-                <source>Meta Description</source>
-                <target>Meta-Beschreibung</target>
-            </trans-unit>
-            <trans-unit id="tx_shopwareconnector_domain_model_product.meta_keywords">
-                <source>Meta Keywords</source>
-                <target>Meta-Schlüsselwörter</target>
-            </trans-unit>
 
-            <!-- Palettenbeschriftungen -->
-            <trans-unit id="palette.product_info">
-                <source>Product Information</source>
-                <target>Produktinformationen</target>
-            </trans-unit>
-            <trans-unit id="palette.price_info">
-                <source>Price Information</source>
-                <target>Preisinformationen</target>
-            </trans-unit>
-            <trans-unit id="palette.stock_info">
-                <source>Stock Information</source>
-                <target>Lagerbestand</target>
-            </trans-unit>
-            <trans-unit id="palette.dimension_info">
-                <source>Dimensions</source>
-                <target>Maße</target>
-            </trans-unit>
-            <trans-unit id="palette.media_info">
-                <source>Media Information</source>
-                <target>Medieninformationen</target>
-            </trans-unit>
+			<!-- tx_shopwareconnector_domain_model_media -->
+			<trans-unit id="tx_shopwareconnector_domain_model_media">
+				<source>Shopware Media</source>
+				<target>Shopware Media</target>
+			</trans-unit>
+			<trans-unit id="tx_shopwareconnector_domain_model_media.sw_id">
+				<source>Shopware ID</source>
+				<target>Shopware-ID</target>
+			</trans-unit>
+			<trans-unit id="tx_shopwareconnector_domain_model_media.sw_language_id">
+				<source>Shopware Language ID</source>
+				<target>Shopware-Sprach-ID</target>
+			</trans-unit>
+			<trans-unit id="tx_shopwareconnector_domain_model_media.mime_type">
+				<source>MIME Type</source>
+				<target>MIME-Typ</target>
+			</trans-unit>
+			<trans-unit id="tx_shopwareconnector_domain_model_media.file_name">
+				<source>File Name</source>
+				<target>Dateiname</target>
+			</trans-unit>
+			<trans-unit id="tx_shopwareconnector_domain_model_media.file_extension">
+				<source>File Extension</source>
+				<target>Dateiendung</target>
+			</trans-unit>
+			<trans-unit id="tx_shopwareconnector_domain_model_media.file_size">
+				<source>File Size</source>
+				<target>Dateigröße</target>
+			</trans-unit>
+			<trans-unit id="tx_shopwareconnector_domain_model_media.title">
+				<source>Title</source>
+				<target>Titel</target>
+			</trans-unit>
+			<trans-unit id="tx_shopwareconnector_domain_model_media.alternative">
+				<source>Alternative Text</source>
+				<target>Alternativtext</target>
+			</trans-unit>
+			<trans-unit id="tx_shopwareconnector_domain_model_media.url">
+				<source>URL</source>
+				<target>URL</target>
+			</trans-unit>
+			<trans-unit id="tx_shopwareconnector_domain_model_media.sorting">
+				<source>Sorting</source>
+				<target>Sortierung</target>
+			</trans-unit>
+
+
+			<!-- tx_shopwareconnector_domain_model_product -->
+			<trans-unit id="tx_shopwareconnector_domain_model_product">
+				<source>Shopware Product</source>
+				<target>Shopware Produkt</target>
+			</trans-unit>
+			<trans-unit id="tx_shopwareconnector_domain_model_product.sw_id">
+				<source>Shopware ID</source>
+				<target>Shopware-ID</target>
+			</trans-unit>
+			<trans-unit id="tx_shopwareconnector_domain_model_product.sw_language_id">
+				<source>Shopware Language ID</source>
+				<target>Shopware-Sprach-ID</target>
+			</trans-unit>
+			<trans-unit id="tx_shopwareconnector_domain_model_product.sw_manufacturer_id">
+				<source>Shopware Manufacturer ID</source>
+				<target>Shopware-Hersteller-ID</target>
+			</trans-unit>
+			<trans-unit id="tx_shopwareconnector_domain_model_product.parent">
+				<source>Parent Product</source>
+				<target>Übergeordnetes Produkt</target>
+			</trans-unit>
+			<trans-unit id="tx_shopwareconnector_domain_model_product.checksum">
+				<source>Checksum</source>
+				<target>Prüfsumme</target>
+			</trans-unit>
+			<trans-unit id="tx_shopwareconnector_domain_model_product.product_number">
+				<source>Product Number</source>
+				<target>Produktnummer</target>
+			</trans-unit>
+			<trans-unit id="tx_shopwareconnector_domain_model_product.name">
+				<source>Name</source>
+				<target>Name</target>
+			</trans-unit>
+			<trans-unit id="tx_shopwareconnector_domain_model_product.ean">
+				<source>EAN</source>
+				<target>EAN</target>
+			</trans-unit>
+			<trans-unit id="tx_shopwareconnector_domain_model_product.is_new">
+				<source>Is New</source>
+				<target>Neu</target>
+			</trans-unit>
+			<trans-unit id="tx_shopwareconnector_domain_model_product.custom_fields">
+				<source>Custom Fields</source>
+				<target>Benutzerdefinierte Felder</target>
+			</trans-unit>
+			<trans-unit id="tx_shopwareconnector_domain_model_product.release_date">
+				<source>Release Date</source>
+				<target>Veröffentlichungsdatum</target>
+			</trans-unit>
+			<trans-unit id="tx_shopwareconnector_domain_model_product.price">
+				<source>Price</source>
+				<target>Preis</target>
+			</trans-unit>
+			<trans-unit id="tx_shopwareconnector_domain_model_product.calculated_price">
+				<source>Calculated Price</source>
+				<target>Kalkulierter Preis</target>
+			</trans-unit>
+			<trans-unit id="tx_shopwareconnector_domain_model_product.available_stock">
+				<source>Available Stock</source>
+				<target>Verfügbarer Lagerbestand</target>
+			</trans-unit>
+			<trans-unit id="tx_shopwareconnector_domain_model_product.stock">
+				<source>Stock</source>
+				<target>Lagerbestand</target>
+			</trans-unit>
+			<trans-unit id="tx_shopwareconnector_domain_model_product.available">
+				<source>Available</source>
+				<target>Verfügbar</target>
+			</trans-unit>
+			<trans-unit id="tx_shopwareconnector_domain_model_product.restock_time">
+				<source>Restock Time</source>
+				<target>Wiederauffüllzeit</target>
+			</trans-unit>
+			<trans-unit id="tx_shopwareconnector_domain_model_product.shipping_free">
+				<source>Shipping Free</source>
+				<target>Versandkostenfrei</target>
+			</trans-unit>
+			<trans-unit id="tx_shopwareconnector_domain_model_product.delivery_time">
+				<source>Delivery Time</source>
+				<target>Lieferzeit</target>
+			</trans-unit>
+			<trans-unit id="tx_shopwareconnector_domain_model_product.purchase_steps">
+				<source>Purchase Steps</source>
+				<target>Kaufstufen</target>
+			</trans-unit>
+			<trans-unit id="tx_shopwareconnector_domain_model_product.max_purchase">
+				<source>Max Purchase</source>
+				<target>Maximale Kaufmenge</target>
+			</trans-unit>
+			<trans-unit id="tx_shopwareconnector_domain_model_product.min_purchase">
+				<source>Min Purchase</source>
+				<target>Minimale Kaufmenge</target>
+			</trans-unit>
+			<trans-unit id="tx_shopwareconnector_domain_model_product.purchase_unit">
+				<source>Purchase Unit</source>
+				<target>Kaufeinheit</target>
+			</trans-unit>
+			<trans-unit id="tx_shopwareconnector_domain_model_product.pack_unit">
+				<source>Pack Unit</source>
+				<target>Verpackungseinheit</target>
+			</trans-unit>
+			<trans-unit id="tx_shopwareconnector_domain_model_product.pack_unit_plural">
+				<source>Pack Unit Plural</source>
+				<target>Verpackungseinheiten (Plural)</target>
+			</trans-unit>
+			<trans-unit id="tx_shopwareconnector_domain_model_product.weight">
+				<source>Weight</source>
+				<target>Gewicht</target>
+			</trans-unit>
+			<trans-unit id="tx_shopwareconnector_domain_model_product.width">
+				<source>Width</source>
+				<target>Breite</target>
+			</trans-unit>
+			<trans-unit id="tx_shopwareconnector_domain_model_product.height">
+				<source>Height</source>
+				<target>Höhe</target>
+			</trans-unit>
+			<trans-unit id="tx_shopwareconnector_domain_model_product.length">
+				<source>Length</source>
+				<target>Länge</target>
+			</trans-unit>
+			<trans-unit id="tx_shopwareconnector_domain_model_product.tags">
+				<source>Tags</source>
+				<target>Tags</target>
+			</trans-unit>
+			<trans-unit id="tx_shopwareconnector_domain_model_product.description">
+				<source>Description</source>
+				<target>Beschreibung</target>
+			</trans-unit>
+			<trans-unit id="tx_shopwareconnector_domain_model_product.cover">
+				<source>Cover</source>
+				<target>Titelseite</target>
+			</trans-unit>
+			<trans-unit id="tx_shopwareconnector_domain_model_product.cover_mime_type">
+				<source>Cover MIME Type</source>
+				<target>Titelseiten-MIME-Typ</target>
+			</trans-unit>
+			<trans-unit id="tx_shopwareconnector_domain_model_product.meta_title">
+				<source>Meta Title</source>
+				<target>Meta-Titel</target>
+			</trans-unit>
+			<trans-unit id="tx_shopwareconnector_domain_model_product.meta_description">
+				<source>Meta Description</source>
+				<target>Meta-Beschreibung</target>
+			</trans-unit>
+			<trans-unit id="tx_shopwareconnector_domain_model_product.meta_keywords">
+				<source>Meta Keywords</source>
+				<target>Meta-Schlüsselwörter</target>
+			</trans-unit>
+			<trans-unit id="tx_shopwareconnector_domain_model_product.categories">
+				<source>Categories</source>
+				<target>Kategorien</target>
+			</trans-unit>
+			<trans-unit id="tx_shopwareconnector_domain_model_product.properties">
+				<source>Properties</source>
+				<target>Eigenschaften</target>
+			</trans-unit>
+
+
+			<!-- tx_shopwareconnector_domain_model_property -->
+			<trans-unit id="tx_shopwareconnector_domain_model_property">
+				<source>Shopware Property</source>
+				<target>Shopware Eigenschaft</target>
+			</trans-unit>
+			<trans-unit id="tx_shopwareconnector_domain_model_property.name">
+				<source>Name</source>
+				<target>Name</target>
+			</trans-unit>
+			<trans-unit id="tx_shopwareconnector_domain_model_property.value">
+				<source>Value</source>
+				<target>Wert</target>
+			</trans-unit>
+			<trans-unit id="tx_shopwareconnector_domain_model_property.group_name">
+				<source>Group Name</source>
+				<target>Gruppenname</target>
+			</trans-unit>
+			<trans-unit id="tx_shopwareconnector_domain_model_property.sw_language_id">
+				<source>Shopware Language ID</source>
+				<target>Shopware Sprach-ID</target>
+			</trans-unit>
+			<trans-unit id="tx_shopwareconnector_domain_model_property.sw_id">
+				<source>Shopware ID</source>
+				<target>Shopware ID</target>
+			</trans-unit>
+			<trans-unit id="tx_shopwareconnector_domain_model_property.sorting">
+				<source>Sorting</source>
+				<target>Sortierung</target>
+			</trans-unit>
 
         </body>
     </file>

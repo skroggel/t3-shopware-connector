@@ -1,6 +1,5 @@
 <?php
 declare(strict_types=1);
-namespace Madj2k\ShopwareConnector\Domain\Model;
 
 /**
  * This file is part of the TYPO3 CMS project.
@@ -12,18 +11,50 @@ namespace Madj2k\ShopwareConnector\Domain\Model;
  * The TYPO3 project - inspiring people to share!
  */
 
+namespace Madj2k\ShopwareConnector\Domain\Model;
+
 use TYPO3\CMS\Extbase\DomainObject\AbstractEntity;
+use TYPO3\CMS\Extbase\Persistence\ObjectStorage;
 
 /**
  * Class Product
  *
  * @author Steffen Kroggel <developer@steffenkroggel.de>
- * @copyright Steffen Kroggel
  * @package Madj2k_ShopwareConnector
  * @license http://www.gnu.org/licenses/gpl.html GNU General Public License, version 3 or later
  */
 class Product extends AbstractEntity
 {
+
+    /**
+     * @var string
+     */
+    protected string $swId = '';
+
+
+    /**
+     * @var string
+     */
+    protected string $swLanguageId = '';
+
+
+    /**
+     * @var string
+     */
+    protected string $swManufacturerId = '';
+
+
+    /**
+     * @var \Madj2k\ShopwareConnector\Domain\Model\Product|null
+     */
+    protected ?Product $parent = null;
+
+
+    /**
+     * @var string
+     */
+    protected string $productNumber = '';
+
 
     /**
      * @var string
@@ -34,25 +65,43 @@ class Product extends AbstractEntity
     /**
      * @var string
      */
-    protected string $description = '';
+    protected string $ean = '';
+
+
+    /**
+     * @var bool
+     */
+    protected bool $isNew = false;
+
+
+    /**
+     * @var string
+     */
+    protected string $customFields = '';
+
+
+    /**
+     * @var int
+     */
+    protected int $releaseDate = 0;
 
 
     /**
      * @var float
      */
-    protected float $price = 0.0;
+    protected float $price = 0.00;
 
 
     /**
      * @var string
      */
-    protected string $shopwareId = '';
+    protected string $calculatedPrice = '';
 
 
     /**
-     * @var string
+     * @var int
      */
-    protected string $sku = '';
+    protected int $availableStock = 0;
 
 
     /**
@@ -62,57 +111,15 @@ class Product extends AbstractEntity
 
 
     /**
-     * @var float
+     * @var bool
      */
-    protected float $weight = 0.0;
-
-
-    /**
-     * @var float
-     */
-    protected float $length = 0.0;
-
-
-    /**
-     * @var float
-     */
-    protected float $width = 0.0;
-
-
-    /**
-     * @var float
-     */
-    protected float $height = 0.0;
-
-
-    /**
-     * @var string
-     */
-    protected string $manufacturer = '';
-
-
-    /**
-     * @var \DateTime|null
-     */
-    protected ?\DateTime $releaseDate = null;
+    protected bool $available = false;
 
 
     /**
      * @var int
      */
-    protected int $minimumPurchase = 0;
-
-
-    /**
-     * @var int
-     */
-    protected int $maximumPurchase = 0;
-
-
-    /**
-     * @var int
-     */
-    protected int $purchaseSteps = 0;
+    protected int $restockTime = 0;
 
 
     /**
@@ -124,47 +131,250 @@ class Product extends AbstractEntity
     /**
      * @var string
      */
-    protected string $shippingTime = '';
+    protected string $deliveryTime = '';
+
+
+    /**
+     * @var int
+     */
+    protected int $purchaseSteps = 0;
+
+
+    /**
+     * @var int
+     */
+    protected int $maxPurchase = 0;
+
+
+    /**
+     * @var int
+     */
+    protected int $minPurchase = 0;
 
 
     /**
      * @var string
      */
-    protected string $seoTitle = '';
+    protected string $purchaseUnit = '';
 
 
     /**
      * @var string
      */
-    protected string $seoDescription = '';
+    protected string $packUnit = '';
 
 
     /**
      * @var string
      */
-    protected string $slug = '';
+    protected string $packUnitPlural = '';
 
 
     /**
-     * @var array
+     * @var float
      */
-    protected array $categories = [];
+    protected float $weight = 0.00;
 
 
     /**
-     * @var array
+     * @var float
      */
-    protected array $tags = [];
+    protected float $width = 0.00;
 
 
     /**
-     * @var array
+     * @var float
      */
-    protected array $customFields = [];
+    protected float $height = 0.00;
 
 
     /**
-     * Get the product name.
+     * @var float
+     */
+    protected float $length = 0.00;
+
+
+    /**
+     * @var string
+     */
+    protected string $tags = '';
+
+
+    /**
+     * @var string
+     */
+    protected string $description = '';
+
+
+    /**
+     * @var string
+     */
+    protected string $cover = '';
+
+
+    /**
+     * @var string
+     */
+    protected string $coverMimeType = '';
+
+
+    /**
+     * @var string
+     */
+    protected string $metaTitle = '';
+
+
+    /**
+     * @var string
+     */
+    protected string $metaDescription = '';
+
+
+    /**
+     * @var string
+     */
+    protected string $metaKeywords = '';
+
+
+    /**
+     * @var \TYPO3\CMS\Extbase\Persistence\ObjectStorage<\Madj2k\ShopwareConnector\Domain\Model\Category>
+     */
+    protected ObjectStorage $categories;
+
+
+    /**
+     * @var \TYPO3\CMS\Extbase\Persistence\ObjectStorage<\Madj2k\ShopwareConnector\Domain\Model\Property>
+     */
+    protected ObjectStorage $properties;
+
+
+    /**
+     * Constructor to initialize ObjectStorages
+     */
+    public function __construct()
+    {
+        $this->categories = new ObjectStorage();
+        $this->properties = new ObjectStorage();
+    }
+
+
+    /**
+     * Get swId
+     *
+     * @return string
+     */
+    public function getSwId(): string
+    {
+        return $this->swId;
+    }
+
+
+    /**
+     * Set swId
+     *
+     * @param string $swId
+     * @return void
+     */
+    public function setSwId(string $swId): void
+    {
+        $this->swId = $swId;
+    }
+
+
+    /**
+     * Get swLanguageId
+     *
+     * @return string
+     */
+    public function getSwLanguageId(): string
+    {
+        return $this->swLanguageId;
+    }
+
+
+    /**
+     * Set swLanguageId
+     *
+     * @param string $swLanguageId
+     * @return void
+     */
+    public function setSwLanguageId(string $swLanguageId): void
+    {
+        $this->swLanguageId = $swLanguageId;
+    }
+
+
+    /**
+     * Get swManufacturerId
+     *
+     * @return string
+     */
+    public function getSwManufacturerId(): string
+    {
+        return $this->swManufacturerId;
+    }
+
+
+    /**
+     * Set swManufacturerId
+     *
+     * @param string $swManufacturerId
+     * @return void
+     */
+    public function setSwManufacturerId(string $swManufacturerId): void
+    {
+        $this->swManufacturerId = $swManufacturerId;
+    }
+
+
+    /**
+     * Get parent
+     *
+     * @return \Madj2k\ShopwareConnector\Domain\Model\Product|null
+     */
+    public function getParent(): ?Product
+    {
+        return $this->parent;
+    }
+
+
+    /**
+     * Set parent
+     *
+     * @param \Madj2k\ShopwareConnector\Domain\Model\Product|null $parent
+     * @return void
+     */
+    public function setParent(?Product $parent): void
+    {
+        $this->parent = $parent;
+    }
+
+
+    /**
+     * Get productNumber
+     *
+     * @return string
+     */
+    public function getProductNumber(): string
+    {
+        return $this->productNumber;
+    }
+
+
+    /**
+     * Set productNumber
+     *
+     * @param string $productNumber
+     * @return void
+     */
+    public function setProductNumber(string $productNumber): void
+    {
+        $this->productNumber = $productNumber;
+    }
+
+
+    /**
+     * Get name
      *
      * @return string
      */
@@ -175,7 +385,7 @@ class Product extends AbstractEntity
 
 
     /**
-     * Set the product name.
+     * Set name
      *
      * @param string $name
      * @return void
@@ -187,30 +397,99 @@ class Product extends AbstractEntity
 
 
     /**
-     * Get the product description.
+     * Get ean
      *
      * @return string
      */
-    public function getDescription(): string
+    public function getEan(): string
     {
-        return $this->description;
+        return $this->ean;
     }
 
 
     /**
-     * Set the product description.
+     * Set ean
      *
-     * @param string $description
+     * @param string $ean
      * @return void
      */
-    public function setDescription(string $description): void
+    public function setEan(string $ean): void
     {
-        $this->description = $description;
+        $this->ean = $ean;
     }
 
 
     /**
-     * Get the product price.
+     * Get isNew
+     *
+     * @return bool
+     */
+    public function getIsNew(): bool
+    {
+        return $this->isNew;
+    }
+
+
+    /**
+     * Set isNew
+     *
+     * @param bool $isNew
+     * @return void
+     */
+    public function setIsNew(bool $isNew): void
+    {
+        $this->isNew = $isNew;
+    }
+
+
+    /**
+     * Get customFields
+     *
+     * @return string
+     */
+    public function getCustomFields(): string
+    {
+        return $this->customFields;
+    }
+
+
+    /**
+     * Set customFields
+     *
+     * @param string $customFields
+     * @return void
+     */
+    public function setCustomFields(string $customFields): void
+    {
+        $this->customFields = $customFields;
+    }
+
+
+    /**
+     * Get releaseDate
+     *
+     * @return int
+     */
+    public function getReleaseDate(): int
+    {
+        return $this->releaseDate;
+    }
+
+
+    /**
+     * Set releaseDate
+     *
+     * @param int $releaseDate
+     * @return void
+     */
+    public function setReleaseDate(int $releaseDate): void
+    {
+        $this->releaseDate = $releaseDate;
+    }
+
+
+    /**
+     * Get price
      *
      * @return float
      */
@@ -221,7 +500,7 @@ class Product extends AbstractEntity
 
 
     /**
-     * Set the product price.
+     * Set price
      *
      * @param float $price
      * @return void
@@ -233,53 +512,53 @@ class Product extends AbstractEntity
 
 
     /**
-     * Get the Shopware ID of the product.
+     * Get calculatedPrice
      *
      * @return string
      */
-    public function getShopwareId(): string
+    public function getCalculatedPrice(): string
     {
-        return $this->shopwareId;
+        return $this->calculatedPrice;
     }
 
 
     /**
-     * Set the Shopware ID of the product.
+     * Set calculatedPrice
      *
-     * @param string $shopwareId
+     * @param string $calculatedPrice
      * @return void
      */
-    public function setShopwareId(string $shopwareId): void
+    public function setCalculatedPrice(string $calculatedPrice): void
     {
-        $this->shopwareId = $shopwareId;
+        $this->calculatedPrice = $calculatedPrice;
     }
 
 
     /**
-     * Get the SKU of the product.
+     * Get availableStock
      *
-     * @return string
+     * @return int
      */
-    public function getSku(): string
+    public function getAvailableStock(): int
     {
-        return $this->sku;
+        return $this->availableStock;
     }
 
 
     /**
-     * Set the SKU of the product.
+     * Set availableStock
      *
-     * @param string $sku
+     * @param int $availableStock
      * @return void
      */
-    public function setSku(string $sku): void
+    public function setAvailableStock(int $availableStock): void
     {
-        $this->sku = $sku;
+        $this->availableStock = $availableStock;
     }
 
 
     /**
-     * Get the stock quantity of the product.
+     * Get stock
      *
      * @return int
      */
@@ -290,7 +569,7 @@ class Product extends AbstractEntity
 
 
     /**
-     * Set the stock quantity of the product.
+     * Set stock
      *
      * @param int $stock
      * @return void
@@ -302,225 +581,64 @@ class Product extends AbstractEntity
 
 
     /**
-     * Get the product weight.
-     *
-     * @return float
-     */
-    public function getWeight(): float
-    {
-        return $this->weight;
-    }
-
-
-    /**
-     * Set the product weight.
-     *
-     * @param float $weight
-     * @return void
-     */
-    public function setWeight(float $weight): void
-    {
-        $this->weight = $weight;
-    }
-
-
-    /**
-     * Get the product length.
-     *
-     * @return float
-     */
-    public function getLength(): float
-    {
-        return $this->length;
-    }
-
-
-    /**
-     * Set the product length.
-     *
-     * @param float $length
-     * @return void
-     */
-    public function setLength(float $length): void
-    {
-        $this->length = $length;
-    }
-
-
-    /**
-     * Get the product width.
-     *
-     * @return float
-     */
-    public function getWidth(): float
-    {
-        return $this->width;
-    }
-
-
-    /**
-     * Set the product width.
-     *
-     * @param float $width
-     * @return void
-     */
-    public function setWidth(float $width): void
-    {
-        $this->width = $width;
-    }
-
-
-    /**
-     * Get the product height.
-     *
-     * @return float
-     */
-    public function getHeight(): float
-    {
-        return $this->height;
-    }
-
-
-    /**
-     * Set the product height.
-     *
-     * @param float $height
-     * @return void
-     */
-    public function setHeight(float $height): void
-    {
-        $this->height = $height;
-    }
-
-
-    /**
-     * Get the manufacturer of the product.
-     *
-     * @return string
-     */
-    public function getManufacturer(): string
-    {
-        return $this->manufacturer;
-    }
-
-
-    /**
-     * Set the manufacturer of the product.
-     *
-     * @param string $manufacturer
-     * @return void
-     */
-    public function setManufacturer(string $manufacturer): void
-    {
-        $this->manufacturer = $manufacturer;
-    }
-
-
-    /**
-     * Get the release date of the product.
-     *
-     * @return \DateTime|null
-     */
-    public function getReleaseDate(): ?\DateTime
-    {
-        return $this->releaseDate;
-    }
-
-
-    /**
-     * Set the release date of the product.
-     *
-     * @param \DateTime|null $releaseDate
-     * @return void
-     */
-    public function setReleaseDate(?\DateTime $releaseDate): void
-    {
-        $this->releaseDate = $releaseDate;
-    }
-
-
-    /**
-     * Get the minimum purchase quantity.
-     *
-     * @return int
-     */
-    public function getMinimumPurchase(): int
-    {
-        return $this->minimumPurchase;
-    }
-
-
-    /**
-     * Set the minimum purchase quantity.
-     *
-     * @param int $minimumPurchase
-     * @return void
-     */
-    public function setMinimumPurchase(int $minimumPurchase): void
-    {
-        $this->minimumPurchase = $minimumPurchase;
-    }
-
-
-    /**
-     * Get the maximum purchase quantity.
-     *
-     * @return int
-     */
-    public function getMaximumPurchase(): int
-    {
-        return $this->maximumPurchase;
-    }
-
-
-    /**
-     * Set the maximum purchase quantity.
-     *
-     * @param int $maximumPurchase
-     * @return void
-     */
-    public function setMaximumPurchase(int $maximumPurchase): void
-    {
-        $this->maximumPurchase = $maximumPurchase;
-    }
-
-
-    /**
-     * Get the purchase steps.
-     *
-     * @return int
-     */
-    public function getPurchaseSteps(): int
-    {
-        return $this->purchaseSteps;
-    }
-
-
-    /**
-     * Set the purchase steps.
-     *
-     * @param int $purchaseSteps
-     * @return void
-     */
-    public function setPurchaseSteps(int $purchaseSteps): void
-    {
-        $this->purchaseSteps = $purchaseSteps;
-    }
-
-
-    /**
-     * Get the shipping free status.
+     * Get available
      *
      * @return bool
      */
-    public function isShippingFree(): bool
+    public function getAvailable(): bool
+    {
+        return $this->available;
+    }
+
+
+    /**
+     * Set available
+     *
+     * @param bool $available
+     * @return void
+     */
+    public function setAvailable(bool $available): void
+    {
+        $this->available = $available;
+    }
+
+
+    /**
+     * Get restockTime
+     *
+     * @return int
+     */
+    public function getRestockTime(): int
+    {
+        return $this->restockTime;
+    }
+
+
+    /**
+     * Set restockTime
+     *
+     * @param int $restockTime
+     * @return void
+     */
+    public function setRestockTime(int $restockTime): void
+    {
+        $this->restockTime = $restockTime;
+    }
+
+
+    /**
+     * Get shippingFree
+     *
+     * @return bool
+     */
+    public function getShippingFree(): bool
     {
         return $this->shippingFree;
     }
 
 
     /**
-     * Set the shipping free status.
+     * Set shippingFree
      *
      * @param bool $shippingFree
      * @return void
@@ -532,162 +650,508 @@ class Product extends AbstractEntity
 
 
     /**
-     * Get the shipping time.
+     * Get deliveryTime
      *
      * @return string
      */
-    public function getShippingTime(): string
+    public function getDeliveryTime(): string
     {
-        return $this->shippingTime;
+        return $this->deliveryTime;
     }
 
 
     /**
-     * Set the shipping time.
+     * Set deliveryTime
      *
-     * @param string $shippingTime
+     * @param string $deliveryTime
      * @return void
      */
-    public function setShippingTime(string $shippingTime): void
+    public function setDeliveryTime(string $deliveryTime): void
     {
-        $this->shippingTime = $shippingTime;
+        $this->deliveryTime = $deliveryTime;
     }
 
 
     /**
-     * Get the SEO title of the product.
+     * Get purchaseSteps
+     *
+     * @return int
+     */
+    public function getPurchaseSteps(): int
+    {
+        return $this->purchaseSteps;
+    }
+
+
+    /**
+     * Set purchaseSteps
+     *
+     * @param int $purchaseSteps
+     * @return void
+     */
+    public function setPurchaseSteps(int $purchaseSteps): void
+    {
+        $this->purchaseSteps = $purchaseSteps;
+    }
+
+
+    /**
+     * Get maxPurchase
+     *
+     * @return int
+     */
+    public function getMaxPurchase(): int
+    {
+        return $this->maxPurchase;
+    }
+
+
+    /**
+     * Set maxPurchase
+     *
+     * @param int $maxPurchase
+     * @return void
+     */
+    public function setMaxPurchase(int $maxPurchase): void
+    {
+        $this->maxPurchase = $maxPurchase;
+    }
+
+
+    /**
+     * Get minPurchase
+     *
+     * @return int
+     */
+    public function getMinPurchase(): int
+    {
+        return $this->minPurchase;
+    }
+
+
+    /**
+     * Set minPurchase
+     *
+     * @param int $minPurchase
+     * @return void
+     */
+    public function setMinPurchase(int $minPurchase): void
+    {
+        $this->minPurchase = $minPurchase;
+    }
+
+
+    /**
+     * Get purchaseUnit
      *
      * @return string
      */
-    public function getSeoTitle(): string
+    public function getPurchaseUnit(): string
     {
-        return $this->seoTitle;
+        return $this->purchaseUnit;
     }
 
 
     /**
-     * Set the SEO title of the product.
+     * Set purchaseUnit
      *
-     * @param string $seoTitle
+     * @param string $purchaseUnit
      * @return void
      */
-    public function setSeoTitle(string $seoTitle): void
+    public function setPurchaseUnit(string $purchaseUnit): void
     {
-        $this->seoTitle = $seoTitle;
+        $this->purchaseUnit = $purchaseUnit;
     }
 
 
     /**
-     * Get the SEO description of the product.
+     * Get packUnit
      *
      * @return string
      */
-    public function getSeoDescription(): string
+    public function getPackUnit(): string
     {
-        return $this->seoDescription;
+        return $this->packUnit;
     }
 
 
     /**
-     * Set the SEO description of the product.
+     * Set packUnit
      *
-     * @param string $seoDescription
+     * @param string $packUnit
      * @return void
      */
-    public function setSeoDescription(string $seoDescription): void
+    public function setPackUnit(string $packUnit): void
     {
-        $this->seoDescription = $seoDescription;
+        $this->packUnit = $packUnit;
     }
 
 
     /**
-     * Get the slug of the product.
+     * Get packUnitPlural
      *
      * @return string
      */
-    public function getSlug(): string
+    public function getPackUnitPlural(): string
     {
-        return $this->slug;
+        return $this->packUnitPlural;
     }
 
 
     /**
-     * Set the slug of the product.
+     * Set packUnitPlural
      *
-     * @param string $slug
+     * @param string $packUnitPlural
      * @return void
      */
-    public function setSlug(string $slug): void
+    public function setPackUnitPlural(string $packUnitPlural): void
     {
-        $this->slug = $slug;
+        $this->packUnitPlural = $packUnitPlural;
     }
 
 
     /**
-     * Get the categories of the product.
+     * Get weight
      *
-     * @return array
+     * @return float
      */
-    public function getCategories(): array
+    public function getWeight(): float
     {
-        return $this->categories;
+        return $this->weight;
     }
 
 
     /**
-     * Set the categories of the product.
+     * Set weight
      *
-     * @param array $categories
+     * @param float $weight
      * @return void
      */
-    public function setCategories(array $categories): void
+    public function setWeight(float $weight): void
     {
-        $this->categories = $categories;
+        $this->weight = $weight;
     }
 
 
     /**
-     * Get the tags of the product.
+     * Get width
      *
-     * @return array
+     * @return float
      */
-    public function getTags(): array
+    public function getWidth(): float
+    {
+        return $this->width;
+    }
+
+
+    /**
+     * Set width
+     *
+     * @param float $width
+     * @return void
+     */
+    public function setWidth(float $width): void
+    {
+        $this->width = $width;
+    }
+
+
+    /**
+     * Get height
+     *
+     * @return float
+     */
+    public function getHeight(): float
+    {
+        return $this->height;
+    }
+
+
+    /**
+     * Set height
+     *
+     * @param float $height
+     * @return void
+     */
+    public function setHeight(float $height): void
+    {
+        $this->height = $height;
+    }
+
+
+    /**
+     * Get length
+     *
+     * @return float
+     */
+    public function getLength(): float
+    {
+        return $this->length;
+    }
+
+
+    /**
+     * Set length
+     *
+     * @param float $length
+     * @return void
+     */
+    public function setLength(float $length): void
+    {
+        $this->length = $length;
+    }
+
+
+    /**
+     * Get tags
+     *
+     * @return string
+     */
+    public function getTags(): string
     {
         return $this->tags;
     }
 
 
     /**
-     * Set the tags of the product.
+     * Set tags
      *
-     * @param array $tags
+     * @param string $tags
      * @return void
      */
-    public function setTags(array $tags): void
+    public function setTags(string $tags): void
     {
         $this->tags = $tags;
     }
 
 
     /**
-     * Get the custom fields of the product.
+     * Get description
      *
-     * @return array
+     * @return string
      */
-    public function getCustomFields(): array
+    public function getDescription(): string
     {
-        return $this->customFields;
+        return $this->description;
     }
 
 
     /**
-     * Set the custom fields of the product.
+     * Set description
      *
-     * @param array $customFields
+     * @param string $description
      * @return void
      */
-    public function setCustomFields(array $customFields): void
+    public function setDescription(string $description): void
     {
-        $this->customFields = $customFields;
+        $this->description = $description;
+    }
+
+
+    /**
+     * Get cover
+     *
+     * @return string
+     */
+    public function getCover(): string
+    {
+        return $this->cover;
+    }
+
+
+    /**
+     * Set cover
+     *
+     * @param string $cover
+     * @return void
+     */
+    public function setCover(string $cover): void
+    {
+        $this->cover = $cover;
+    }
+
+
+    /**
+     * Get coverMimeType
+     *
+     * @return string
+     */
+    public function getCoverMimeType(): string
+    {
+        return $this->coverMimeType;
+    }
+
+
+    /**
+     * Set coverMimeType
+     *
+     * @param string $coverMimeType
+     * @return void
+     */
+    public function setCoverMimeType(string $coverMimeType): void
+    {
+        $this->coverMimeType = $coverMimeType;
+    }
+
+
+    /**
+     * Get metaTitle
+     *
+     * @return string
+     */
+    public function getMetaTitle(): string
+    {
+        return $this->metaTitle;
+    }
+
+
+    /**
+     * Set metaTitle
+     *
+     * @param string $metaTitle
+     * @return void
+     */
+    public function setMetaTitle(string $metaTitle): void
+    {
+        $this->metaTitle = $metaTitle;
+    }
+
+
+    /**
+     * Get metaDescription
+     *
+     * @return string
+     */
+    public function getMetaDescription(): string
+    {
+        return $this->metaDescription;
+    }
+
+
+    /**
+     * Set metaDescription
+     *
+     * @param string $metaDescription
+     * @return void
+     */
+    public function setMetaDescription(string $metaDescription): void
+    {
+        $this->metaDescription = $metaDescription;
+    }
+
+
+    /**
+     * Get metaKeywords
+     *
+     * @return string
+     */
+    public function getMetaKeywords(): string
+    {
+        return $this->metaKeywords;
+    }
+
+
+    /**
+     * Set metaKeywords
+     *
+     * @param string $metaKeywords
+     * @return void
+     */
+    public function setMetaKeywords(string $metaKeywords): void
+    {
+        $this->metaKeywords = $metaKeywords;
+    }
+
+
+    /**
+     * Get categories
+     *
+     * @return ObjectStorage<\Madj2k\ShopwareConnector\Domain\Model\Category>
+     */
+    public function getCategories(): ObjectStorage
+    {
+        return $this->categories;
+    }
+
+
+    /**
+     * Adds a Category to the categories ObjectStorage.
+     *
+     * @param \Madj2k\ShopwareConnector\Domain\Model\Category $category
+     * @return void
+     */
+    public function addCategory(\Madj2k\ShopwareConnector\Domain\Model\Category $category): void
+    {
+        $this->categories->attach($category);
+    }
+
+
+    /**
+     * Removes a Category from the categories ObjectStorage.
+     *
+     * @param \Madj2k\ShopwareConnector\Domain\Model\Category $category
+     * @return void
+     */
+    public function removeCategory(\Madj2k\ShopwareConnector\Domain\Model\Category $category): void
+    {
+        $this->categories->detach($category);
+    }
+
+    /**
+     * Set categories
+     *
+     * @param ObjectStorage<\Madj2k\ShopwareConnector\Domain\Model\Category> $categories
+     * @return void
+     */
+    public function setCategories(ObjectStorage $categories): void
+    {
+        $this->categories = $categories;
+    }
+
+
+    /**
+     * Get properties
+     *
+     * @return ObjectStorage<\Madj2k\ShopwareConnector\Domain\Model\Property>
+     */
+    public function getProperties(): ObjectStorage
+    {
+        return $this->properties;
+    }
+
+
+    /**
+     * Set properties
+     *
+     * @param ObjectStorage<\Madj2k\ShopwareConnector\Domain\Model\Property> $properties
+     * @return void
+     */
+    public function setProperties(ObjectStorage $properties): void
+    {
+        $this->properties = $properties;
+    }
+
+
+    /**
+     * Adds a Property to the properties ObjectStorage.
+     *
+     * @param \Madj2k\ShopwareConnector\Domain\Model\Property $property
+     * @return void
+     */
+    public function addProperty(\Madj2k\ShopwareConnector\Domain\Model\Property $property): void
+    {
+        $this->properties->attach($property);
+    }
+
+
+    /**
+     * Removes a Property from the properties ObjectStorage.
+     *
+     * @param \Madj2k\ShopwareConnector\Domain\Model\Property $property
+     * @return void
+     */
+    public function removeProperty(\Madj2k\ShopwareConnector\Domain\Model\Property $property): void
+    {
+        $this->properties->detach($property);
     }
 }
