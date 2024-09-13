@@ -313,6 +313,10 @@
 				<source>Properties</source>
 				<target>Eigenschaften</target>
 			</trans-unit>
+			<trans-unit id="tx_shopwareconnector_domain_model_product.media">
+				<source>Media</source>
+				<target>Media</target>
+			</trans-unit>
 
 
 			<!-- tx_shopwareconnector_domain_model_property -->

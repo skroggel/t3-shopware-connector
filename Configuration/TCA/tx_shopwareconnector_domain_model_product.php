@@ -51,13 +51,13 @@ return [
     ],
     'palettes' => [
         'general' => ['showitem' => 'name, is_new, --linebreak--, description, --linebreak--, product_number, ean', 'label' => $ll . 'palette.general'],
-        'relations' => ['showitem' => 'categories, --linebreak--, properties', 'label' => $ll . 'palette.relations'],
+        'relations' => ['showitem' => 'parent, --linebreak--, categories, --linebreak--, properties', 'label' => $ll . 'palette.relations'],
         'pricing' => ['showitem' => 'price, --linebreak--, calculated_price', 'label' => $ll . 'palette.pricing'],
         'stock' => ['showitem' => 'available,--linebreak--, available_stock, stock, restock_time, --linebreak--, purchase_steps, max_purchase, min_purchase, --linebreak--, purchase_unit', 'label' => $ll . 'palette.stock'],
         'shipping' => ['showitem' => 'shipping_free, --linebreak--, delivery_time, --linebreak--, pack_unit, pack_unit_plural', 'label' => $ll . 'palette.shipping'],
         'dimensions' => ['showitem' => 'weight, width, height, length', 'label' => $ll . 'palette.dimensions'],
         'meta' => ['showitem' => 'meta_title, meta_description, meta_keywords, tags', 'label' => $ll . 'palette.meta'],
-        'media' => ['showitem' => 'cover, --linebreak--, cover_mime_type', 'label' => $ll . 'palette.media'],
+        'media' => ['showitem' => 'cover, --linebreak--, cover_mime_type, --linebreak--, media', 'label' => $ll . 'palette.media'],
         'shopware' => ['showitem' => 'sw_id, --linebreak--, sw_language_id, --linebreak--, sw_manufacturer_id', 'label' => $ll . 'palette.shopware'],
     ],
     'columns' => [
@@ -174,6 +174,9 @@ return [
                 'foreign_table_where' => 'AND tx_shopwareconnector_domain_model_product.pid=###CURRENT_PID### AND tx_shopwareconnector_domain_model_product.sys_language_uid IN (-1,0)',
                 'minitems' => 0,
                 'maxitems' => 1,
+                'items' => [
+                    ['', 0],
+                ],
             ],
         ],
         'product_number' => [
@@ -518,6 +521,20 @@ return [
                 'renderType' => 'selectMultipleSideBySide',
                 'foreign_table' => 'tx_shopwareconnector_domain_model_property',
                 'foreign_table_where' => 'AND tx_shopwareconnector_domain_model_property.pid=###CURRENT_PID### AND tx_shopwareconnector_domain_model_property.sys_language_uid IN (-1,0)',
+                'minitems' => 0,
+                'maxitems' => 99999,
+            ],
+        ],
+        'media' => [
+            'exclude' => false,
+            'label' => $ll . 'tx_shopwareconnector_domain_model_product.media',
+            'config' => [
+                'readOnly' => true,
+                'type' => 'select',
+                'renderType' => 'selectMultipleSideBySide',
+                'foreign_table' => 'tx_shopwareconnector_domain_model_media',
+                'foreign_table_where' => 'AND tx_shopwareconnector_domain_model_media.pid=###CURRENT_PID### AND tx_shopwareconnector_domain_model_media.sys_language_uid IN (-1,0)',
+                'MM' => 'tx_shopwareconnector_product_media_mm',
                 'minitems' => 0,
                 'maxitems' => 99999,
             ],

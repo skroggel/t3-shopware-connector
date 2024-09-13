@@ -137,10 +137,10 @@ class ShopwareImporterTest extends FunctionalTestCase
 
 
         $mmConnection = GeneralUtility::makeInstance(ConnectionPool::class)
-            ->getConnectionForTable('tx_shopwareconnector_product_category_mm');
+            ->getConnectionForTable('tx_shopwareconnector_product_categories_mm');
         $rows = $mmConnection->select(
             ['uid_foreign'],
-            'tx_shopwareconnector_product_category_mm',
+            'tx_shopwareconnector_product_categories_mm',
             ['uid_local' => $productUid]
         )->fetchAllAssociative();
 
@@ -205,12 +205,13 @@ class ShopwareImporterTest extends FunctionalTestCase
     /**
      * @test
      *
-     * Scenario: Handle one-to-many associations correctly
-     * Given the Shopware API returns a product with properties
-     * When the importer runs
-     * Then the product and its properties should be correctly imported and linked
+     * Scenario: Import products with parent-child relationships
+     * Given the API provides a list of products with child products associated to a parent product
+     * When the import process is executed
+     * Then the parent field in the product table should be updated for each child product
+     * And the parent field should contain the UID of the parent product
      */
-    public function itHandlesOneToManyAssociationsCorrectly(): void
+    public function itHandlesParentToChildRelationshipCorrectly(): void
     {
         // Mock API response for product with properties
         $apiResponse = Yaml::parseFile(self::FIXTURE_PATH . 'ApiResponseWithOneToMany.yaml');
@@ -223,30 +224,93 @@ class ShopwareImporterTest extends FunctionalTestCase
         // Assert the import was successful
         $this->assertTrue($result);
 
-        // Check if properties were correctly associated with product by product number
+        // Verify that the parent field has been set correctly for each child
         $connection = GeneralUtility::makeInstance(ConnectionPool::class)
             ->getConnectionForTable('tx_shopwareconnector_domain_model_product');
-        $productRow = $connection->select(
+
+        // Fetch the UID of the Parent Product
+        $parentProduct = $connection->select(
             ['uid'],
+            'tx_shopwareconnector_domain_model_product',
+            ['product_number' => '12345'] // Shopware ID of the Parent Product
+        )->fetchAssociative();
+
+        // Ensure the parent product exists in the database
+        $this->assertNotEmpty($parentProduct);
+        $parentUid = $parentProduct['uid'];
+
+        // Verify parent field for Child Product 1
+        $childProduct1 = $connection->select(
+            ['parent'],
+            'tx_shopwareconnector_domain_model_product',
+            ['product_number' => '67890'] // Shopware ID of Child Product 1
+        )->fetchAssociative();
+        $this->assertEquals($parentUid, $childProduct1['parent']); // Check that parent is set correctly
+
+        // Verify parent field for Child Product 2
+        $childProduct2 = $connection->select(
+            ['parent'],
+            'tx_shopwareconnector_domain_model_product',
+            ['product_number' => '54321'] // Shopware ID of Child Product 2
+        )->fetchAssociative();
+        $this->assertEquals($parentUid, $childProduct2['parent']); // Check that parent is set correctly
+    }
+
+
+
+    /**
+     * @test
+     *
+     * Scenario: Import products with associated properties
+     * Given the API provides a list of products with associated properties
+     * When the import process is executed
+     * Then the properties field in the product table should be updated with the UIDs of the related properties
+     * And the UIDs should be stored as a comma-separated list in the properties field
+     */
+    public function itHandlesOneToManyRelationshipCorrectly(): void
+    {
+        // Mock API response for product with properties
+        $apiResponse = Yaml::parseFile(self::FIXTURE_PATH . 'ApiResponseWithOneToMany.yaml');
+        $this->shopwareApiService->method('fetchFromApi')
+            ->willReturn($apiResponse);
+
+        // Execute the import
+        $result = $this->shopwareImporter->executeImport();
+
+        // Assert the import was successful
+        $this->assertTrue($result);
+
+        // Verify that the properties field has been updated with the correct UIDs (comma-separated list)
+        $connection = GeneralUtility::makeInstance(ConnectionPool::class)
+            ->getConnectionForTable('tx_shopwareconnector_domain_model_property');
+
+        // Fetch the UID of the first property
+        $property1 = $connection->select(
+            ['uid'],
+            'tx_shopwareconnector_domain_model_property',
+            ['sw_id' => 'prop123']
+        )->fetchAssociative();
+
+        // Fetch the UID of the second property
+        $property2 = $connection->select(
+            ['uid'],
+            'tx_shopwareconnector_domain_model_property',
+            ['sw_id' => 'prop456']
+        )->fetchAssociative();
+
+        // Now check the product table for the properties field, which should contain the comma-separated UIDs of the properties
+        $productConnection = GeneralUtility::makeInstance(ConnectionPool::class)
+            ->getConnectionForTable('tx_shopwareconnector_domain_model_product');
+
+        $row = $productConnection->select(
+            ['properties'],
             'tx_shopwareconnector_domain_model_product',
             ['product_number' => '12345']
         )->fetchAssociative();
 
-        $productUid = $productRow['uid'];
-        $propertyConnection = GeneralUtility::makeInstance(ConnectionPool::class)
-            ->getConnectionForTable('tx_shopwareconnector_domain_model_property');
-        $propertyRows = $propertyConnection->select(
-            ['name'],
-            'tx_shopwareconnector_domain_model_property',
-            ['product_uid' => $productUid]
-        )->fetchAllAssociative();
-
-        $this->assertNotEmpty($propertyRows);
-
-        // Verify the property names
-        foreach ($propertyRows as $propertyRow) {
-            $this->assertContains($propertyRow['name'], ['Size', 'Color']);
-        }
+        // Verify that the properties field contains the correct UIDs
+        $expectedProperties = implode(',', [(int)$property1['uid'], (int)$property2['uid']]);
+        $this->assertEquals($expectedProperties, $row['properties']);
     }
 
 

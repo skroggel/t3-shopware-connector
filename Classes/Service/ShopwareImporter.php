@@ -57,6 +57,12 @@ class ShopwareImporter implements LoggerAwareInterface
 
 
     /**
+     * @var int
+     */
+    protected int $pid = 0;
+
+
+    /**
      * Constructor.
      *
      * @param ShopwareApiService $shopwareApiService
@@ -120,6 +126,25 @@ class ShopwareImporter implements LoggerAwareInterface
     public function setSwLanguageId(string $swLanguageId): void
     {
         $this->swLanguageId = $swLanguageId;
+    }
+
+
+    /**
+     * @return int
+     */
+    public function getPid(): int
+    {
+        return $this->pid;
+    }
+
+
+    /**
+     * @param int $pid
+     * @return void
+     */
+    public function setPid(int $pid): void
+    {
+        $this->pid = $pid;
     }
 
 
@@ -273,17 +298,16 @@ class ShopwareImporter implements LoggerAwareInterface
             )->fetchAssociative();
 
             if ($existingEntity) {
+
+                $entityUid = (int)$existingEntity['uid'];
                 if ($existingEntity['checksum'] !== $mappedData['checksum']) {
                     $connection->update(
                         $table,
                         $mappedData,
                         [
-                            'uid' => (int)$existingEntity['uid']
+                            'uid' => $entityUid
                         ]
                     );
-                    $entityUid = (int)$existingEntity['uid'];
-                } else {
-                    $entityUid = (int)$existingEntity['uid'];
                 }
 
             } else {
@@ -417,7 +441,7 @@ class ShopwareImporter implements LoggerAwareInterface
 
             // Calculate sum of relationships for local table
             $localCount = $connection->count('*', $mmTable, ['uid_local' => $entityUid]);
-            $this->updateManyToManyCounter($localTable, $localField, $localCount, $entityUid);
+            $this->updateManyToManyCounter($localTable, $entityUid, $localField, $localCount);
 
             $connection->commit();
 
@@ -443,13 +467,13 @@ class ShopwareImporter implements LoggerAwareInterface
      * Update the sum field of a given entity.
      *
      * @param string $table
+     * @param int $entityUid
      * @param string $sumField
      * @param int $count
-     * @param int $entityUid
      * @return void
      * @internal
      */
-    protected function updateManyToManyCounter(string $table, string $sumField, int $count, int $entityUid): void
+    protected function updateManyToManyCounter(string $table, int $entityUid, string $sumField, int $count): void
     {
         $connection = GeneralUtility::makeInstance(ConnectionPool::class)
             ->getConnectionForTable($table);
@@ -462,7 +486,7 @@ class ShopwareImporter implements LoggerAwareInterface
 
 
     /**
-     * Imports one-to-many associations, such as product children or properties.
+     * Imports one-to-many associations, such as properties.
      *
      * @param array $associationConfig
      * @param array $associationData
@@ -482,9 +506,10 @@ class ShopwareImporter implements LoggerAwareInterface
     ): void {
 
         $reference = $associationConfig['reference'];
-        $localField = $associationConfig['localField'];
+        $localField = $associationConfig['localField'] ?? null;
+        $foreignField = $associationConfig['foreignField'] ?? null;
 
-        if (!$localField || !$reference){
+        if ((!$localField && !$foreignField) || !$reference){
             throw new Exception(
                 sprintf(
                     'Missing configuration parameters. Can not import one-to-many associations for type "%s".',
@@ -494,15 +519,19 @@ class ShopwareImporter implements LoggerAwareInterface
             );
         }
 
-        $mappingConfig = $this->getMappingConfig($reference);
-        $uniqueKeyField = $mappingConfig['uniqueKeyField'] ?? 'sw_id';
-        $uniqueLanguageField = $mappingConfig['uniqueLanguageField'] ?? 'sw_language_id';
-        $table = $mappingConfig['table'];
+        $localMappingConfig = $this->getMappingConfig($entityType);
+        $localTable = $localMappingConfig['table'];
 
-        if (!$table){
+        $foreignMappingConfig = $this->getMappingConfig($reference);
+        $foreignTable = $foreignMappingConfig['table'];
+
+        $uniqueKeyField = $foreignMappingConfig['uniqueKeyField'] ?? 'sw_id';
+        $uniqueLanguageField = $foreignMappingConfig['uniqueLanguageField'] ?? 'sw_language_id';
+
+        if (!$foreignTable || !$localTable){
             throw new Exception(
                 sprintf(
-                    'Missing table parameter for type "%s".',
+                    'Missing table parameters. Can not import one-to-many associations for type "%s".',
                     $reference
                 ),
                 1725689184
@@ -510,45 +539,59 @@ class ShopwareImporter implements LoggerAwareInterface
         }
 
         $connection = GeneralUtility::makeInstance(ConnectionPool::class)
-            ->getConnectionForTable($table);
+            ->getConnectionForTable($foreignTable);
 
         try {
             $connection->beginTransaction();
 
+            $foreignEntityUids = [];
             foreach ($associationData as $item) {
 
-                $mappedData = $this->mapData($item, $mappingConfig);
+                $mappedData = $this->mapData($item, $foreignMappingConfig);
 
-                // add localField
-                $mappedData[$localField] = $entityUid;
-
-                $existingRecord = $connection->select(
-                    [$uniqueKeyField, 'checksum'],
-                    $table,
+                $existingEntity = $connection->select(
+                    ['uid', 'checksum'],
+                    $foreignTable,
                     [
-                        $localField => $entityUid,
                         $uniqueKeyField => $mappedData[$uniqueKeyField],
                         $uniqueLanguageField => $this->getSwLanguageId()
                     ]
                 )->fetchAssociative();
 
-                if ($existingRecord) {
+                if ($existingEntity) {
 
-                    if ($existingRecord['checksum'] !== $mappedData['checksum']) {
+                    $foreignEntityUid = (int)$existingEntity['uid'];
+                    if ($existingEntity['checksum'] !== $mappedData['checksum']) {
                         $connection->update(
-                            $table,
+                            $foreignTable,
                             $mappedData,
                             [
-                                $uniqueKeyField => (int)$existingRecord[$uniqueKeyField],
-                                $uniqueLanguageField => $uniqueLanguageField
+                                'uid' => $foreignEntityUid
                             ]
                         );
                     }
+
                 } else {
                     $connection->insert(
-                        $table,
+                        $foreignTable,
                         $mappedData
                     );
+                    $foreignEntityUid  = (int)$connection->lastInsertId();
+                }
+
+                $foreignEntityUids[] = $foreignEntityUid;
+            }
+
+            if ($localField) {
+
+                //  Update the relation field in the local table with a comma-separated list
+                $this->updateOneToManyRelationField($localTable, $entityUid, $localField, $foreignEntityUids);
+
+            } elseif ($foreignField) {
+
+                // Update the parent reference field in the foreign table
+                foreach ($foreignEntityUids as $foreignEntityUid) {
+                    $this->updateParentRelationField($foreignTable, $foreignEntityUid, $foreignField, $entityUid);
                 }
             }
 
@@ -560,13 +603,60 @@ class ShopwareImporter implements LoggerAwareInterface
                 sprintf(
                     'Error while processing association to %s from table %s for %s: %s',
                     $reference,
-                    $table,
+                    $foreignTable,
                     $entityUid,
                     $e->getMessage()
                 )
             );
             throw $e;
         }
+    }
+
+
+
+    /**
+     * Update the relation field of a given entity for a one-to-many relationship.
+     *
+     * @param string $table
+     * @param int $entityUid
+     * @param string $relationField
+     * @param array $relations
+     * @return void
+     * @internal
+     */
+    protected function updateOneToManyRelationField(string $table, int $entityUid, string $relationField, array $relations): void
+    {
+        $connection = GeneralUtility::makeInstance(ConnectionPool::class)
+            ->getConnectionForTable($table);
+
+        $connection->update(
+            $table,
+            [$relationField => implode(',', $relations)],
+            ['uid' => $entityUid]
+        );
+    }
+
+
+    /**
+     * Update the parent reference field in the foreign table for a many-to-one relationship.
+     *
+     * @param string $table
+     * @param int $entityUid
+     * @param string $relationField
+     * @param int $parentUid
+     * @return void
+     * @internal
+     */
+    protected function updateParentRelationField(string $table, int $entityUid, string $relationField, int $parentUid): void
+    {
+        $connection = GeneralUtility::makeInstance(ConnectionPool::class)
+            ->getConnectionForTable($table);
+
+        $connection->update(
+            $table,
+            [$relationField => $parentUid],
+            ['uid' => $entityUid]
+        );
     }
 
 
@@ -590,8 +680,9 @@ class ShopwareImporter implements LoggerAwareInterface
             }
         }
 
-        // add checksum and language ID
+        // add checksum, language ID and pid
         $mappedData['sw_language_id'] = $this->getSwLanguageId();
+        $mappedData['pid'] = $this->getPId();
         $mappedData['checksum'] = md5(json_encode($mappedData));
 
         return $mappedData;

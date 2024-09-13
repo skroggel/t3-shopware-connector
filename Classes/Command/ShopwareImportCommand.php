@@ -60,6 +60,11 @@ class ShopwareImportCommand extends Command
                 'The sw-language-id for the import.',
                 // '0191c7b547e37dbfab666ce0f50424e7'
             )
+            ->addArgument(
+                'pid',
+                InputArgument::REQUIRED,
+                'The pid for the import.',
+            )
             ->setHelp('This command allows you to import categories and products from Shopware into TYPO3.');
 
     }
@@ -77,8 +82,10 @@ class ShopwareImportCommand extends Command
         try {
 
             $swLanguageId = $input->getArgument('swLanguageId');
+            $pid = $input->getArgument('pid');
 
             $this->importer->setSwLanguageId($swLanguageId);
+            $this->importer->setPid(intval($pid));
             $importSuccess = $this->importer->executeImport();
 
             if ($importSuccess) {

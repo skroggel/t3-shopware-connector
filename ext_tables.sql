@@ -20,7 +20,7 @@ CREATE TABLE tx_shopwareconnector_domain_model_category
 	PRIMARY KEY (uid),
 	KEY            parent (pid),
 	KEY            sw_id (sw_id),
-	UNIQUE KEY unique_category (sw_id, sw_language_id)
+	UNIQUE KEY unique_category (pid, sw_id, sw_language_id)
 );
 
 
@@ -47,7 +47,7 @@ CREATE TABLE tx_shopwareconnector_domain_model_media
 	PRIMARY KEY (uid),
 	KEY            parent (pid),
 	KEY            sw_id (sw_id),
-	UNIQUE KEY unique_media (sw_id, sw_language_id)
+	UNIQUE KEY unique_media (pid, sw_id, sw_language_id)
 );
 
 
@@ -103,11 +103,12 @@ CREATE TABLE tx_shopwareconnector_domain_model_product
 
 	categories         int(11) DEFAULT '0' NOT NULL,
 	properties         text                  DEFAULT '',
+	media              int(11) DEFAULT '0' NOT NULL,
 
 	PRIMARY KEY (uid),
 	KEY                parent (pid),
 	KEY                sw_id (sw_id),
-	UNIQUE KEY unique_product (sw_id, sw_language_id)
+	UNIQUE KEY unique_product (pid, sw_id, sw_language_id, product_number)
 
 );
 
@@ -121,7 +122,6 @@ CREATE TABLE tx_shopwareconnector_domain_model_property
 
 	sw_id          varchar(255) NOT NULL DEFAULT '',
 	sw_language_id varchar(255) NOT NULL DEFAULT '',
-	product        varchar(255) NOT NULL DEFAULT '',
 	checksum       varchar(255)          DEFAULT '' NOT NULL,
 
 	name           varchar(255) NOT NULL DEFAULT '',
@@ -131,12 +131,21 @@ CREATE TABLE tx_shopwareconnector_domain_model_property
 
 	PRIMARY KEY (uid),
 	KEY            parent (pid),
-	KEY            product_uid (product_uid),
-	UNIQUE KEY unique_property (product_uid, sw_id, sw_language_id)
+	UNIQUE KEY unique_property (pid, sw_id, sw_language_id)
 
 );
 
 CREATE TABLE tx_shopwareconnector_product_categories_mm
+(
+	uid_local   int(11) NOT NULL,
+	uid_foreign int(11) NOT NULL,
+	sorting     int(11) DEFAULT '0' NOT NULL,
+	KEY         uid_local (uid_local),
+	KEY         uid_foreign (uid_foreign)
+);
+
+
+CREATE TABLE tx_shopwareconnector_product_media_mm
 (
 	uid_local   int(11) NOT NULL,
 	uid_foreign int(11) NOT NULL,

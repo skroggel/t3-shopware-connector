@@ -6,7 +6,22 @@ elements:
     price: 49.99
     stock: 150
     active: true
-    properties:
+    children: # Children relationship
+      - id: '67890'
+        productNumber: '67890'
+        translated:
+          name: 'Child Product 1'
+        price: 19.99
+        stock: 50
+        active: true
+      - id: '54321'
+        productNumber: '54321'
+        translated:
+          name: 'Child Product 2'
+        price: 29.99
+        stock: 30
+        active: true
+    properties: # Properties (One-to-Many relationship)
       - id: 'prop123'
         translated:
           name: 'Size'

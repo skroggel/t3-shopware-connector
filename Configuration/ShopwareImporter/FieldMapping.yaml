@@ -160,23 +160,23 @@ product:
     children:
       reference: 'product'
       apiField: 'children'
-      localField: 'parent'
+      foreignField: 'parent'
     categories:
       reference: 'category'
       apiField: 'categories'
       localField: 'categories'
       foreignField: 'products'
-      mmTable: 'tx_shopwareconnector_product_category_mm'
+      mmTable: 'tx_shopwareconnector_product_categories_mm'
     properties:
       reference: 'property'
       apiField: 'properties'
-      localField: 'product'
+      localField: 'properties'
     media:
       reference: 'media'
       apiField: 'media'
       localField: 'media'
       foreignField: 'products'
-      mmTable: 'tx_shopwareconnector_product_downloads_mm'
+      mmTable: 'tx_shopwareconnector_product_media_mm'
 
 property:
   table: 'tx_shopwareconnector_domain_model_property'
