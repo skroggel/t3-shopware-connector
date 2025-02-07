@@ -27,6 +27,28 @@ call_user_func(
         }
 
         //=================================================================
+        // Add form configuration
+        //=================================================================
+        \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addTypoScript(
+            $extensionKey,
+            'setup',
+            'module.tx_form {
+                settings {
+                    yamlConfigurations {
+                        1732885676 = EXT:' . $extensionKey . '/Configuration/Yaml/FormSetup.yaml
+                    }
+                }
+            }
+            plugin.tx_form {
+                settings {
+                    yamlConfigurations {
+                        1732885676 = EXT:' . $extensionKey . '/Configuration/Yaml/FormSetup.yaml
+                    }
+                }
+            }'
+        );
+
+        //=================================================================
         // Register Logger
         //=================================================================
         $GLOBALS['TYPO3_CONF_VARS']['LOG']['Madj2k']['ShopwareConnector']['writerConfiguration'] = [

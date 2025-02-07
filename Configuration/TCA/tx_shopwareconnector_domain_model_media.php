@@ -37,9 +37,18 @@ return [
         ],
     ],
     'palettes' => [
-        'general' => ['showitem' => 'title, --linebreak--,alternative, --linebreak--, file_name, --linebreak--, url', 'label' => $ll . 'palette.general'],
-        'meta' => ['showitem' => 'mime_type, file_extension, file_size, sorting', 'label' => $ll . 'palette.meta'],
-        'shopware' => ['showitem' => 'sw_id, --linebreak--, sw_language_id', 'label' => $ll . 'palette.shopware'],
+        'general' => [
+            'label' => $ll . 'palette.general',
+            'showitem' => 'title, --linebreak--,alternative, --linebreak--, file_name, --linebreak--, url',
+        ],
+        'meta' => [
+            'label' => $ll . 'palette.meta',
+            'showitem' => 'mime_type, file_extension, file_size, sorting',
+        ],
+        'shopware' => [
+            'label' => $ll . 'palette.shopware',
+            'showitem' => 'sw_id, --linebreak--, sw_language_id',
+        ],
     ],
     'columns' => [
         'hidden' => [

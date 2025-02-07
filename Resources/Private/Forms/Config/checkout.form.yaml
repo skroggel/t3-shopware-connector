@@ -1,0 +1,114 @@
+type: Form
+identifier: checkout
+label: "Checkout"
+prototypeName: standard
+renderingOptions:
+  fluidAdditionalAttributes:
+    novalidate: "novalidate"
+  formNavigation:
+    btnSubmitClassAttribute: cta cta-small
+
+renderables:
+  step-contact:
+    identifier: step-contact
+    type: Page
+    renderables:
+      contact-uid:
+        identifier: contact-uid
+        type: Hidden
+
+      fieldset-contact:
+        identifier: fieldset-contact
+        type: Fieldset
+        renderables:
+          row-names:
+            identifier: row-names
+            type: GridRow
+            renderables:
+              first-name:
+                identifier: first-name
+                type: Text
+                validators:
+                  - identifier: NotEmpty
+              last-name:
+                identifier: last-name
+                type: Text
+                validators:
+                  - identifier: NotEmpty
+
+          row-company-email:
+            identifier: row-company-email
+            type: GridRow
+            renderables:
+              company:
+                identifier: company
+                type: Text
+              email:
+                identifier: email
+                type: TextEmail
+                validators:
+                  - identifier: BetterEmailAddress
+                  - identifier: NotEmpty
+
+          row-telephone-country:
+            identifier: row-telephone-country
+            type: GridRow
+            renderables:
+              telephone:
+                identifier: telephone
+                type: Telephone
+                validators:
+                  - identifier: Phone
+                    options:
+                      allowLeadingPlus: 1
+              country:
+                identifier: country
+                type: Text
+
+          row-message:
+            identifier: row-message
+            type: GridRow
+            renderables:
+              message:
+                identifier: message
+                type: Textarea
+                validators:
+                  - identifier: NotEmpty
+
+      consent-container:
+        identifier: consent-container
+        type: ConsentContainer
+        renderables:
+          row-consent:
+            identifier: row-consent
+            type: GridRow
+            renderables:
+              consent-privacy-policy:
+                identifier: consent-privacy-policy
+                type: ConsentCheckbox
+                properties:
+                  hideText: 1
+                  privacyPolicyPid: 36 # fallback
+                validators:
+                  - identifier: NotEmpty
+
+        #  row-captcha:
+        #    identifier: row-captcha
+        #    type: GridRow
+        #    renderables:
+        #      captcha:
+        #        identifier: hcaptcha
+        #        type: Hcaptcha
+        #        validators:
+        #          - identifier: Hcaptcha
+
+finishers:
+
+  emailToReceiver:
+    identifier: EmailToReceiver
+
+  emailToSender:
+    identifier: EmailToSender
+
+  confirmation:
+    identifier: ConfirmationMessage

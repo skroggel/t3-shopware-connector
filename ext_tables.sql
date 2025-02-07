@@ -153,3 +153,26 @@ CREATE TABLE tx_shopwareconnector_product_media_mm
 	KEY         uid_local (uid_local),
 	KEY         uid_foreign (uid_foreign)
 );
+
+
+CREATE TABLE tx_shopwareconnector_domain_model_basket
+(
+	uid            int(11) NOT NULL auto_increment,
+	pid            int(11) DEFAULT '0' NOT NULL,
+	crdate         int(11) DEFAULT '0' NOT NULL,
+	tstamp         int(11) DEFAULT '0' NOT NULL,
+
+	sw_id          varchar(255) NOT NULL DEFAULT '',
+	sw_language_id varchar(255) NOT NULL DEFAULT '',
+	checksum       varchar(255)          DEFAULT '' NOT NULL,
+
+	name           varchar(255) NOT NULL DEFAULT '',
+	value          varchar(255) NOT NULL DEFAULT '',
+	group_name     varchar(255) NOT NULL DEFAULT '',
+	sorting        int(11) DEFAULT '0' NOT NULL,
+
+	PRIMARY KEY (uid),
+	KEY            parent (pid),
+	UNIQUE KEY unique_property (pid, sw_id, sw_language_id)
+
+);

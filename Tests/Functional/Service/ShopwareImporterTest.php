@@ -1,5 +1,6 @@
 <?php
 declare(strict_types=1);
+namespace Madj2k\ShopwareConnector\Tests\Functional\Service;
 
 /**
  * This file is part of the TYPO3 CMS project.
@@ -10,8 +11,6 @@ declare(strict_types=1);
  *
  * The TYPO3 project - inspiring people to share!
  */
-
-namespace Madj2k\ShopwareConnector\Tests\Functional\Service;
 
 use Madj2k\CoreExtended\Utility\GeneralUtility;
 use Madj2k\ShopwareConnector\Service\ShopwareImporter;

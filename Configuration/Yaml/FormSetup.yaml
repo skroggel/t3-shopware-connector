@@ -1,0 +1,34 @@
+imports:
+ - { resource: "EXT:forminator/Configuration/Yaml/FormElements/Hcaptcha.yaml" }
+
+TYPO3:
+  CMS:
+    Form:
+      persistenceManager:
+        allowedExtensionPaths:
+          1732885676: "EXT:shopware_connector/Resources/Private/Forms/Config"
+      prototypes:
+        standard:
+
+          formEngine:
+            translationFiles:
+              1732885676: "EXT:shopware_connector/Resources/Private/Language/locallang_be.xlf"
+
+          formElementsDefinition:
+            Form:
+              renderingOptions:
+                translation:
+                  translationFiles:
+                    1732885676: "EXT:shopware_connector/Resources/Private/Language/locallang.xlf"
+                templateRootPaths:
+                  1732885676: "EXT:shopware_connector/Resources/Private/Forms/Templates/"
+                partialRootPaths:
+                  1732885676: "EXT:shopware_connector/Resources/Private/Forms/Partials/"
+                fluidAdditionalAttributes:
+                  novalidate: "novalidate"
+
+          finishersDefinition:
+            ConfirmationMessage:
+              options:
+                templateRootPaths:
+                  1732885676: 'EXT:shopware_connector/Resources/Private/Forms/Templates/Finishers/ConfirmationMessage/'

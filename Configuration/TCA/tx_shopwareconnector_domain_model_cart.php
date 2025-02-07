@@ -3,7 +3,7 @@
 $ll = 'LLL:EXT:shopware_connector/Resources/Private/Language/locallang_db.xlf:';
 return [
     'ctrl' => [
-        'title' => $ll . 'tx_shopwareconnector_domain_model_property',
+        'title' => $ll . 'tx_shopwareconnector_domain_model_cart',
         'label' => 'name',
         'tstamp' => 'tstamp',
         'crdate' => 'crdate',
@@ -19,7 +19,7 @@ return [
             'starttime' => 'starttime',
             'endtime' => 'endtime',
         ],
-        'iconfile' => 'EXT:shopware_connector/Resources/Public/Icons/tx_shopwareconnector_domain_model_property.svg',
+        'iconfile' => 'EXT:shopware_connector/Resources/Public/Icons/tx_shopwareconnector_domain_model_cart.svg',
         'searchFields' => 'name, value, group_name',
     ],
     'types' => [
@@ -37,11 +37,21 @@ return [
     'palettes' => [
         'general' => [
             'label' => $ll . 'palette.general',
-            'showitem' => ' name, --linebreak--, value, --linebreak--, group_name, --linebreak--, sorting',
+            'showitem' => '
+                name,
+                --linebreak--,
+                value,
+                --linebreak--,
+                group_name,
+                --linebreak--,
+                sorting',
         ],
         'shopware' => [
             'label' => $ll . 'palette.shopware',
-            'showitem' => 'sw_id, --linebreak--, sw_language_id',
+            'showitem' => '
+                sw_id,
+                --linebreak--,
+                sw_language_id',
         ],
     ],
     'columns' => [
@@ -95,8 +105,8 @@ return [
 				'readOnly' => true,
                 'type' => 'select',
                 'renderType' => 'selectSingle',
-                'foreign_table' => 'tx_shopwareconnector_domain_model_property',
-                'foreign_table_where' => 'AND tx_shopwareconnector_domain_model_property.pid=###CURRENT_PID### AND tx_shopwareconnector_domain_model_property.sys_language_uid IN (-1,0)',
+                'foreign_table' => 'tx_shopwareconnector_domain_model_cart',
+                'foreign_table_where' => 'AND tx_shopwareconnector_domain_model_cart.pid=###CURRENT_PID### AND tx_shopwareconnector_domain_model_cart.sys_language_uid IN (-1,0)',
                 'items' => [
                     ['', 0],
                 ],
@@ -111,7 +121,7 @@ return [
         'shopware_id' => [
             'exclude' => false,
             'readOnly' => true,
-            'label' => $ll . 'tx_shopwareconnector_domain_model_property.shopware_id',
+            'label' => $ll . 'tx_shopwareconnector_domain_model_cart.shopware_id',
             'config' => [
 				'readOnly' => true,
                 'type' => 'input',
@@ -122,7 +132,7 @@ return [
         'sw_language_id' => [
             'exclude' => false,
             'readOnly' => true,
-            'label' => $ll . 'tx_shopwareconnector_domain_model_property.sw_language_id',
+            'label' => $ll . 'tx_shopwareconnector_domain_model_cart.sw_language_id',
             'config' => [
 				'readOnly' => true,
                 'type' => 'input',
@@ -138,7 +148,7 @@ return [
         ],
         'name' => [
             'exclude' => false,
-            'label' => $ll . 'tx_shopwareconnector_domain_model_property.name',
+            'label' => $ll . 'tx_shopwareconnector_domain_model_cart.name',
             'config' => [
 				'readOnly' => true,
                 'type' => 'input',
@@ -148,7 +158,7 @@ return [
         ],
         'value' => [
             'exclude' => false,
-            'label' => $ll . 'tx_shopwareconnector_domain_model_property.value',
+            'label' => $ll . 'tx_shopwareconnector_domain_model_cart.value',
             'config' => [
 				'readOnly' => true,
                 'type' => 'input',
@@ -158,7 +168,7 @@ return [
         ],
         'group_name' => [
             'exclude' => false,
-            'label' => $ll . 'tx_shopwareconnector_domain_model_property.group_name',
+            'label' => $ll . 'tx_shopwareconnector_domain_model_cart.group_name',
             'config' => [
 				'readOnly' => true,
                 'type' => 'input',
@@ -168,7 +178,7 @@ return [
         ],
         'sorting' => [
             'exclude' => false,
-            'label' => $ll . 'tx_shopwareconnector_domain_model_property.sorting',
+            'label' => $ll . 'tx_shopwareconnector_domain_model_cart.sorting',
             'config' => [
 				'readOnly' => true,
                 'type' => 'input',

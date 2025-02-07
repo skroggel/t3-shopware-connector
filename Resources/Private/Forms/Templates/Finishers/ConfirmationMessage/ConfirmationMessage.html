@@ -1,0 +1,24 @@
+<html
+	xmlns:f="http://typo3.org/ns/TYPO3/CMS/Fluid/ViewHelpers"
+	data-namespace-typo3-fluid="true">
+
+    <div class="form-feedback" id="{form.identifier}">
+        <f:if condition="{header}">
+            <h3 class="h3 headline">
+                {header -> f:format.htmlentitiesDecode()}
+            </h3>
+        </f:if>
+
+        <div class="alerts" role="alert">
+            <div class="alert alert-success">
+                {message -> f:format.html()}
+            </div>
+        </div>
+
+        <f:if condition="{link} && {linkText}">
+            <f:link.typolink parameter="{link}" class="cta cta-small mt-2">
+                {linkText}
+            </f:link.typolink>
+        </f:if>
+    </div>
+</html>

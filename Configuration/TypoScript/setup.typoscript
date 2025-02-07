@@ -49,3 +49,28 @@ module.tx_shopwareconnector {
         }
 	}
 }
+
+
+
+// ====================================================
+// Add configuration for forms
+//=====================================================
+plugin.tx_form {
+
+	view {
+
+		# Note that this configuration only affects the EXT:Form plugin
+		# template (form/Resources/Private/Frontend/Templates/Render.html)
+		templateRootPaths.1732885676 = EXT:shopware_connector/Resources/Private/Forms/Templates/
+	}
+
+    settings {
+         yamlConfigurations {
+            1732885676 = EXT:shopware_connector/Configuration/Yaml/FormSetup.yaml
+        }
+
+        formDefinitionOverrides {
+
+		}
+    }
+}

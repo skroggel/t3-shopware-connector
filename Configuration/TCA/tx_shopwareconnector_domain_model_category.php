@@ -39,10 +39,18 @@ return [
         ],
     ],
     'palettes' => [
-        'general' => ['showitem' => 'name, --linebreak--, slug, --linebreak--, description', 'label' => $ll . 'palette.general'],
-        'relations' => ['showitem' => 'parent', 'label' => $ll . 'palette.relations'],
-        'shopware' => ['showitem' => 'sw_id, --linebreak--, sw_language_id', 'label' => $ll . 'palette.shopware'],
-
+        'general' => [
+            'label' => $ll . 'palette.general',
+            'showitem' => 'name, --linebreak--, slug, --linebreak--, description',
+        ],
+        'relations' => [
+            'label' => $ll . 'palette.relations',
+            'showitem' => 'parent',
+        ],
+        'shopware' => [
+            'label' => $ll . 'palette.shopware',
+            'showitem' => 'sw_id, --linebreak--, sw_language_id',
+        ],
     ],
     'columns' => [
         'hidden' => [

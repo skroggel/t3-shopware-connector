@@ -50,15 +50,42 @@ return [
         ],
     ],
     'palettes' => [
-        'general' => ['showitem' => 'name, is_new, --linebreak--, description, --linebreak--, product_number, ean', 'label' => $ll . 'palette.general'],
-        'relations' => ['showitem' => 'parent, --linebreak--, categories, --linebreak--, properties', 'label' => $ll . 'palette.relations'],
-        'pricing' => ['showitem' => 'price, --linebreak--, calculated_price', 'label' => $ll . 'palette.pricing'],
-        'stock' => ['showitem' => 'available,--linebreak--, available_stock, stock, restock_time, --linebreak--, purchase_steps, max_purchase, min_purchase, --linebreak--, purchase_unit', 'label' => $ll . 'palette.stock'],
-        'shipping' => ['showitem' => 'shipping_free, --linebreak--, delivery_time, --linebreak--, pack_unit, pack_unit_plural', 'label' => $ll . 'palette.shipping'],
-        'dimensions' => ['showitem' => 'weight, width, height, length', 'label' => $ll . 'palette.dimensions'],
-        'meta' => ['showitem' => 'meta_title, meta_description, meta_keywords, tags', 'label' => $ll . 'palette.meta'],
-        'media' => ['showitem' => 'cover, --linebreak--, cover_mime_type, --linebreak--, media', 'label' => $ll . 'palette.media'],
-        'shopware' => ['showitem' => 'sw_id, --linebreak--, sw_language_id, --linebreak--, sw_manufacturer_id', 'label' => $ll . 'palette.shopware'],
+        'general' => [
+            'label' => $ll . 'palette.general',
+            'showitem' => 'name, is_new, --linebreak--, description, --linebreak--, product_number, ean'
+        ],
+        'relations' => [
+            'label' => $ll . 'palette.relations',
+            'showitem' => 'parent, --linebreak--, categories, --linebreak--, properties'
+        ],
+        'pricing' => [
+            'label' => $ll . 'palette.pricing',
+            'showitem' => 'price, --linebreak--, calculated_price',
+        ],
+        'stock' => [
+            'label' => $ll . 'palette.stock',
+            'showitem' => 'available,--linebreak--, available_stock, stock, restock_time, --linebreak--, purchase_steps, max_purchase, min_purchase, --linebreak--, purchase_unit'
+        ],
+        'shipping' => [
+            'label' => $ll . 'palette.shipping',
+            'showitem' => 'shipping_free, --linebreak--, delivery_time, --linebreak--, pack_unit, pack_unit_plural'
+        ],
+        'dimensions' => [
+            'label' => $ll . 'palette.dimensions',
+            'showitem' => 'weight, width, height, length'
+        ],
+        'meta' => [
+            'label' => $ll . 'palette.meta',
+            'showitem' => 'meta_title, meta_description, meta_keywords, tags'
+        ],
+        'media' => [
+            'label' => $ll . 'palette.media',
+            'showitem' => 'cover, --linebreak--, cover_mime_type, --linebreak--, media'
+        ],
+        'shopware' => [
+            'label' => $ll . 'palette.shopware',
+            'showitem' => 'sw_id, --linebreak--, sw_language_id, --linebreak--, sw_manufacturer_id'
+        ],
     ],
     'columns' => [
 
