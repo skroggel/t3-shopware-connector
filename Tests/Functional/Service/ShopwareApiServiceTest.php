@@ -1,6 +1,5 @@
 <?php
 declare(strict_types=1);
-namespace Madj2k\ShopwareConnector\Tests\Functional\Service;
 
 /**
  * This file is part of the TYPO3 CMS project.
@@ -12,292 +11,694 @@ namespace Madj2k\ShopwareConnector\Tests\Functional\Service;
  * The TYPO3 project - inspiring people to share!
  */
 
+namespace Madj2k\ShopwareConnector\Tests\Functional\Service;
+
+use Madj2k\ShopwareConnector\Exception;
+use Madj2k\ShopwareConnector\Service\ShopwareApiService;
+use PHPUnit\Framework\Attributes\Test;
+use PHPUnit\Framework\MockObject\MockObject;
+use Psr\Http\Message\ResponseInterface;
+use TYPO3\CMS\Core\Localization\Locale;
+use TYPO3\CMS\Core\Site\Entity\SiteLanguage;
+use TYPO3\CMS\Core\Site\SiteLanguageAwareInterface;
+use TYPO3\TestingFramework\Core\Functional\FunctionalTestCase;
 use TYPO3\CMS\Core\Cache\Frontend\FrontendInterface;
 use TYPO3\CMS\Core\Http\RequestFactory;
 use TYPO3\CMS\Core\Registry;
-use Madj2k\ShopwareConnector\Service\ShopwareApiService;
-use TYPO3\TestingFramework\Core\Functional\FunctionalTestCase;
-use Symfony\Component\Yaml\Yaml;
 use Psr\Log\NullLogger;
-use GuzzleHttp\Psr7\Response;
-use GuzzleHttp\Exception\RequestException;
-use GuzzleHttp\Psr7\Request;
 
 /**
- * Class ShopwareApiService
+ * Class ShopwareApiServiceTest
+ *
+ * Functional tests for ShopwareApiService
  *
  * @author Steffen Kroggel <developer@steffenkroggel.de>
+ * @copyright Steffen Kroggel <developer@steffenkroggel.de>
  * @package Madj2k_ShopwareConnector
  * @license http://www.gnu.org/licenses/gpl.html GNU General Public License, version 3 or later
  */
 class ShopwareApiServiceTest extends FunctionalTestCase
 {
 
-    protected const FIXTURE_PATH = __DIR__ . '/ShopwareApiService/Fixtures/';
-
-
     /**
-     * @var array
+     * @var \TYPO3\CMS\Core\Cache\Frontend\FrontendInterface|\PHPUnit\Framework\MockObject\MockObject
      */
-    protected $testExtensionsToLoad = [
-        'typo3conf/ext/shopware_connector',
-    ];
+    private FrontendInterface|MockObject $cacheMock;
 
 
     /**
-     * @var \Madj2k\ShopwareConnector\Service\ShopwareApiService|null
+     * @var \TYPO3\CMS\Core\Http\RequestFactory|\PHPUnit\Framework\MockObject\MockObject
      */
-    protected ?ShopwareApiService $shopwareApiService = null;
+    private RequestFactory|MockObject $requestFactoryMock;
+
 
     /**
-     * @var FrontendInterface|\PHPUnit\Framework\MockObject\MockObject
+     * @var \TYPO3\CMS\Core\Registry|\PHPUnit\Framework\MockObject\MockObject
      */
-    protected $cacheMock;
+    private Registry|MockObject $registryMock;
 
 
     /**
-     * @var RequestFactory|\PHPUnit\Framework\MockObject\MockObject
+     * @var \Madj2k\ShopwareConnector\Service\ShopwareApiService
      */
-    protected $requestFactoryMock = null;
+    private ShopwareApiService $subject;
 
 
     /**
-     * @var Registry|\PHPUnit\Framework\MockObject\MockObject
-     */
-    protected $registryMock = null;
-
-
-    /**
-     * Set up the test case
-     * @throws \Doctrine\DBAL\DBALException
+     * Sets up the test environment
+     *
+     * @return void
+     * @throws \PHPUnit\Framework\MockObject\Exception
      */
     protected function setUp(): void
     {
         parent::setUp();
 
-        // Mock the required services
         $this->cacheMock = $this->createMock(FrontendInterface::class);
         $this->requestFactoryMock = $this->createMock(RequestFactory::class);
         $this->registryMock = $this->createMock(Registry::class);
 
-        // Inject the mocked services into the ShopwareApiService
-        $this->shopwareApiService = new ShopwareApiService(
+        $this->subject = new ShopwareApiService(
             $this->cacheMock,
             $this->requestFactoryMock,
             $this->registryMock
         );
 
-        // Set a NullLogger to avoid real logging during tests
-        $this->shopwareApiService->setLogger(new NullLogger());
+        $this->subject->setLogger(new NullLogger());
     }
 
 
     /**
-     * @test
-     *
-     * Scenario: Fetching products from the API works correctly and stores data in cache
-     * Given the Shopware API returns a valid product list
+     * Scenario: Fetch data from Store API with cache hit
+     * Given cached response exists for API request
      * When fetchFromApi is called
-     * Then the products should be returned correctly and stored in the cache
+     * Then the cached response should be returned without HTTP call
      */
-    public function itFetchesProductsCorrectlyAndStoresInCache(): void
+    #[Test]
+    public function fetchFromApiReturnsCachedResult(): void
     {
-        // Load the mocked response from a YAML file
-        $mockResponseContent = Yaml::parseFile(self::FIXTURE_PATH . 'ApiResponseProducts.yaml');
+        $endpoint = 'product';
+        $expected = ['result' => 'cached'];
+        $parameters = [];
 
-        // Mock the API response
-        $response = new Response(200, [], json_encode($mockResponseContent));
+        $url = 'https://www.example.com/store-api/' . $endpoint;
+        $cacheKey = sha1($url . json_encode($parameters));
 
-        // Mock the RequestFactory to return the mocked response
-        $this->requestFactoryMock->method('request')
-            ->willReturn($response);
+        $this->registryMock->method('get')->willReturn([
+            'apiUrl' => 'https://www.example.com/store-api',
+            'apiKey' => '',
+        ]);
 
-        // Mock the cache behavior
-        $this->cacheMock->expects($this->once())
-            ->method('set');
+        $this->cacheMock->method('has')->with($cacheKey)->willReturn(true);
+        $this->cacheMock->method('get')->with($cacheKey)->willReturn($expected);
 
-        // Execute the fetchFromApi call
-        $result = $this->shopwareApiService->fetchFromApi('/product', [], 'de-DE');
-
-        // Assert that the API response is as expected
-        $this->assertArrayHasKey('elements', $result);
-        $this->assertCount(1, $result['elements']);
-        $this->assertEquals('Product 1', $result['elements'][0]['translated']['name']);
-        $this->assertEquals('12345', $result['elements'][0]['productNumber']);
+        $result = $this->subject->fetchFromApi($endpoint);
+        self::assertEquals($expected, $result);
     }
 
 
     /**
-     * @test
-     *
-     * Scenario: Fetching products from the cache works correctly
-     * Given the product data is available in the cache
+     * Scenario: Fetch data from Store API without cache
+     * Given no cached response exists
      * When fetchFromApi is called
-     * Then the cached data should be returned without making an API call
+     * Then an HTTP request should be performed and the response cached and returned
      */
-    public function itFetchesProductsFromCache(): void
+    #[Test]
+    public function fetchFromApiMakesHttpRequestAndCachesResponse(): void
     {
-        // Load the mocked response from a YAML file
-        $mockResponseContent = Yaml::parseFile(self::FIXTURE_PATH . 'ApiResponseProducts.yaml');
+        $endpoint = 'category';
+        $expected = ['data' => 'live'];
+        $parameters = [];
 
-        // Mock the cache to return cached data
-        $this->cacheMock->method('has')
-            ->willReturn(true);
+        $url = 'https://www.example.com/store-api/' . $endpoint;
+        $cacheKey = sha1($url . json_encode($parameters));
 
-        $this->cacheMock->method('get')
-            ->willReturn($mockResponseContent);
+        $this->registryMock->method('get')->willReturn([
+            'apiUrl' => 'https://www.example.com/store-api',
+            'apiKey' => '',
+        ]);
 
-        // RequestFactory should not be called since the data is from cache
-        $this->requestFactoryMock->expects($this->never())
-            ->method('request');
+        $responseMock = $this->createMock(ResponseInterface::class);
+        $responseMock->method('getStatusCode')->willReturn(200);
+        $responseMock->method('getBody')->willReturn($this->createStreamMock(json_encode($expected)));
 
-        // Execute the fetchFromApi call
-        $result = $this->shopwareApiService->fetchFromApi('/product', [], 'de-DE');
+        $this->cacheMock->method('has')->willReturn(false);
+        $this->requestFactoryMock->method('request')->willReturn($responseMock);
 
-        // Assert that the cached data is as expected
-        $this->assertArrayHasKey('elements', $result);
-        $this->assertCount(1, $result['elements']);
-        $this->assertEquals('Product 1', $result['elements'][0]['translated']['name']);
-        $this->assertEquals('12345', $result['elements'][0]['productNumber']);
+        $this->cacheMock->expects(self::once())
+            ->method('set')
+            ->with($cacheKey, $expected, [], 3600);
+
+        $result = $this->subject->fetchFromApi($endpoint);
+        self::assertEquals($expected, $result);
     }
 
 
-    /**
-     * @test
-     *
-     * Scenario: Fetching products from the API with the same parameters twice
-     * Given the Shopware API is called with the same parameters twice
-     * When fetchFromApi is called again with the same parameters
-     * Then the second call should return the cached data instead of making a new API request
-     */
-    public function itFetchesDataFromCacheOnSecondApiCall(): void
-    {
-        // Load the mocked response from a YAML file
-        $mockResponseContent = Yaml::parseFile(self::FIXTURE_PATH . 'ApiResponseProducts.yaml');
-
-        // Mock the API response
-        $response = new Response(200, [], json_encode($mockResponseContent));
-
-        // Mock the RequestFactory to return the mocked response on the first call
-        $this->requestFactoryMock->expects($this->once()) // Ensure request is made only once
-        ->method('request')
-            ->willReturn($response);
-
-        // Cache should be set after the first call
-        $this->cacheMock->expects($this->once())
-            ->method('set');
-
-        // Mock the cache to return cached data on the second call
-        $this->cacheMock->method('has')
-            ->willReturnOnConsecutiveCalls(false, true); // First call will not hit the cache, second will
-        $this->cacheMock->method('get')
-            ->willReturn($mockResponseContent);
-
-        // Execute the fetchFromApi call for the first time (fetches from API)
-        $resultFirstCall = $this->shopwareApiService->fetchFromApi('/product', [], 'de-DE');
-
-        // Execute the fetchFromApi call for the second time (fetches from cache)
-        $resultSecondCall = $this->shopwareApiService->fetchFromApi('/product', [], 'de-DE');
-
-        // Assert that the first and second results are the same
-        $this->assertEquals($resultFirstCall, $resultSecondCall);
-
-        // Assert that the data is as expected
-        $this->assertArrayHasKey('elements', $resultSecondCall);
-        $this->assertCount(1, $resultSecondCall['elements']);
-        $this->assertEquals('Product 1', $resultSecondCall['elements'][0]['translated']['name']);
-        $this->assertEquals('12345', $resultSecondCall['elements'][0]['productNumber']);
-    }
-
 
     /**
-     * @test
-     *
-     * Scenario: Handling server exceptions during API request
-     * Given the Shopware API returns a server error
+     * Scenario: Fetch raw body from Store API
+     * Given returnRawBody flag is true
      * When fetchFromApi is called
-     * Then an exception should be thrown with the full error body
+     * Then the raw response body should be returned as string
      */
-    public function itHandlesServerExceptionCorrectly(): void
+    #[Test]
+    public function fetchFromApiReturnsRawBody(): void
     {
-        // Mock the API response with a server error
-        $response = new Response(500, [], 'Internal Server Error');
-        $request = new Request('GET', '/product');
+        $rawContent = 'some-binary-data';
 
-        // Mock the RequestFactory to throw the exception
-        $this->requestFactoryMock->method('request')
-            ->willThrowException(new RequestException('Error', $request, $response));
+        $this->registryMock->method('get')->willReturn([
+            'apiUrl' => 'https://www.example.com/store-api',
+            'apiKey' => '',
+        ]);
 
-        // Expect an exception to be thrown during the fetch
-        $this->expectException(RequestException::class);
-        $this->expectExceptionMessage('Error');
+        $responseMock = $this->createMock(ResponseInterface::class);
+        $responseMock->method('getStatusCode')->willReturn(200);
+        $responseMock->method('getBody')->willReturn($this->createStreamMock($rawContent));
 
-        // Execute the fetchFromApi call
-        $this->shopwareApiService->fetchFromApi('/product', [], 'de-DE');
+        $this->requestFactoryMock->method('request')->willReturn($responseMock);
+
+        $result = $this->subject->fetchFromApi('download/456', [], 'GET', 0, true);
+        self::assertIsString($result);
+        self::assertEquals($rawContent, $result);
     }
 
 
     /**
-     * @test
-     *
-     * Scenario: Handling invalid JSON responses
-     * Given the Shopware API returns invalid JSON data
+     * Scenario: Cache must be disabled for checkout endpoints
+     * Given the endpoint starts with "checkout/"
      * When fetchFromApi is called
-     * Then an exception should be thrown indicating a JSON decoding error
+     * Then no cache get/set is performed and the response is returned directly
      */
-    public function itHandlesInvalidJsonResponse(): void
+    #[Test]
+    public function fetchFromApiDisablesCacheForCheckoutEndpoint(): void
     {
-        // Mock the API response with invalid JSON
-        $response = new Response(200, [], '{invalid_json}');
+        $endpoint = 'checkout/cart';
+        $expected = ['data' => 'noCache'];
 
-        // Mock the RequestFactory to return the invalid response
-        $this->requestFactoryMock->method('request')
-            ->willReturn($response);
+        $this->registryMock->method('get')->willReturn([
+            'apiUrl' => 'https://www.example.com/store-api',
+            'apiKey' => 'testKey',
+        ]);
 
-        // Expect an exception to be thrown due to JSON decode error
-        $this->expectException(\Madj2k\ShopwareConnector\Exception::class);
-        $this->expectExceptionMessage('Can not decode data from API');
+        $responseMock = $this->createMock(\Psr\Http\Message\ResponseInterface::class);
+        $responseMock->method('getStatusCode')->willReturn(200);
+        $responseMock->method('getBody')->willReturn($this->createStreamMock(json_encode($expected)));
+
+        $this->cacheMock->expects(self::never())->method('get');
+        $this->cacheMock->expects(self::never())->method('set');
+
+        $this->requestFactoryMock->method('request')->willReturn($responseMock);
+
+        $result = $this->subject->fetchFromApi($endpoint);
+        self::assertEquals($expected, $result);
+    }
+
+    /**
+     * Scenario: Cache must be disabled for order endpoints
+     * Given the endpoint starts with "order/"
+     * When fetchFromApi is called
+     * Then no cache get/set is performed and the response is returned directly
+     */
+    #[Test]
+    public function fetchFromApiDisablesCacheForOrderEndpoint(): void
+    {
+        $endpoint = 'order/list';
+        $expected = ['orders' => []];
+
+        $this->registryMock->method('get')->willReturn([
+            'apiUrl' => 'https://www.example.com/store-api',
+            'apiKey' => 'testKey',
+        ]);
+
+        $responseMock = $this->createMock(\Psr\Http\Message\ResponseInterface::class);
+        $responseMock->method('getStatusCode')->willReturn(200);
+        $responseMock->method('getBody')->willReturn($this->createStreamMock(json_encode($expected)));
+
+        $this->cacheMock->expects(self::never())->method('get');
+        $this->cacheMock->expects(self::never())->method('set');
+
+        $this->requestFactoryMock->method('request')->willReturn($responseMock);
+
+        $result = $this->subject->fetchFromApi($endpoint);
+        self::assertEquals($expected, $result);
+    }
+
+    /**
+     * Scenario: Cache must be disabled for account endpoints
+     * Given the endpoint starts with "account/"
+     * When fetchFromApi is called
+     * Then no cache get/set is performed and the response is returned directly
+     */
+    #[Test]
+    public function fetchFromApiDisablesCacheForAccountEndpoint(): void
+    {
+        $endpoint = 'account/profile';
+        $expected = ['profile' => ['name' => 'John Doe']];
+
+        $this->registryMock->method('get')->willReturn([
+            'apiUrl' => 'https://www.example.com/store-api',
+            'apiKey' => 'testKey',
+        ]);
+
+        $responseMock = $this->createMock(\Psr\Http\Message\ResponseInterface::class);
+        $responseMock->method('getStatusCode')->willReturn(200);
+        $responseMock->method('getBody')->willReturn($this->createStreamMock(json_encode($expected)));
+
+        $this->cacheMock->expects(self::never())->method('get');
+        $this->cacheMock->expects(self::never())->method('set');
+
+        $this->requestFactoryMock->method('request')->willReturn($responseMock);
+
+        $result = $this->subject->fetchFromApi($endpoint);
+        self::assertEquals($expected, $result);
+    }
+
+    /**
+     * Scenario: Admin API requests must never be cached
+     * Given fetchFromAdminApi is called
+     * When a response is returned
+     * Then no cache get/set is performed and the response is returned directly
+     */
+    #[Test]
+    public function fetchFromAdminApiNeverCaches(): void
+    {
+        $endpoint = 'product/list';
+        $expected = ['products' => []];
+
+        $this->registryMock->method('get')->willReturn([
+            'adminApiUrl' => 'https://www.example.com/api',
+            'adminApiAccessId' => 'id123',
+            'adminApiAccessSecret' => 'secret123',
+        ]);
+
+        $this->subject = $this->getMockBuilder(\Madj2k\ShopwareConnector\Service\ShopwareApiService::class)
+            ->setConstructorArgs([$this->cacheMock, $this->requestFactoryMock, $this->registryMock])
+            ->onlyMethods(['fetchAdminApiAuthToken', 'getSwLanguageId'])
+            ->getMock();
+
+        $this->subject->method('fetchAdminApiAuthToken')->willReturn('adminToken');
+        $this->subject->method('getSwLanguageId')->willReturn('lang-id');
+
+        $responseMock = $this->createMock(\Psr\Http\Message\ResponseInterface::class);
+        $responseMock->method('getStatusCode')->willReturn(200);
+        $responseMock->method('getBody')->willReturn($this->createStreamMock(json_encode($expected)));
+
+        $this->cacheMock->expects(self::never())->method('get');
+        $this->cacheMock->expects(self::never())->method('set');
+
+        $this->requestFactoryMock->method('request')->willReturn($responseMock);
+
+        $result = $this->subject->fetchFromAdminApi($endpoint);
+        self::assertEquals($expected, $result);
+    }
+
+
+    /**
+     * Scenario: Missing registry config entry for adminApiUrl
+     * Given the registry does not return an adminApiUrl
+     * When fetchAdminApiAuthToken is called
+     * Then a runtime exception is thrown due to invalid URL
+     */
+    #[Test]
+    public function fetchAdminApiAuthTokenThrowsOnInvalidUrl(): void
+    {
+        $this->expectException(\RuntimeException::class);
+
+        $this->registryMock->method('get')->willReturn([]);
+
+        $this->requestFactoryMock
+            ->method('request')
+            ->willThrowException(new \RuntimeException('Invalid URL'));
+
+        $this->subject->fetchAdminApiAuthToken();
+    }
+
+
+    /**
+     * Scenario: HTTP request throws a GuzzleException
+     * Given the HTTP client throws a GuzzleException
+     * When fetchFromApi is called
+     * Then the exception should be passed through and logged
+     */
+    #[Test]
+    public function fetchFromApiThrowsOnGuzzleException(): void
+    {
+        $this->expectException(\RuntimeException::class);
+
+        $this->registryMock->method('get')->willReturn([
+            'apiUrl' => 'https://www.example.com/store-api',
+            'apiKey' => '',
+        ]);
+
+        $this->cacheMock->method('has')->willReturn(false);
+        $this->requestFactoryMock->method('request')->willThrowException(new \RuntimeException('Connection error'));
+
+        $this->subject->fetchFromApi('product');
+    }
+
+    /**
+     * Scenario: Fetch Admin API token successfully
+     * Given credentials are available
+     * When fetchAdminApiAuthToken is called
+     * Then the token should be extracted from the response and returned
+     *
+     * @throws \Throwable
+     */
+    #[Test]
+    public function fetchAdminApiAuthTokenReturnsAccessToken(): void
+    {
+        $expectedToken = 'abcdef123456';
+
+        $this->registryMock->method('get')->willReturn([
+            'adminApiUrl' => 'https://www.example.com/api',
+            'adminApiAccessId' => 'id123',
+            'adminApiAccessSecret' => 'secret123',
+        ]);
+
+        $responseMock = $this->createMock(ResponseInterface::class);
+        $responseMock->method('getStatusCode')->willReturn(200);
+        $responseMock->method('getBody')->willReturn($this->createStreamMock(json_encode(['access_token' => $expectedToken])));
+
+        $this->requestFactoryMock->method('request')->willReturn($responseMock);
+
+        $result = $this->subject->fetchAdminApiAuthToken();
+        self::assertEquals($expectedToken, $result);
+    }
+
+    /**
+     * Scenario: Admin API response does not contain access_token
+     * Given a valid response without access_token
+     * When fetchAdminApiAuthToken is called
+     * Then an Exception should be thrown
+     */
+    #[Test]
+    public function fetchAdminApiAuthTokenThrowsExceptionIfTokenMissing(): void
+    {
+        $this->expectException(Exception::class);
+        $this->expectExceptionCode(1725892301);
+
+        $this->registryMock->method('get')->willReturn([
+            'adminApiUrl' => 'https://www.example.com/api',
+            'adminApiAccessId' => 'id123',
+            'adminApiAccessSecret' => 'secret123',
+        ]);
+
+        $responseMock = $this->createMock(ResponseInterface::class);
+        $responseMock->method('getStatusCode')->willReturn(200);
+        $responseMock->method('getBody')->willReturn($this->createStreamMock(json_encode(['no_token_here' => true])));
+
+        $this->requestFactoryMock->method('request')->willReturn($responseMock);
+
+        $this->subject->fetchAdminApiAuthToken();
+    }
+
+
+    /**
+     * Scenario: API responds with a non-200 HTTP status code
+     * Given the API returns a 500 error
+     * When executeRequest is called
+     * Then an Exception should be thrown indicating the error response
+     */
+    #[Test]
+    public function executeRequestThrowsExceptionOnNon200StatusCode(): void
+    {
+        $this->expectException(Exception::class);
+        $this->expectExceptionCode(1725891306);
+
+        $responseMock = $this->createMock(ResponseInterface::class);
+        $responseMock->method('getStatusCode')->willReturn(500);
+        $responseMock->method('getReasonPhrase')->willReturn('Internal Server Error');
+
+        $this->registryMock->method('get')->willReturn([
+            'apiUrl' => 'https://www.example.com/store-api',
+            'apiKey' => '',
+        ]);
+        $this->cacheMock->method('has')->willReturn(false);
+        $this->requestFactoryMock->method('request')->willReturn($responseMock);
+
+        $this->subject->fetchFromApi('product');
+    }
+
+
+    /**
+     * Scenario: API returns invalid JSON
+     * Given the API returns an invalid JSON response
+     * When executeRequest is called
+     * Then an Exception should be thrown
+     */
+    #[Test]
+    public function executeRequestThrowsExceptionOnInvalidJson(): void
+    {
+        $this->expectException(Exception::class);
         $this->expectExceptionCode(1725891305);
 
-        // Execute the fetchFromApi call
-        $this->shopwareApiService->fetchFromApi('/product', [], 'de-DE');
+        $responseMock = $this->createMock(ResponseInterface::class);
+        $responseMock->method('getStatusCode')->willReturn(200);
+        $responseMock->method('getBody')->willReturn($this->createStreamMock('{invalid-json'));
+
+        $this->registryMock->method('get')->willReturn([
+            'apiUrl' => 'https://www.example.com/store-api',
+            'apiKey' => '',
+        ]);
+        $this->cacheMock->method('has')->willReturn(false);
+        $this->requestFactoryMock->method('request')->willReturn($responseMock);
+
+        $this->subject->fetchFromApi('product');
     }
 
 
     /**
-     * @test
-     *
-     * Scenario: Fetching products with associations and caching
-     * Given the Shopware API returns a product with categories
-     * When fetchFromApi is called with associations
-     * Then the product and its categories should be returned correctly and stored in cache
+     * Scenario: Context token is stored in FE user session
+     * Given a frontend user exists
+     * When setContextToken is called with a new token
+     * Then the token is stored serialized in the session and retrievable
      */
-    public function itFetchesProductsWithAssociationsAndStoresInCache(): void
+    #[Test]
+    public function setContextTokenStoresTokenInFrontendUserSession(): void
     {
-        // Load the mocked response from a YAML file
-        $mockResponseContent = Yaml::parseFile(self::FIXTURE_PATH . 'ApiResponseWithAssociations.yaml');
+        $feUserMock = $this->createMock(\TYPO3\CMS\Frontend\Authentication\FrontendUserAuthentication::class);
 
-        // Mock the API response
-        $response = new Response(200, [], json_encode($mockResponseContent));
+        $feUserMock->expects(self::once())
+            ->method('setKey')
+            ->with('ses', ShopwareApiService::SESSION_KEY, serialize('newToken'));
 
-        // Mock the RequestFactory to return the mocked response
-        $this->requestFactoryMock->method('request')
-            ->willReturn($response);
+        $feUserMock->expects(self::once())
+            ->method('storeSessionData');
 
-        // Mock the cache behavior
-        $this->cacheMock->expects($this->once())
-            ->method('set');
+        // inject fake request with frontend.user
+        $request = new \TYPO3\CMS\Core\Http\ServerRequest();
+        $request = $request->withAttribute('frontend.user', $feUserMock);
+        $GLOBALS['TYPO3_REQUEST'] = $request;
 
-        // Execute the fetchFromApi call with associations
-        $result = $this->shopwareApiService->fetchFromApi('/product', ['associations' => ['categories']], 'de-DE');
-
-        // Assert that the API response includes product and categories
-        $this->assertArrayHasKey('elements', $result);
-        $this->assertCount(1, $result['elements']);
-        $this->assertEquals('Product 1', $result['elements'][0]['translated']['name']);
-        $this->assertCount(2, $result['elements'][0]['categories']);
-        $this->assertEquals('Category 1', $result['elements'][0]['categories'][0]['translated']['name']);
-        $this->assertEquals('Category 2', $result['elements'][0]['categories'][1]['translated']['name']);
+        $this->subject->setContextToken('newToken');
+        self::assertEquals('newToken', $this->subject->getContextToken());
     }
 
+
+    /**
+     * Scenario: Context token is read from FE user session
+     * Given a frontend user has a serialized token in session
+     * When getContextToken is called
+     * Then the unserialized token is returned
+     */
+    #[Test]
+    public function getContextTokenReturnsTokenFromFrontendUserSession(): void
+    {
+        $token = 'sessionToken';
+
+        $feUserMock = $this->createMock(\TYPO3\CMS\Frontend\Authentication\FrontendUserAuthentication::class);
+        $feUserMock->method('getKey')
+            ->with('ses', ShopwareApiService::SESSION_KEY)
+            ->willReturn(serialize($token));
+
+        $request = new \TYPO3\CMS\Core\Http\ServerRequest();
+        $request = $request->withAttribute('frontend.user', $feUserMock);
+        $GLOBALS['TYPO3_REQUEST'] = $request;
+
+        $result = $this->subject->getContextToken();
+        self::assertEquals($token, $result);
+    }
+
+
+    /**
+     * Scenario: Resetting context token
+     * Given a token was set before
+     * When resetContextToken is called
+     * Then getContextToken should return empty string
+     */
+    #[Test]
+    public function resetContextTokenClearsStoredValue(): void
+    {
+        $this->subject->setContextToken('oldToken');
+        $this->subject->resetContextToken();
+
+        self::assertSame('', $this->subject->getContextToken());
+    }
+
+
+    /**
+     * Scenario: Setting same token twice does not rewrite session
+     * Given a frontend user already has a token
+     * When setContextToken is called with the same token again
+     * Then setKey/storeSessionData are not called
+     */
+    #[Test]
+    public function setContextTokenWithSameValueDoesNotRewriteSession(): void
+    {
+        $token = 'sameToken';
+
+        $feUserMock = $this->createMock(\TYPO3\CMS\Frontend\Authentication\FrontendUserAuthentication::class);
+        $feUserMock->method('getKey')
+            ->with('ses', ShopwareApiService::SESSION_KEY)
+            ->willReturn(serialize($token));
+
+        $feUserMock->expects(self::never())->method('setKey');
+        $feUserMock->expects(self::never())->method('storeSessionData');
+
+        $request = new \TYPO3\CMS\Core\Http\ServerRequest();
+        $request = $request->withAttribute('frontend.user', $feUserMock);
+        $GLOBALS['TYPO3_REQUEST'] = $request;
+
+        // preload same token
+        $this->subject->setContextToken($token);
+
+        // call again with same token
+        $this->subject->setContextToken($token);
+    }
+
+    /**
+     * Scenario: API returns a new context token
+     * Given the response contains a sw-context-token header
+     * When fetchFromApi is called
+     * Then the token is stored in the FE user session and available via getContextToken
+     */
+    #[Test]
+    public function fetchFromApiStoresContextTokenFromResponse(): void
+    {
+        $endpoint = 'checkout/cart';
+        $expected = ['data' => 'ok'];
+
+        $responseMock = $this->createMock(ResponseInterface::class);
+        $responseMock->method('getStatusCode')->willReturn(200);
+        $responseMock->method('getBody')->willReturn($this->createStreamMock(json_encode($expected)));
+        $responseMock->method('hasHeader')->with('sw-context-token')->willReturn(true);
+        $responseMock->method('getHeader')->with('sw-context-token')->willReturn(['newCtxToken']);
+
+        $this->registryMock->method('get')->willReturn([
+            'apiUrl' => 'https://www.example.com/store-api',
+            'apiKey' => 'testKey',
+        ]);
+        $this->cacheMock->method('has')->willReturn(false);
+        $this->requestFactoryMock->method('request')->willReturn($responseMock);
+
+        // mock FE user
+        $feUserMock = $this->createMock(\TYPO3\CMS\Frontend\Authentication\FrontendUserAuthentication::class);
+        $feUserMock->expects(self::once())
+            ->method('setKey')
+            ->with('ses', ShopwareApiService::SESSION_KEY, serialize('newCtxToken'));
+        $feUserMock->expects(self::once())->method('storeSessionData');
+
+        $siteLanguageMock = $this->createMock(SiteLanguage::class);
+        $siteLanguageMock->method('getLocale')->willReturn(new Locale('de-DE'));
+
+        $request = new \TYPO3\CMS\Core\Http\ServerRequest();
+        $request = $request->withAttribute('frontend.user', $feUserMock)
+            ->withAttribute('language', $siteLanguageMock);
+
+        $GLOBALS['TYPO3_REQUEST'] = $request;
+
+        $result = $this->subject->fetchFromApi($endpoint);
+        self::assertEquals($expected, $result);
+        self::assertEquals('newCtxToken', $this->subject->getContextToken());
+    }
+
+
+    /**
+     * Scenario: Existing context token is reused in next API call
+     * Given a token was stored previously in the FE user session
+     * When fetchFromApi is called again
+     * Then the token is sent in the request headers as sw-context-token
+     */
+    #[Test]
+    public function fetchFromApiUsesStoredContextTokenInHeaders(): void
+    {
+        $endpoint = 'checkout/confirm';
+        $expected = ['data' => 'withToken'];
+
+        // preload token in FE user session
+        $feUserMock = $this->createMock(\TYPO3\CMS\Frontend\Authentication\FrontendUserAuthentication::class);
+        $feUserMock->method('getKey')
+            ->with('ses', \Madj2k\ShopwareConnector\Service\ShopwareApiService::SESSION_KEY)
+            ->willReturn(serialize('existingToken'));
+
+        // mock site language with Locale object
+        $siteLanguageMock = $this->createMock(\TYPO3\CMS\Core\Site\Entity\SiteLanguage::class);
+        $siteLanguageMock->method('getLocale')->willReturn(new \TYPO3\CMS\Core\Localization\Locale('en-GB'));
+
+        // build request with FE user and language
+        $request = new \TYPO3\CMS\Core\Http\ServerRequest();
+        $request = $request
+            ->withAttribute('frontend.user', $feUserMock)
+            ->withAttribute('language', $siteLanguageMock);
+        $GLOBALS['TYPO3_REQUEST'] = $request;
+
+        // registry configuration
+        $this->registryMock->method('get')->willReturn([
+            'apiUrl' => 'https://www.example.com/store-api',
+            'apiKey' => 'testKey',
+        ]);
+
+        // response for the /language request
+        $languageResponseMock = $this->createMock(\Psr\Http\Message\ResponseInterface::class);
+        $languageResponseMock->method('getStatusCode')->willReturn(200);
+        $languageResponseMock->method('getBody')->willReturn(
+            $this->createStreamMock(json_encode([
+                ['id' => 'lang-id', 'translationCode' => ['code' => 'en-GB']]
+            ]))
+        );
+
+        // response for the actual API request
+        $responseMock = $this->createMock(\Psr\Http\Message\ResponseInterface::class);
+        $responseMock->method('getStatusCode')->willReturn(200);
+        $responseMock->method('getBody')->willReturn($this->createStreamMock(json_encode($expected)));
+
+        // intercept both requests: first /language, second actual endpoint
+        $callCount = 0;
+        $this->requestFactoryMock->method('request')
+            ->willReturnCallback(function ($url, $method, $options) use (&$callCount, $languageResponseMock, $responseMock, $endpoint) {
+                $callCount++;
+                if ($callCount === 1) {
+                    // first call: must be /language
+                    \PHPUnit\Framework\Assert::assertStringContainsString('language', $url);
+                    return $languageResponseMock;
+                }
+                // second call: must be the actual endpoint, including context token header
+                \PHPUnit\Framework\Assert::assertStringContainsString($endpoint, $url);
+                \PHPUnit\Framework\Assert::assertEquals('existingToken', $options['headers']['sw-context-token']);
+                return $responseMock;
+            });
+
+        $this->cacheMock->method('has')->willReturn(false);
+
+        // execute test
+        $result = $this->subject->fetchFromApi($endpoint);
+        self::assertEquals($expected, $result);
+    }
+
+
+    /**
+     * Creates a stream mock that returns the given string on getContents()
+     *
+     * @param string $contents
+     * @return \Psr\Http\Message\StreamInterface
+     * @throws \PHPUnit\Framework\MockObject\Exception
+     */
+    private function createStreamMock(string $contents): \Psr\Http\Message\StreamInterface
+    {
+        $streamMock = $this->createMock(\Psr\Http\Message\StreamInterface::class);
+        $streamMock ->method('__toString')->willReturn($contents);
+        $streamMock->method('getContents')->willReturn($contents);
+
+        return $streamMock;
+    }
 }

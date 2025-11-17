@@ -4,6 +4,32 @@
         <header/>
         <body>
 
+			<!-- Plugin -->
+			<trans-unit id="plugin.apiRequest.title">
+				<source>Shopware Connector</source>
+				<target>Frontend connection to Shopware</target>
+			</trans-unit>
+			<trans-unit id="plugin.apiRequest.description">
+				<source>Manage Shopware API connections and data import</source>
+				<target>Frontend-Anbindung an Shopware</target>
+			</trans-unit>
+
+			<!-- Flexform -->
+			<trans-unit id="flexform.apiRequest.function.headline">
+				<source>Shopware Connector</source>
+				<target>Shopware Connector</target>
+			</trans-unit>
+			<trans-unit id="flexform.apiRequest.function.select">
+				<source>Action</source>
+				<target>Aktion</target>
+			</trans-unit>
+			<trans-unit id="flexform.apiRequest.function.select.I.list">
+				<source>List</source>
+				<target>Liste</target>
+			</trans-unit>
+
+
+
 			<!-- Palettes -->
 			<trans-unit id="palette.general">
 				<source>General</source>

@@ -31,13 +31,6 @@ class ShopwareImporter implements LoggerAwareInterface
 {
     use LoggerAwareTrait;
 
-
-    /**
-     * @const string
-     */
-    protected const YAML_CONFIG = 'EXT:shopware_connector/Configuration/ShopwareImporter/FieldMapping.yaml';
-
-
     /**
      * @var ShopwareApiService
      */
@@ -48,6 +41,18 @@ class ShopwareImporter implements LoggerAwareInterface
      * @var array
      */
     protected array $mappings = [];
+
+
+    /**
+     * @var array
+     */
+    protected array $proxyConfig = [];
+
+
+    /**
+     * @var string
+     */
+    protected string $yamlConfigFile = 'EXT:shopware_connector/Configuration/ShopwareImporter/FieldMapping.yaml';
 
 
     /**
@@ -70,7 +75,6 @@ class ShopwareImporter implements LoggerAwareInterface
     public function __construct(ShopwareApiService $shopwareApiService)
     {
         $this->shopwareApiService = $shopwareApiService;
-        $this->loadYamlMappings();
     }
 
 
@@ -79,7 +83,7 @@ class ShopwareImporter implements LoggerAwareInterface
      */
     protected function loadYamlMappings(): void
     {
-        $mappingFile = GeneralUtility::getFileAbsFileName(self::YAML_CONFIG);
+        $mappingFile = GeneralUtility::getFileAbsFileName($this->getYamlConfigFile());
         $this->mappings = Yaml::parseFile($mappingFile);
     }
 
@@ -93,6 +97,10 @@ class ShopwareImporter implements LoggerAwareInterface
      */
     protected function getMappingConfig(string $entityType): array
     {
+        if (empty($this->mappings)) {
+            $this->loadYamlMappings();
+        }
+
         if (
             (! $this->mappings[$entityType])
             || (! is_array($this->mappings[$entityType]))
@@ -107,6 +115,48 @@ class ShopwareImporter implements LoggerAwareInterface
         }
 
         return $this->mappings[$entityType];
+    }
+
+
+    /**
+     * @return array
+     */
+    public function getProxyConfig(): array
+    {
+        return $this->proxyConfig;
+    }
+
+
+    /**
+     * @param array $proxyConfig
+     * @return void
+     */
+    public function setProxyConfig(array $proxyConfig): void
+    {
+        if ($proxyConfig) {
+            $this->proxyConfig = $proxyConfig;
+        }
+    }
+
+
+    /**
+     * @return string
+     */
+    public function getYamlConfigFile(): string
+    {
+        return $this->yamlConfigFile;
+    }
+
+
+    /**
+     * @param string $yamlConfigFile
+     * @return void
+     */
+    public function setYamlConfigFile(string $yamlConfigFile): void
+    {
+        if ($yamlConfigFile) {
+            $this->yamlConfigFile = $yamlConfigFile;
+        }
     }
 
 
@@ -175,6 +225,10 @@ class ShopwareImporter implements LoggerAwareInterface
             // Build the 'include' and 'association' parameters from the mapping
             $includeFields = $this->buildIncludes($mapping);
             $associationParams = $this->buildAssociations($mapping);
+
+            if ($this->proxyConfig) {
+                $this->shopwareApiService->setProxyConfig($this->getProxyConfig());
+            }
 
             // Fetch the entities from the API with the include and association params
             $entities = $this->shopwareApiService->fetchFromApi($mapping['apiEndpoint'],
@@ -674,7 +728,7 @@ class ShopwareImporter implements LoggerAwareInterface
         foreach ($mapping['fields'] as $field) {
 
             // Ensure both apiField and tableField exist
-            if ($field['apiField'] && $field['tableField']) {
+            if (!empty($field['apiField']) && !empty($field['tableField'])) {
                 $value = $this->getValueFromPath($data, $field['apiField']);
                 $mappedData[$field['tableField']] = $this->convertType($value, $field['type']);
             }
@@ -696,7 +750,7 @@ class ShopwareImporter implements LoggerAwareInterface
      * @param string $path
      * @return mixed
      */
-    public function getValueFromPath(array $data, string $path)
+    public function getValueFromPath(array $data, string $path): mixed
     {
         $keys = explode('.', $path);
         foreach ($keys as $key) {
@@ -718,7 +772,7 @@ class ShopwareImporter implements LoggerAwareInterface
      * @return mixed
      * @throws \Exception
      */
-    public function convertType($value, string $type)
+    public function convertType(mixed $value, string $type): mixed
     {
         switch ($type) {
             case 'bool':

@@ -4,22 +4,10 @@ defined('TYPO3') or die();
 call_user_func(
     function (string $extensionKey) {
 
-        \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addTypoScript(
-            $extensionKey,
-            'constants',
-            '<INCLUDE_TYPOSCRIPT: source="FILE:EXT:' . $extensionKey . '/Configuration/TypoScript/constants.typoscript">'
-        );
-
-        \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addTypoScript(
-            $extensionKey,
-            'setup',
-            '<INCLUDE_TYPOSCRIPT: source="FILE:EXT:' . $extensionKey . '/Configuration/TypoScript/setup.typoscript">'
-        );
-
-        //=================================================================
+              //=================================================================
         // Register Cache
         //=================================================================
-        if (!is_array($GLOBALS['TYPO3_CONF_VARS']['SYS']['caching']['cacheConfigurations']['shopwareconnector_apicalls'])) {
+        if (!isset($GLOBALS['TYPO3_CONF_VARS']['SYS']['caching']['cacheConfigurations']['shopwareconnector_apicalls'])) {
             $GLOBALS['TYPO3_CONF_VARS']['SYS']['caching']['cacheConfigurations']['shopwareconnector_apicalls'] = [];
         }
         if (!isset($GLOBALS['TYPO3_CONF_VARS']['SYS']['caching']['cacheConfigurations']['shopwareconnector_apicalls']['backend'])) {
@@ -47,6 +35,30 @@ call_user_func(
                 }
             }'
         );
+
+        //=================================================================
+        // Add Plugins
+        //=================================================================
+        \TYPO3\CMS\Extbase\Utility\ExtensionUtility::configurePlugin(
+            $extensionKey,
+            'ApiRequest',
+            [
+                \Madj2k\ShopwareConnector\Controller\ApiRequestController::class => 'list,show,download,downloadExecute'
+            ],
+
+            // non-cacheable actions
+            [
+            ],
+            \TYPO3\CMS\Extbase\Utility\ExtensionUtility::PLUGIN_TYPE_CONTENT_ELEMENT
+        );
+
+        //=================================================================
+        // cHash
+        //=================================================================
+        $GLOBALS['TYPO3_CONF_VARS']['FE']['cacheHash']['excludedParameters'][] = 'tx_shopwareconnector_apirequest[slug]';
+        $GLOBALS['TYPO3_CONF_VARS']['FE']['cacheHash']['excludedParameters'][] = 'tx_shopwareconnector_apirequest[productNumber]';
+        $GLOBALS['TYPO3_CONF_VARS']['FE']['cacheHash']['excludedParameters'][] = 'tx_shopwareconnector_apirequest[productId]';
+        $GLOBALS['TYPO3_CONF_VARS']['FE']['cacheHash']['excludedParameters'][] = 'tx_shopwareconnector_apirequest[term]';
 
         //=================================================================
         // Register Logger

@@ -16,6 +16,7 @@ use Madj2k\ShopwareConnector\Service\ShopwareImporter;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
@@ -65,6 +66,24 @@ class ShopwareImportCommand extends Command
                 InputArgument::REQUIRED,
                 'The pid for the import.',
             )
+            ->addOption(
+                'proxyHttp',
+                'p',
+                InputOption::VALUE_OPTIONAL,
+                ''
+            )
+            ->addOption(
+                'proxyHttps',
+                'p',
+                InputOption::VALUE_OPTIONAL,
+                ''
+            )
+            ->addOption(
+                'yamlConfigFile',
+                'y',
+                InputOption::VALUE_OPTIONAL,
+                ''
+            )
             ->setHelp('This command allows you to import categories and products from Shopware into TYPO3.');
 
     }
@@ -83,9 +102,26 @@ class ShopwareImportCommand extends Command
 
             $swLanguageId = $input->getArgument('swLanguageId');
             $pid = $input->getArgument('pid');
+            $yamlConfigFile = $input->getOption('yamlConfigFile');
 
             $this->importer->setSwLanguageId($swLanguageId);
             $this->importer->setPid(intval($pid));
+            $this->importer->setYamlConfigFile($yamlConfigFile);
+
+
+            $proxy = [];
+            if ($input->getOption('proxyHttp')) {
+                $proxy['http'] = $input->getOption('proxyHttp');
+            }
+            if ($input->getOption('proxyHttps')) {
+                $proxy['https'] = $input->getOption('proxyHttps');
+            }
+
+            if (! empty($proxy)) {
+                $this->importer->setProxyConfig($proxy);
+            }
+
+
             $importSuccess = $this->importer->executeImport();
 
             if ($importSuccess) {

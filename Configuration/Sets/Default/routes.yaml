@@ -1,0 +1,3 @@
+imports:
+  -
+    resource: 'EXT:shopware_connector/Configuration/Routes/Default.yaml'

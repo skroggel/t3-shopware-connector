@@ -1,0 +1,8 @@
+<html xmlns:f="http://typo3.org/ns/TYPO3/CMS/Fluid/ViewHelpers"
+      xmlns:sc="http://typo3.org/ns/Madj2k/ShopwareConnector/ViewHelpers"
+      data-namespace-typo3-fluid="true"
+>
+    <f:render partial="Category/Item"
+              arguments="{categories: '{sc:category.tree(categories: allCategories.elements)}', activeCategories: activeCategories, level: 1}" />
+
+</html>

@@ -1,0 +1,19 @@
+<html xmlns:f="http://typo3.org/ns/TYPO3/CMS/Fluid/ViewHelpers"
+      xmlns:sc="http://typo3.org/ns/Madj2k/ShopwareConnector/ViewHelpers"
+      data-namespace-typo3-fluid="true"
+>
+
+    <f:if condition="{product}">
+
+        <f:link.action
+            action="show"
+            arguments="{productNumber: product.productNumber, slug: '{product.translated.name -> sc:format.slug()}'}"
+        >
+            <h4>{poduct.translated.name}</h4>
+            <img src="{product.cover.media.url}" alt="{product.translated.name}" >
+            {product.translated.name}
+        </f:link.action>
+    </f:if>
+
+
+</html>

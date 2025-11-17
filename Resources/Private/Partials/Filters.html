@@ -1,0 +1,27 @@
+<html xmlns:f="http://typo3.org/ns/TYPO3/CMS/Fluid/ViewHelpers"
+      xmlns:sc="http://typo3.org/ns/Madj2k/ShopwareConnector/ViewHelpers"
+      data-namespace-typo3-fluid="true"
+>
+
+    <f:for each="{allFilters}" as="filter">
+        <f:if condition="{filter.filterable}">
+            <f:switch expression="{filter.displayType}">
+
+                <f:case value="select">
+                    <f:render partial="Filter/Radio"
+                              arguments="{filter: filter, activeFilters: activeFilters, availableFilterOptions: availableFilterOptions}" />
+                </f:case>
+
+                <f:case value="text">
+                    <f:render partial="Filter/Checkbox"
+                              arguments="{filter: filter, activeFilters: activeFilters, availableFilterOptions: availableFilterOptions}" />
+                </f:case>
+
+                <f:defaultCase>
+                    {filter.translated.name}
+                </f:defaultCase>
+            </f:switch>
+        </f:if>
+    </f:for>
+
+</html>

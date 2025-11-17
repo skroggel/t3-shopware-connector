@@ -12,12 +12,13 @@ namespace Madj2k\ShopwareConnector\Tests\Functional\Service;
  * The TYPO3 project - inspiring people to share!
  */
 
-use Madj2k\CoreExtended\Utility\GeneralUtility;
 use Madj2k\ShopwareConnector\Service\ShopwareImporter;
 use Madj2k\ShopwareConnector\Service\ShopwareApiService;
+use PHPUnit\Framework\Attributes\Test;
 use Psr\Log\NullLogger;
 use TYPO3\TestingFramework\Core\Functional\FunctionalTestCase;
 use TYPO3\CMS\Core\Database\ConnectionPool;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
 use Symfony\Component\Yaml\Yaml;
 
 /**
@@ -36,7 +37,7 @@ class ShopwareImporterTest extends FunctionalTestCase
     /**
      * @var array
      */
-    protected $testExtensionsToLoad = [
+    protected array $testExtensionsToLoad = [
         'typo3conf/ext/shopware_connector',
     ];
 
@@ -44,7 +45,7 @@ class ShopwareImporterTest extends FunctionalTestCase
     /**
      * @var \Madj2k\ShopwareConnector\Service\ShopwareImporter|null
      */
-    protected ?ShopwareImporter $importer = null;
+    protected ?ShopwareImporter $shopwareImporter = null;
 
 
     /**
@@ -55,7 +56,6 @@ class ShopwareImporterTest extends FunctionalTestCase
 
     /**
      * Set up the test case
-     * @throws \Doctrine\DBAL\DBALException
      */
     protected function setUp(): void
     {
@@ -67,13 +67,12 @@ class ShopwareImporterTest extends FunctionalTestCase
 
 
     /**
-     * @test
-     *
      * Scenario: Import products correctly
      * Given the Shopware API returns a list of products
      * When the importer runs
      * Then the products should be imported into TYPO3
      */
+    #[Test]
     public function itImportsProductsCorrectly(): void
     {
         // Mock API response
@@ -103,13 +102,12 @@ class ShopwareImporterTest extends FunctionalTestCase
 
 
     /**
-     * @test
-     *
      * Scenario: Import many-to-many associations correctly
      * Given the Shopware API returns a product with categories
      * When the importer runs
      * Then the product and its categories should be correctly imported and linked
      */
+    #[Test]
     public function itImportsManyToManyAssociationsCorrectly(): void
     {
         // Mock API response for product with categories
@@ -170,13 +168,12 @@ class ShopwareImporterTest extends FunctionalTestCase
 
 
     /**
-     * @test
-     *
      * Scenario: Handle empty API response
      * Given the Shopware API returns no data
      * When the importer runs
      * Then no products should be imported into TYPO3
      */
+    #[Test]
     public function itHandlesEmptyApiResponses(): void
     {
         // Mock API with empty response
@@ -202,14 +199,13 @@ class ShopwareImporterTest extends FunctionalTestCase
 
 
     /**
-     * @test
-     *
      * Scenario: Import products with parent-child relationships
      * Given the API provides a list of products with child products associated to a parent product
      * When the import process is executed
      * Then the parent field in the product table should be updated for each child product
      * And the parent field should contain the UID of the parent product
      */
+    #[Test]
     public function itHandlesParentToChildRelationshipCorrectly(): void
     {
         // Mock API response for product with properties
@@ -258,14 +254,13 @@ class ShopwareImporterTest extends FunctionalTestCase
 
 
     /**
-     * @test
-     *
      * Scenario: Import products with associated properties
      * Given the API provides a list of products with associated properties
      * When the import process is executed
      * Then the properties field in the product table should be updated with the UIDs of the related properties
      * And the UIDs should be stored as a comma-separated list in the properties field
      */
+    #[Test]
     public function itHandlesOneToManyRelationshipCorrectly(): void
     {
         // Mock API response for product with properties
@@ -314,13 +309,12 @@ class ShopwareImporterTest extends FunctionalTestCase
 
 
     /**
-     * @test
-     *
      * Scenario: Handle API unavailability
      * Given the Shopware API is unavailable
      * When the importer runs
      * Then the importer should throw an exception
      */
+    #[Test]
     public function itHandlesApiUnavailability(): void
     {
         // Mock API to throw an exception (API unavailable)
@@ -336,13 +330,12 @@ class ShopwareImporterTest extends FunctionalTestCase
 
 
     /**
-     * @test
-     *
      * Scenario: convertType works as expected for different types
      * Given various data types to be converted
      * When the convertType method is called
      * Then the data should be correctly converted
      */
+    #[Test]
     public function itConvertsTypesCorrectly(): void
     {
         $this->assertEquals(1, $this->shopwareImporter->convertType(true, 'boolean'));
@@ -359,13 +352,12 @@ class ShopwareImporterTest extends FunctionalTestCase
 
 
     /**
-     * @test
-     *
      * Scenario: mapData works correctly
      * Given a valid mapping and data
      * When the mapData method is called
      * Then the data should be mapped correctly
      */
+    #[Test]
     public function itMapsDataCorrectly(): void
     {
         $mapping = [
@@ -395,13 +387,12 @@ class ShopwareImporterTest extends FunctionalTestCase
 
 
     /**
-     * @test
-     *
      * Scenario: getValueFromPath works correctly
      * Given a nested array and a path
      * When the getValueFromPath method is called
      * Then the value should be correctly extracted
      */
+    #[Test]
     public function itGetsValueFromPathCorrectly(): void
     {
         $data = [
@@ -418,13 +409,12 @@ class ShopwareImporterTest extends FunctionalTestCase
 
 
     /**
-     * @test
-     *
      * Scenario: Already imported objects are skipped based on checksum
      * Given an object that has already been imported
      * When the importer runs again with the same data
      * Then the object should not be re-imported
      */
+    #[Test]
     public function itSkipsAlreadyImportedObjectsBasedOnChecksum(): void
     {
         // Mock API response

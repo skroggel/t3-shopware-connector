@@ -1,0 +1,13 @@
+<html xmlns:f="http://typo3.org/ns/TYPO3/CMS/Fluid/ViewHelpers"
+      xmlns:sc="http://typo3.org/ns/Madj2k/ShopwareConnector/ViewHelpers"
+      data-namespace-typo3-fluid="true"
+>
+
+
+    <f:form.select name="filters[{filter.id}]"
+                   prependOptionLabel="{filter.translated.name}"
+                   prependOptionValue=""
+                   options="{sc:form.getOptions(options: filter.options)}"
+                   value="{activeFilters.{filter.id}}"
+    />
+</html>

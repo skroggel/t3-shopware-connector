@@ -89,93 +89,30 @@ return [
     ],
     'columns' => [
 
-        'hidden' => [
-            'exclude' => false,
-            'label' => 'LLL:EXT:core/Resources/Private/Language/locallang_general.xlf:LGL.hidden',
-            'config' => [
-				'readOnly' => true,
-                'type' => 'check',
-                'renderType' => 'checkboxToggle'
-            ],
-        ],
-        'starttime' => [
-            'exclude' => false,
-            'label' => 'LLL:EXT:core/Resources/Private/Language/locallang_general.xlf:LGL.starttime',
-            'config' => [
-				'readOnly' => true,
-                'type' => 'input',
-                'renderType' => 'inputDateTime',
-                'eval' => 'datetime',
-                'default' => 0,
-            ],
-        ],
-        'endtime' => [
-            'exclude' => false,
-            'label' => 'LLL:EXT:core/Resources/Private/Language/locallang_general.xlf:LGL.endtime',
-            'config' => [
-				'readOnly' => true,
-                'type' => 'input',
-                'renderType' => 'inputDateTime',
-                'eval' => 'datetime',
-                'default' => 0,
-            ],
-        ],
-        'sys_language_uid' => [
-            'exclude' => false,
-            'label' => 'LLL:EXT:core/Resources/Private/Language/locallang_general.xlf:LGL.language',
-            'config' => [
-				'readOnly' => true,
-                'type' => 'select',
-                'renderType' => 'selectSingle',
-                'special' => 'languages',
-                'default' => 0,
-            ],
-        ],
-        'l10n_parent' => [
-            'exclude' => false,
-            'label' => 'LLL:EXT:core/Resources/Private/Language/locallang_general.xlf:LGL.l10n_parent',
-            'config' => [
-				'readOnly' => true,
-                'type' => 'select',
-                'renderType' => 'selectSingle',
-                'foreign_table' => 'tx_shopwareconnector_domain_model_product',
-                'foreign_table_where' => 'AND tx_shopwareconnector_domain_model_product.pid=###CURRENT_PID### AND tx_shopwareconnector_domain_model_product.sys_language_uid IN (-1,0)',
-                'items' => [
-                    ['', 0],
-                ],
-            ],
-        ],
-        'l10n_diffsource' => [
-            'config' => [
-				'readOnly' => true,
-                'type' => 'passthrough',
-            ],
-        ],
         'sw_id' => [
             'exclude' => false,
-            'readOnly' => true,
             'label' => $ll . 'tx_shopwareconnector_domain_model_product.sw_id',
             'config' => [
 				'readOnly' => true,
+                'required' => true,
                 'type' => 'input',
                 'size' => 30,
-                'eval' => 'trim,required',
+                'eval' => 'trim',
             ],
         ],
         'sw_language_id' => [
             'exclude' => false,
-            'readOnly' => true,
             'label' => $ll . 'tx_shopwareconnector_domain_model_product.sw_language_id',
             'config' => [
 				'readOnly' => true,
+                'required' => true,
                 'type' => 'input',
                 'size' => 30,
-                'eval' => 'trim,required',
+                'eval' => 'trim',
             ],
         ],
         'sw_manufacturer_id' => [
             'exclude' => false,
-            'readOnly' => true,
             'label' => $ll . 'tx_shopwareconnector_domain_model_product.sw_manufacturer_id',
             'config' => [
 				'readOnly' => true,
@@ -202,7 +139,10 @@ return [
                 'minitems' => 0,
                 'maxitems' => 1,
                 'items' => [
-                    ['', 0],
+                    [
+                        'label' => '',
+                        'value' => '0',
+                    ],
                 ],
             ],
         ],
@@ -211,9 +151,10 @@ return [
             'label' => $ll . 'tx_shopwareconnector_domain_model_product.product_number',
             'config' => [
 				'readOnly' => true,
+                'required' => true,
                 'type' => 'input',
                 'size' => 30,
-                'eval' => 'trim,required',
+                'eval' => 'trim',
             ],
         ],
         'name' => [
@@ -221,9 +162,10 @@ return [
             'label' => $ll . 'tx_shopwareconnector_domain_model_product.name',
             'config' => [
 				'readOnly' => true,
+                'required' => true,
                 'type' => 'input',
                 'size' => 30,
-                'eval' => 'trim,required',
+                'eval' => 'trim',
             ],
         ],
         'description' => [
@@ -273,9 +215,8 @@ return [
             'label' => $ll . 'tx_shopwareconnector_domain_model_product.release_date',
             'config' => [
 				'readOnly' => true,
-                'type' => 'input',
-                'renderType' => 'inputDateTime',
-                'eval' => 'datetime',
+                'type' => 'datetime',
+                'format' => 'date',
             ],
         ],
         'price' => [
@@ -283,9 +224,10 @@ return [
             'label' => $ll . 'tx_shopwareconnector_domain_model_product.price',
             'config' => [
 				'readOnly' => true,
+                'required' => true,
                 'type' => 'input',
                 'size' => 10,
-                'eval' => 'double2,required',
+                'eval' => 'number',
             ],
         ],
         'calculated_price' => [
@@ -306,7 +248,7 @@ return [
 				'readOnly' => true,
                 'type' => 'input',
                 'size' => 10,
-                'eval' => 'int',
+                'eval' => 'number',
             ],
         ],
         'stock' => [
@@ -316,7 +258,7 @@ return [
 				'readOnly' => true,
                 'type' => 'input',
                 'size' => 10,
-                'eval' => 'int',
+                'eval' => 'number',
             ],
         ],
         'available' => [
@@ -335,7 +277,7 @@ return [
 				'readOnly' => true,
                 'type' => 'input',
                 'size' => 10,
-                'eval' => 'int',
+                'eval' => 'number',
             ],
         ],
         'shipping_free' => [
@@ -365,7 +307,7 @@ return [
 				'readOnly' => true,
                 'type' => 'input',
                 'size' => 10,
-                'eval' => 'int',
+                'eval' => 'number',
             ],
         ],
         'max_purchase' => [
@@ -375,7 +317,7 @@ return [
 				'readOnly' => true,
                 'type' => 'input',
                 'size' => 10,
-                'eval' => 'int',
+                'eval' => 'number',
             ],
         ],
         'min_purchase' => [
@@ -385,7 +327,7 @@ return [
 				'readOnly' => true,
                 'type' => 'input',
                 'size' => 10,
-                'eval' => 'int',
+                'eval' => 'number',
             ],
         ],
         'purchase_unit' => [
@@ -425,7 +367,7 @@ return [
 				'readOnly' => true,
                 'type' => 'input',
                 'size' => 10,
-                'eval' => 'double2',
+                'eval' => 'number',
             ],
         ],
         'width' => [
@@ -435,7 +377,7 @@ return [
 				'readOnly' => true,
                 'type' => 'input',
                 'size' => 10,
-                'eval' => 'double2',
+                'eval' => 'number',
             ],
         ],
         'height' => [
@@ -445,7 +387,7 @@ return [
 				'readOnly' => true,
                 'type' => 'input',
                 'size' => 10,
-                'eval' => 'double2',
+                'eval' => 'number',
             ],
         ],
         'length' => [
@@ -455,7 +397,7 @@ return [
 				'readOnly' => true,
                 'type' => 'input',
                 'size' => 10,
-                'eval' => 'double2',
+                'eval' => 'number',
             ],
         ],
         'tags' => [
@@ -475,14 +417,8 @@ return [
             'config' => [
 				'readOnly' => true,
                 'type' => 'input',
-                'renderType' => 'inputLink',
-                'fieldControl' => [
-                    'linkPopup' => [
-                        'options' => [
-                            'blindLinkOptions' => 'file,folder,page,mail,telephone',
-                        ],
-                    ],
-                ],
+                'renderType' => 'link',
+                'allowedTypes' => ['url'],
             ],
         ],
         'cover_mime_type' => [

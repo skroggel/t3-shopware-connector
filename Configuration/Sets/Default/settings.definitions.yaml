@@ -1,0 +1,61 @@
+categories:
+  shopwareConnector: ~
+  shopwareConnector.anonymousGuestUser:
+    parent: shopwareConnector
+  shopwareConnector.proxy:
+    parent: shopwareConnector
+  shopwareConnector.templates:
+    parent: shopwareConnector
+
+settings:
+  shopwareConnector.view.templateRootPath:
+    default: 'EXT:shopware_connector/Resources/Private/Templates/'
+    type: string
+    category: shopwareConnector.templates
+  shopwareConnector.view.partialRootPath:
+    default: 'EXT:shopware_connector/Resources/Private/Partials/'
+    type: string
+    category: shopwareConnector.templates
+  shopwareConnector.view.layoutRootPath:
+    default: 'EXT:shopware_connector/Resources/Private/Layouts/'
+    type: string
+    category: shopwareConnector.templates
+
+
+  shopwareConnector.anonymousGuestUser.firstName:
+    default: Max
+    type: string
+    category: shopwareConnector.anonymousGuestUser
+  shopwareConnector.anonymousGuestUser.lastName:
+    default: Mustermannn
+    type: string
+    category: shopwareConnector.anonymousGuestUser
+  shopwareConnector.anonymousGuestUser.email:
+    default: no-reply@example.com
+    type: string
+    category: shopwareConnector.anonymousGuestUser
+  shopwareConnector.anonymousGuestUser.city:
+    default: Musterstadt
+    type: string
+    category: shopwareConnector.anonymousGuestUser
+  shopwareConnector.anonymousGuestUser.zip:
+    default: 123456
+    type: string
+    category: shopwareConnector.anonymousGuestUser
+
+
+  shopwareConnector.proxy.http:
+    default: ''
+    type: string
+    category: shopwareConnector.proxy
+  shopwareConnector.proxy.https:
+    default: ''
+    type: string
+    category: shopwareConnector.proxy
+
+
+  shopwareConnector.itemsPerPage:
+    default: 10
+    type: int
+    category: shopwareConnector
+

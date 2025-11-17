@@ -5,8 +5,7 @@
         <f:if condition="{flashMessages}">
             <div class="typo3-messages" role="alert">
                 <f:for each="{flashMessages}" as="flashMessage">
-
-                    <f:switch expression="{flashMessage.severity}">
+                    <f:switch expression="{flashMessage.severity.value}">
                         <f:case value="-2"><f:variable name="status" value="dark" /></f:case>
                         <f:case value="-1"><f:variable name="status" value="info" /></f:case>
                         <f:case value="0"><f:variable name="status" value="success" /></f:case>

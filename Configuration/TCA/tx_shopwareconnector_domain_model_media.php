@@ -51,88 +51,26 @@ return [
         ],
     ],
     'columns' => [
-        'hidden' => [
-            'exclude' => false,
-            'label' => 'LLL:EXT:core/Resources/Private/Language/locallang_general.xlf:LGL.hidden',
-            'config' => [
-				'readOnly' => true,
-                'type' => 'check',
-                'renderType' => 'checkboxToggle'
-            ],
-        ],
-        'starttime' => [
-            'exclude' => false,
-            'label' => 'LLL:EXT:core/Resources/Private/Language/locallang_general.xlf:LGL.starttime',
-            'config' => [
-				'readOnly' => true,
-                'type' => 'input',
-                'renderType' => 'inputDateTime',
-                'eval' => 'datetime',
-                'default' => 0,
-            ],
-        ],
-        'endtime' => [
-            'exclude' => false,
-            'label' => 'LLL:EXT:core/Resources/Private/Language/locallang_general.xlf:LGL.endtime',
-            'config' => [
-				'readOnly' => true,
-                'type' => 'input',
-                'renderType' => 'inputDateTime',
-                'eval' => 'datetime',
-                'default' => 0,
-            ],
-        ],
-        'sys_language_uid' => [
-            'exclude' => false,
-            'label' => 'LLL:EXT:core/Resources/Private/Language/locallang_general.xlf:LGL.language',
-            'config' => [
-				'readOnly' => true,
-                'type' => 'select',
-                'renderType' => 'selectSingle',
-                'special' => 'languages',
-                'default' => 0,
-            ],
-        ],
-        'l10n_parent' => [
-            'exclude' => false,
-            'label' => 'LLL:EXT:core/Resources/Private/Language/locallang_general.xlf:LGL.l10n_parent',
-            'config' => [
-				'readOnly' => true,
-                'type' => 'select',
-                'renderType' => 'selectSingle',
-                'foreign_table' => 'tx_shopwareconnector_domain_model_media',
-                'foreign_table_where' => 'AND tx_shopwareconnector_domain_model_media.pid=###CURRENT_PID### AND tx_shopwareconnector_domain_model_media.sys_language_uid IN (-1,0)',
-                'items' => [
-                    ['', 0],
-                ],
-            ],
-        ],
-        'l10n_diffsource' => [
-            'config' => [
-				'readOnly' => true,
-                'type' => 'passthrough',
-            ],
-        ],
         'sw_id' => [
             'exclude' => false,
-            'readOnly' => true,
             'label' => $ll . 'tx_shopwareconnector_domain_model_media.sw_id',
             'config' => [
 				'readOnly' => true,
+                'required' => true,
                 'type' => 'input',
                 'size' => 30,
-                'eval' => 'trim,required',
+                'eval' => 'trim',
             ],
         ],
         'sw_language_id' => [
             'exclude' => false,
-            'readOnly' => true,
             'label' => $ll . 'tx_shopwareconnector_domain_model_media.sw_language_id',
             'config' => [
 				'readOnly' => true,
+                'required' => true,
                 'type' => 'input',
                 'size' => 30,
-                'eval' => 'trim,required',
+                'eval' => 'trim',
             ],
         ],
         'checksum' => [
@@ -156,9 +94,10 @@ return [
             'label' => $ll . 'tx_shopwareconnector_domain_model_media.file_name',
             'config' => [
 				'readOnly' => true,
+                'required' => true,
                 'type' => 'input',
                 'size' => 255,
-                'eval' => 'trim,required',
+                'eval' => 'trim',
             ],
         ],
         'file_extension' => [
@@ -178,7 +117,7 @@ return [
 				'readOnly' => true,
                 'type' => 'input',
                 'size' => 10,
-                'eval' => 'int',
+                'eval' => 'number',
             ],
         ],
         'title' => [
@@ -207,14 +146,8 @@ return [
             'config' => [
 				'readOnly' => true,
                 'type' => 'input',
-                'renderType' => 'inputLink',
-                'fieldControl' => [
-                    'linkPopup' => [
-                        'options' => [
-                            'blindLinkOptions' => 'file,folder,page,mail,telephone',
-                        ],
-                    ],
-                ],
+                'renderType' => 'link',
+                'allowedTypes' => ['url'],
             ],
         ],
         'sorting' => [
@@ -224,7 +157,7 @@ return [
 				'readOnly' => true,
                 'type' => 'input',
                 'size' => 10,
-                'eval' => 'int',
+                'eval' => 'number',
             ],
         ],
     ],

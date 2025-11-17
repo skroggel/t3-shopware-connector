@@ -3,19 +3,48 @@
     <file source-language="en" target-language="de" datatype="plaintext" original="messages" date="2024-08-28T17:42:00Z" product-name="shopware_connector">
         <header/>
         <body>
-
+			<trans-unit id="module.title">
+				<source>Shopware Connector</source>
+				<target>Shopware Connector</target>
+			</trans-unit>
+			<trans-unit id="module.description">
+				<source>Manage Shopware API connections and data import</source>
+				<target>Verwalten Sie Shopware-API-Verbindungen und den Datenimport</target>
+			</trans-unit>
+			<trans-unit id="module.api.title">
+				<source>Store API</source>
+				<target>Store API</target>
+			</trans-unit>
+			<trans-unit id="module.adminApi.title">
+				<source>Admin API</source>
+				<target>Admin API</target>
+			</trans-unit>
             <trans-unit id="module.apiUrl">
-                <source>API Url</source>
-                <target>API Url</target>
+                <source>API URL (e.g. https://example.com/store-api)</source>
+                <target>API URL (z.B. https://example.com/store-api)</target>
             </trans-unit>
             <trans-unit id="module.apiKey">
                 <source>API Key</source>
                 <target>API Key</target>
             </trans-unit>
+            <trans-unit id="module.adminApiUrl">
+                <source>Admin API URL (e.g. https://example.com/api)</source>
+                <target>Admin API URL (z.B. https://example.com/api)</target>
+            </trans-unit>
+            <trans-unit id="module.adminApiAccessId">
+                <source>Admin API Access ID</source>
+                <target>Admin API Zugangsschlüssel-ID/target>
+            </trans-unit>
+            <trans-unit id="module.adminApiAccessSecret">
+                <source>Admin API Secret</source>
+                <target>Admin API Sicherheitsschlüssel</target>
+            </trans-unit>
             <trans-unit id="module.saveButton">
                 <source>Save Settings</source>
                 <target>Einstellungen speichern</target>
             </trans-unit>
+
+
             <trans-unit id="adminModuleController.message.saved">
                 <source>Settings saved successfully!</source>
                 <target>Einstellungen erfolgreich gespeichert!</target>
@@ -24,6 +53,7 @@
                 <source>Error saving settings. Please check if all values are set correctly.</source>
                 <target>Fehler beim Speichern der Einstellungen. Bitte prüfen Sie, ob alle Werte korrekt gesetzt sind.</target>
             </trans-unit>
+
         </body>
     </file>
 </xliff>

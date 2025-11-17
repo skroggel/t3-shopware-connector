@@ -17,7 +17,17 @@ plugin.tx_shopwareconnector {
 	}
 
 	settings {
+        proxy {
 
+            # cat=plugin.tx_shopwareconnector//a; type=string; label=HTTP proxy
+            http =
+
+            # cat=plugin.tx_shopwareconnector//a; type=string; label=HTTPS proxy
+            https = test
+        }
+
+        # cat=plugin.tx_shopwareconnector//a; type=int; label=Items per Page
+        itemsPerPage = 10
 	}
 }
 

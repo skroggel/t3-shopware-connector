@@ -13,6 +13,8 @@ declare(strict_types=1);
 namespace Madj2k\ShopwareConnector\Controller;
 
 
+use Psr\Http\Message\ResponseInterface;
+use TYPO3\CMS\Core\Type\ContextualFeedbackSeverity;
 use TYPO3\CMS\Extbase\Mvc\Controller\ActionController;
 use TYPO3\CMS\Core\Registry;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
@@ -31,13 +33,13 @@ class AdminModuleController extends ActionController
     /**
      * @const string
      */
-    const REGISTRY_NAMESPACE = 'shopware_connector';
+    const string REGISTRY_NAMESPACE = 'shopware_connector';
 
 
     /**
      * @const string
      */
-    const REGISTRY_KEY = 'shopwareConfig';
+    const string REGISTRY_KEY = 'shopwareConfig';
 
 
     /**
@@ -60,9 +62,9 @@ class AdminModuleController extends ActionController
      * Loads the current API credentials from the registry and displays them in the form.
      *
      * @param array $shopwareConfig
-     * @return void
+     * @return \Psr\Http\Message\ResponseInterface
      */
-    public function indexAction(array $shopwareConfig = []): void
+    public function indexAction(array $shopwareConfig = []): ResponseInterface
     {
 
         if (! $shopwareConfig) {
@@ -75,6 +77,8 @@ class AdminModuleController extends ActionController
         $this->view->assignMultiple([
             'shopwareConfig' => $shopwareConfig
         ]);
+
+        return $this->htmlResponse();
     }
 
 
@@ -82,14 +86,16 @@ class AdminModuleController extends ActionController
      * Saves the API credentials to the TYPO3 Core registry.
      *
      * @param array $shopwareConfig
-     * @return void
-     * @throws \TYPO3\CMS\Extbase\Mvc\Exception\StopActionException
+     * @return \Psr\Http\Message\ResponseInterface
      */
-    public function saveAction(array $shopwareConfig = []): void
+    public function saveAction(array $shopwareConfig = []): ResponseInterface
     {
         if (
             ($shopwareConfig['apiUrl'])
             && ($shopwareConfig['apiKey'])
+            && ($shopwareConfig['adminApiUrl'])
+            && ($shopwareConfig['adminApiAccessId'])
+            && ($shopwareConfig['adminApiAccessSecret'])
         ) {
 
             $this->registry->set(
@@ -112,11 +118,11 @@ class AdminModuleController extends ActionController
                     'shopware_connector'
                 ),
                 '',
-                \TYPO3\CMS\Core\Messaging\AbstractMessage::ERROR
+                ContextualFeedbackSeverity::ERROR
             );
         }
 
-        $this->redirect(
+        return $this->redirect(
             'index',
             null,
             null,

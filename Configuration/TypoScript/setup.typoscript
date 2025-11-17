@@ -3,17 +3,17 @@ plugin.tx_shopwareconnector {
 	view {
 		layoutRootPaths {
 			0 = EXT:shopware_connector/Resources/Private/Layouts/
-			10 = {$plugin.tx_shopwareconnector.view.layoutRootPath}
+			10 = {$plugin.tx_shopwareconnector.view.layoutRootPath ?? $shopwareConnector.view.layoutRootPath}
 
 		}
 		templateRootPaths {
 			0 = EXT:shopware_connector/Resources/Private/Templates/
-            10 = {$plugin.tx_shopwareconnector.view.templateRootPath}
+            10 = {$plugin.tx_shopwareconnector.view.templateRootPath ?? $shopwareConnector.view.templateRootPath}
 
         }
 		partialRootPaths {
 			0 = EXT:shopware_connector/Resources/Private/Partials/
-			10 = {$plugin.tx_shopwareconnector.view.partialRootPath}
+			10 = {$plugin.tx_shopwareconnector.view.partialRootPath ?? $shopwareConnector.view.partialRootPath}
         }
 	}
 
@@ -25,7 +25,20 @@ plugin.tx_shopwareconnector {
 	}
 
 	settings {
+        proxy {
+            http = {$shopwareConnector.proxy.http}
+            https = {$shopwareConnector.proxy.https}
+        }
 
+        itemsPerPage = {$shopwareConnector.itemsPerPage}
+
+        anonymousGuestUser {
+            firstName = {$shopwareConnector.anonymousGuestUser.firstName}
+            lastName = {$shopwareConnector.anonymousGuestUser.lastName}
+            email = {$shopwareConnector.anonymousGuestUser.email}
+            city = {$shopwareConnector.anonymousGuestUser.city}
+            zip = {$shopwareConnector.anonymousGuestUser.zip}
+        }
 	}
 }
 

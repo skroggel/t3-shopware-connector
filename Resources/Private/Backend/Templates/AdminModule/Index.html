@@ -16,6 +16,8 @@
 
         <f:form action="save" name="shopwareConfig" method="post" class="form">
 
+            <h2>{f:translate(key: 'module.api.title')}</h2>
+
             <div class="form-group">
                 <label><f:translate key="module.apiUrl" />:</label>
                 <f:form.textfield property="apiUrl" value="{shopwareConfig.apiUrl}"/>
@@ -24,6 +26,23 @@
             <div class="form-group">
                 <label><f:translate key="module.apiKey" />:</label>
                 <f:form.textfield property="apiKey" value="{shopwareConfig.apiKey}"/>
+            </div>
+
+            <h2>{f:translate(key: 'module.adminApi.title')}</h2>
+
+            <div class="form-group">
+                <label><f:translate key="module.adminApiUrl" />:</label>
+                <f:form.textfield property="adminApiUrl" value="{shopwareConfig.adminApiUrl}"/>
+            </div>
+
+            <div class="form-group">
+                <label><f:translate key="module.adminApiAccessId" />:</label>
+                <f:form.textfield property="adminApiAccessId" value="{shopwareConfig.adminApiAccessId}"/>
+            </div>
+
+            <div class="form-group">
+                <label><f:translate key="module.adminApiAccessSecret" />:</label>
+                <f:form.password property="adminApiAccessSecret" value="{shopwareConfig.adminApiAccessSecret}"/>
             </div>
 
             <f:form.submit value="{f:translate(key:'module.saveButton')}"

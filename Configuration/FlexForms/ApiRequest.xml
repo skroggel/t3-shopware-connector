@@ -1,0 +1,25 @@
+<T3DataStructure>
+    <sheets>
+        <sDEF>
+            <ROOT>
+                <sheetTitle>LLL:EXT:shopware_connector/Resources/Private/Language/locallang_db.xlf:flexform.apiRequest.function.headline</sheetTitle>
+                <type>array</type>
+                <el>
+                    <switchableControllerActions>
+                        <label>LLL:EXT:shopware_connector/Resources/Private/Language/locallang_db.xlf:flexform.apiRequest.function.select</label>
+                        <config>
+                            <type>select</type>
+                            <renderType>selectSingle</renderType>
+                            <items>
+                                <numIndex index="0" type="array">
+                                    <label>LLL:EXT:shopware_connector/Resources/Private/Language/locallang_db.xlf:flexform.apiRequest.function.select.I.list</label>
+                                    <value>ApiRequest->list</value>
+                                </numIndex>
+                            </items>
+                        </config>
+                    </switchableControllerActions>
+                </el>
+            </ROOT>
+        </sDEF>
+    </sheets>
+</T3DataStructure>

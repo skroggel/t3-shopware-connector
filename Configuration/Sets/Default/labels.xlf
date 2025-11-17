@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
+	<file source-language="en" datatype="plaintext" original="EXT:shopware_connector/Configuration/Sets/Sitemap/labels.xlf" date="2018-09-04T12:30:00Z"
+		  product-name="shopware_connector">
+		<header/>
+		<body>
+			<trans-unit id="label">
+				<source>Shopware Connector</source>
+			</trans-unit>
+
+
+			<trans-unit id="categories.shopwareConnector">
+				<source>Shopware Connector</source>
+			</trans-unit>
+			<trans-unit id="categories.shopwareConnector.anonymousGuestUser">
+				<source>Anonymous Guest User</source>
+			</trans-unit>
+			<trans-unit id="categories.shopwareConnector.proxy">
+				<source>Proxy</source>
+			</trans-unit>
+			<trans-unit id="categories.shopwareConnector.templates">
+				<source>Template Paths</source>
+			</trans-unit>
+
+
+
+			<trans-unit id="settings.shopwareConnector.view.templateRootPath">
+				<source>Path to template root (FE)</source>
+			</trans-unit>
+			<trans-unit id="settings.shopwareConnector.view.partialRootPath">
+				<source>Path to template partials (FE)</source>
+			</trans-unit>
+			<trans-unit id="settings.shopwareConnector.view.layoutRootPath">
+				<source>Path to template layouts (FE)</source>
+			</trans-unit>
+
+
+			<trans-unit id="settings.shopwareConnector.proxy.http">
+				<source>Proxy (HTTP)</source>
+			</trans-unit>
+			<trans-unit id="settings.shopwareConnector.proxy.https">
+				<source>Proxy (HTTPS)</source>
+			</trans-unit>
+
+
+			<trans-unit id="settings.shopwareConnector.anonymousGuestUser.firstName">
+				<source>First Name</source>
+			</trans-unit>
+			<trans-unit id="settings.shopwareConnector.anonymousGuestUser.lastName">
+				<source>Last Name</source>
+			</trans-unit>
+			<trans-unit id="settings.shopwareConnector.anonymousGuestUser.email">
+				<source>Email</source>
+			</trans-unit>
+			<trans-unit id="settings.shopwareConnector.anonymousGuestUser.city">
+				<source>City</source>
+			</trans-unit>
+			<trans-unit id="settings.shopwareConnector.anonymousGuestUser.zip">
+				<source>ZIP</source>
+			</trans-unit>
+
+
+			<trans-unit id="settings.shopwareConnector.itemsPerPage">
+				<source>Items per page</source>
+			</trans-unit>
+		</body>
+	</file>
+</xliff>

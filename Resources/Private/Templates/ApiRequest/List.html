@@ -1,0 +1,57 @@
+<html xmlns:f="http://typo3.org/ns/TYPO3/CMS/Fluid/ViewHelpers"
+      xmlns:sc="http://typo3.org/ns/Madj2k/ShopwareConnector/ViewHelpers"
+      data-namespace-typo3-fluid="true"
+>
+
+    <h1>Products:</h1>
+    <ul>
+        <f:for each="{paginator.paginatedItems}" as="product">
+            <li>
+                <f:link.action
+                    action="show"
+                    arguments="{productNumber: product.productNumber, slug: '{product.translated.name -> sc:format.slug()}'}"
+                >
+                        <img src="{product.cover.media.url}" alt="{product.translated.name}" >
+                        {product.translated.name}
+                </f:link.action>
+            </li>
+        </f:for>
+    </ul>
+
+    <f:if condition="{paginator.paginatedItems} && {paginator.numberOfPages} > 1">
+        <ul class="pagination">
+            <f:for each="{pagination.allPageNumbers}" as="page">
+                <li class="page-item">
+                    <f:link.action
+                        action="list"
+                        arguments="{page:page, filters: activeFilters, categories: activeCategories, term: term}"
+                        class="page-link {f:if(condition:'{currentPageNumber}=={page}',then:'active')}"
+                    >
+                        {page}
+                    </f:link.action>
+                </li>
+            </f:for>
+        </ul>
+    </f:if>
+
+    <aside>
+        <h2>Filterable Properties & Categories:</h2>
+        <f:form action="list" method="POST">
+
+            <f:render partial="Term"
+                      arguments="{term: term}" />
+
+            <f:render partial="Categories"
+                      arguments="{allCategories: allCategories, activeCategories: activeCategories}" />
+
+            <f:render partial="Filters"
+                      arguments="{allFilters: allFilters, activeFilters: activeFilters, availableFilterOptions: availableFilterOptions}" />
+
+            <button type="submit">OK</button>
+        </f:form>
+
+        <f:form action="list" method="POST">
+            <button type="submit">RESET</button>
+        </f:form>
+    </aside>
+</html>

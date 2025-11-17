@@ -22,7 +22,8 @@ The Shopware Connector is a TYPO3 extension designed to connect and import data 
 ## Tests
 Run functional tests using the TYPO3 testing framework:
 ```bash
-./vendor/bin/phpunit --testsuite functional
+./vendor/bin/phpunit -c vendor/madj2k/t3-shopware-connector/phpunit.xml.dist
+
 ```
 
 ## Todo

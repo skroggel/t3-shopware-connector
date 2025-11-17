@@ -1,0 +1,22 @@
+routeEnhancers:
+  ShopwareConnector:
+    type: Extbase
+    extension: ShopwareConnector
+    plugin: Apirequest
+    routes:
+      - routePath: '/shop/list/{page}'
+        _controller: 'ApiRequest::list'
+      - routePath: '/shop/show/{slug}/{productNumber}'
+        _controller: 'ApiRequest::show'
+      - routePath: '/shop/download/{productId}'
+        _controller: 'ApiRequest::download'
+    defaultController: 'ApiRequest::list'
+    aspects:
+      page:
+        type: StaticRangeMapper
+        start: '1'
+        end: '1000'
+    requirements:
+      slug: '^[a-z0-9\-]+$'
+      productNumber: '^[A-Za-z0-9\-_]+$'
+      productId: '^[A-Za-z0-9]+$'

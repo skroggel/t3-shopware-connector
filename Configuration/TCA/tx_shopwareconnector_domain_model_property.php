@@ -46,88 +46,26 @@ return [
     ],
     'columns' => [
 
-        'hidden' => [
-            'exclude' => false,
-            'label' => 'LLL:EXT:core/Resources/Private/Language/locallang_general.xlf:LGL.hidden',
-            'config' => [
-				'readOnly' => true,
-                'type' => 'check',
-                'renderType' => 'checkboxToggle'
-            ],
-        ],
-        'starttime' => [
-            'exclude' => false,
-            'label' => 'LLL:EXT:core/Resources/Private/Language/locallang_general.xlf:LGL.starttime',
-            'config' => [
-				'readOnly' => true,
-                'type' => 'input',
-                'renderType' => 'inputDateTime',
-                'eval' => 'datetime',
-                'default' => 0,
-            ],
-        ],
-        'endtime' => [
-            'exclude' => false,
-            'label' => 'LLL:EXT:core/Resources/Private/Language/locallang_general.xlf:LGL.endtime',
-            'config' => [
-				'readOnly' => true,
-                'type' => 'input',
-                'renderType' => 'inputDateTime',
-                'eval' => 'datetime',
-                'default' => 0,
-            ],
-        ],
-        'sys_language_uid' => [
-            'exclude' => false,
-            'label' => 'LLL:EXT:core/Resources/Private/Language/locallang_general.xlf:LGL.language',
-            'config' => [
-				'readOnly' => true,
-                'type' => 'select',
-                'renderType' => 'selectSingle',
-                'special' => 'languages',
-                'default' => 0,
-            ],
-        ],
-        'l10n_parent' => [
-            'exclude' => false,
-            'label' => 'LLL:EXT:core/Resources/Private/Language/locallang_general.xlf:LGL.l10n_parent',
-            'config' => [
-				'readOnly' => true,
-                'type' => 'select',
-                'renderType' => 'selectSingle',
-                'foreign_table' => 'tx_shopwareconnector_domain_model_property',
-                'foreign_table_where' => 'AND tx_shopwareconnector_domain_model_property.pid=###CURRENT_PID### AND tx_shopwareconnector_domain_model_property.sys_language_uid IN (-1,0)',
-                'items' => [
-                    ['', 0],
-                ],
-            ],
-        ],
-        'l10n_diffsource' => [
-            'config' => [
-				'readOnly' => true,
-                'type' => 'passthrough',
-            ],
-        ],
         'shopware_id' => [
             'exclude' => false,
-            'readOnly' => true,
             'label' => $ll . 'tx_shopwareconnector_domain_model_property.shopware_id',
             'config' => [
 				'readOnly' => true,
+                'required' => true,
                 'type' => 'input',
                 'size' => 30,
-                'eval' => 'trim,required',
+                'eval' => 'trim',
             ],
         ],
         'sw_language_id' => [
             'exclude' => false,
-            'readOnly' => true,
             'label' => $ll . 'tx_shopwareconnector_domain_model_property.sw_language_id',
             'config' => [
 				'readOnly' => true,
+                'required' => true,
                 'type' => 'input',
                 'size' => 30,
-                'eval' => 'trim,required',
+                'eval' => 'trim',
             ],
         ],
         'checksum' => [
@@ -141,9 +79,10 @@ return [
             'label' => $ll . 'tx_shopwareconnector_domain_model_property.name',
             'config' => [
 				'readOnly' => true,
+                'required' => true,
                 'type' => 'input',
                 'size' => 255,
-                'eval' => 'trim,required',
+                'eval' => 'trim',
             ],
         ],
         'value' => [
@@ -151,6 +90,7 @@ return [
             'label' => $ll . 'tx_shopwareconnector_domain_model_property.value',
             'config' => [
 				'readOnly' => true,
+                'required' => true,
                 'type' => 'input',
                 'size' => 255,
                 'eval' => 'trim',
@@ -173,7 +113,7 @@ return [
 				'readOnly' => true,
                 'type' => 'input',
                 'size' => 10,
-                'eval' => 'int',
+                'eval' => 'number',
             ],
         ],
     ],

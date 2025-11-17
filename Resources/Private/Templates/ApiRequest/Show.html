@@ -1,0 +1,52 @@
+<html xmlns:f="http://typo3.org/ns/TYPO3/CMS/Fluid/ViewHelpers"
+      xmlns:sc="http://typo3.org/ns/Madj2k/ShopwareConnector/ViewHelpers"
+      data-namespace-typo3-fluid="true"
+>
+
+    <h1>{product.translated.name}</h1>
+    <h2>{product.translated.customFields.custom_meta_subheader}</h2>
+
+    <img src="{product.cover.media.url}" alt="{product.translated.name}" >
+
+    <f:format.html>{product.translated.customFields.custom_meta_covertext}</f:format.html>
+
+    <f:format.html>{product.translated.description}</f:format.html>
+
+    <h3>Downloads</h3>
+    <f:link.action
+        action="download"
+        arguments="{productId: product.id}"
+    >
+        Download
+    </f:link.action>
+
+
+    <f:for each="{sc:api.crossSelling(shopwareApiService: shopwareApiService, productId: product.id)}" as="crossSellingGroup">
+        <f:comment><!-- This is a reference to the bundled items --></f:comment>
+        <f:if condition="{crossSellingGroup.crossSelling.name} == '#BUNDLE#'">
+            <f:then>
+                <h3>Bundle</h3>
+                <f:render partial="CrossSelling"
+                          arguments="{products: crossSellingGroup.products}" />
+            </f:then>
+            <f:else>
+                <f:comment><!-- This is a reference to the bundle parent --></f:comment>
+                <f:if condition="{crossSellingGroup.crossSelling.name} == '#BUNDLE_PARENT#'">
+                    <f:then>
+                        <h3>Belongs to bundle</h3>
+                        <f:render partial="CrossSelling"
+                                  arguments="{products: crossSellingGroup.products}" />
+                    </f:then>
+                    <f:else>
+                        <f:comment><!-- This is a normal crossselling --></f:comment>
+                        <h3>{crossSellingGroup.crossSelling.translated.name}</h3>
+                        <f:render partial="CrossSelling"
+                                  arguments="{products: crossSellingGroup.products}" />
+
+                    </f:else>
+                </f:if>
+            </f:else>
+        </f:if>
+
+    </f:for>
+</html>

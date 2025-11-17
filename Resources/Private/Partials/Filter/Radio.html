@@ -1,0 +1,32 @@
+<html xmlns:f="http://typo3.org/ns/TYPO3/CMS/Fluid/ViewHelpers"
+      xmlns:sc="http://typo3.org/ns/Madj2k/ShopwareConnector/ViewHelpers"
+      data-namespace-typo3-fluid="true"
+>
+
+    <h3>{filter.translated.name}</h3>
+    <ul class="filter-list">
+        <f:for each="{sc:form.getOptions(options: filter.options)}" as="label" key="value">
+            <li class="filter-item">
+                <f:variable name="enabled" value="FALSE" />
+                <f:if condition="{availableFilterOptions}">
+                    <f:variable name="enabled" value="{sc:arrayKeyExists(needle: filter.id, haystack: availableFilterOptions)}" />
+                </f:if>
+
+                <f:variable name="checked" value="FALSE" />
+                <f:if condition="{activeFilters.{filter.id}}">
+                    <f:variable name="checked" value="{f:if(condition: '{activeFilters.{filter.id}} == {value}')}" />
+                </f:if>
+
+                <label>
+                    <f:form.radio
+                        name="filters[{filter.id}]"
+                        value="{value}"
+                        checked="{checked}"
+                        disabled="{f:if(condition: '!{enabled}', then: 'disabled')}"
+                    />
+                    {label}
+                </label>
+            </li>
+        </f:for>
+    </ul>
+</html>
