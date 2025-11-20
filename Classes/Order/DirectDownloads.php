@@ -55,7 +55,7 @@ class DirectDownloads
      * and returns the available direct download links.
      *
      * @param string $productId The product ID of the digital product to order.
-     * @param array $set statings settings
+     * @param array $settings statings settings
      * @return string[] Array of absolute download URLs.
      * @throws \GuzzleHttp\Exception\GuzzleException
      * @throws \Madj2k\ShopwareConnector\Exception
@@ -103,7 +103,6 @@ class DirectDownloads
             }
         }
 
-
         // 3. Add product to cart
         $cartAddResult = $this->apiService->fetchFromApi(
             'checkout/cart/line-item',
@@ -118,6 +117,11 @@ class DirectDownloads
                 ]]
             ],
         );
+
+
+     //   DebuggerUtility::var_dump($cartAddResult );
+
+       // die();
 
         if (empty($cartAddResult['lineItems'])) {
             return $files;
@@ -174,7 +178,7 @@ class DirectDownloads
                         $filename .= '.' . $download['media']['fileExtension'];
                     }
                 }
-                var_dump($this->apiService->getContextToken());
+
                 $fileContent = $this->apiService->fetchFromApi(
                     sprintf('order/download/%s/%s', $orderId, $downloadId ),
                     [],

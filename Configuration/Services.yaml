@@ -12,18 +12,6 @@ services:
   Madj2k\ShopwareConnector\:
     resource: '../Classes/*'
 
-  Madj2k\ShopwareConnector\Command\ShopwareImportCommand:
-    tags:
-      - name: 'console.command'
-        command: 'shopware:import'
-        schedulable: true
-    arguments:
-      $importer: '@Madj2k\ShopwareConnector\Service\ShopwareImporter'
-
-  Madj2k\ShopwareConnector\Service\ShopwareImporter:
-    arguments:
-      $shopwareApiService: '@Madj2k\ShopwareConnector\Service\ShopwareApiService'
-
   Madj2k\ShopwareConnector\Service\ShopwareApiService:
     arguments:
       $cache: '@cache.shopwareconnector_apicalls'

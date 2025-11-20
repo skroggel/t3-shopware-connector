@@ -70,6 +70,7 @@ class TreeViewHelper extends AbstractViewHelper
         );
     }
 
+
     /**
      * Renders the hierarchical category tree.
      *
@@ -81,6 +82,7 @@ class TreeViewHelper extends AbstractViewHelper
         $categories = $this->arguments['categories'];
         return $this->buildTree($categories);
     }
+
 
     /**
      * Builds a hierarchical tree from a flat list using parentId relations.

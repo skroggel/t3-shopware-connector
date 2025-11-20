@@ -22,7 +22,7 @@ use TYPO3\CMS\Extbase\Utility\LocalizationUtility;
 
 /**
  * Class AdminModuleController
- **
+ *
  * @author Steffen Kroggel <developer@steffenkroggel.de>
  * @copyright Steffen Kroggel <developer@steffenkroggel.de>
  * @package Madj2k_ShopwareConnector

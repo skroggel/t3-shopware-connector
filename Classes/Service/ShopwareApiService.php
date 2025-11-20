@@ -196,14 +196,21 @@ class ShopwareApiService implements LoggerAwareInterface
         bool $returnRawBody = false,
         ?string $cacheKey = null,
     ): array|string {
+
         $cacheKey = $cacheKey ?: sha1($url . json_encode($parameters));
-        $this->logger->debug('Using cache key: ' . $cacheKey);
-$cacheLifetime = 0;
+        $doCache = false;
+
+        if (
+            $cacheLifetime > 0
+            && !$this->getContextToken()
+            && !$returnRawBody
+        ){
+            $doCache = true;
+        }
+
         if (
             $this->cache->has($cacheKey)
-            && $cacheLifetime > 0
-            && !$this->getContextToken()
-            && !$returnRawBody)
+            && $doCache)
         {
             return $this->cache->get($cacheKey);
         }
@@ -226,7 +233,7 @@ $cacheLifetime = 0;
 
                 $response = $this->requestFactory->request($url, $method, $options);
 
-                // do not truncate errors!
+            // do not truncate errors!
             } catch (\GuzzleHttp\Exception\GuzzleException $e) {
 
                 $fullLengthMessage = $e->getResponse()->getBody()->getContents();
@@ -271,7 +278,9 @@ $cacheLifetime = 0;
                 );
             }
 
-            $this->cache->set($cacheKey, $data, [], $cacheLifetime);
+            if ($doCache) {
+                $this->cache->set($cacheKey, $data, [], $cacheLifetime);
+            }
             return $data;
 
         } catch (\Throwable $e) {
