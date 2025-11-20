@@ -196,7 +196,7 @@ class ApiRequestController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionContr
                 ],
             ],
         );
-DebuggerUtility::var_dump($results);
+
         if (! empty($results['elements'])) {
             $this->view->assign('product', $results['elements'][0]);
         }
