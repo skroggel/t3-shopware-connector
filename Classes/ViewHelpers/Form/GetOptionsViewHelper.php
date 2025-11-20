@@ -43,6 +43,7 @@ class GetOptionsViewHelper extends AbstractViewHelper
         );
     }
 
+
     /**
      * Render method
      *

@@ -13,7 +13,9 @@ declare(strict_types=1);
 namespace Madj2k\ShopwareConnector\Controller;
 
 use JetBrains\PhpStorm\NoReturn;
+use Madj2k\ShopwareConnector\Domain\DTO\Cart;
 use Madj2k\ShopwareConnector\Order\DirectDownloads;
+use Madj2k\ShopwareConnector\Order\OrderManager;
 use Madj2k\ShopwareConnector\Service\ShopwareApiService;
 use Madj2k\ShopwareConnector\Utilities\FilterUtility;
 use Psr\Http\Message\ResponseInterface;
@@ -28,9 +30,9 @@ class ApiRequestController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionContr
 {
 
     /**
-     * @var \Madj2k\ShopwareConnector\Order\DirectDownloads
+     * @var \Madj2k\ShopwareConnector\Order\OrderManager
      */
-    protected DirectDownloads $directDownloads;
+    protected OrderManager $orderManager;
 
 
     /**
@@ -45,18 +47,14 @@ class ApiRequestController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionContr
     protected array $mappings = [];
 
 
-
-
     /**
-     * Constructor.
-     *
      * @param \Madj2k\ShopwareConnector\Service\ShopwareApiService $shopwareApiService
-     * @param \Madj2k\ShopwareConnector\Order\DirectDownloads $directDownloads
+     * @param \Madj2k\ShopwareConnector\Order\OrderManager $orderManager
      */
-    public function __construct(ShopwareApiService $shopwareApiService, DirectDownloads $directDownloads)
+    public function __construct(ShopwareApiService $shopwareApiService, OrderManager $orderManager)
     {
         $this->shopwareApiService = $shopwareApiService;
-        $this->directDownloads = $directDownloads;
+        $this->orderManager = $orderManager;
     }
 
 
@@ -170,9 +168,7 @@ class ApiRequestController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionContr
      */
     public function showAction(string $productNumber): ResponseInterface
     {
-
         // load product
-        $this->shopwareApiService->setProxyConfig($this->settings['proxy']);
         $results = $this->shopwareApiService->fetchFromApi(
             'product',
             [
@@ -200,7 +196,7 @@ class ApiRequestController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionContr
                 ],
             ],
         );
-
+DebuggerUtility::var_dump($results);
         if (! empty($results['elements'])) {
             $this->view->assign('product', $results['elements'][0]);
         }
@@ -242,7 +238,10 @@ class ApiRequestController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionContr
      */
     #[NoReturn] public function downloadExecuteAction(string $productId): void
     {
-        $files = $this->directDownloads->createOrderAndGetDownloads($productId, $this->settings);
+        $cartDto = new Cart();
+        $cartDto->addLineItem(id: $productId, referencedId: $productId);
+
+        $files = $this->orderManager->processDownloads(cartDto: $cartDto, settings: $this->settings);
 
         if (empty($files)) {
             header('HTTP/1.1 404 Not Found');
