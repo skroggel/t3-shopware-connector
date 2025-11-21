@@ -54,7 +54,7 @@ class OrderHandler
         $this->eventDispatcher->dispatch(new BeforeOrderCreateEvent($customerDto));
 
         $data = [
-            'guest' => $customerDto->getIsGuest(),
+            'guest' => $customerDto->getGuest(),
             'email' => $customerDto->getEmail(),
         ];
 
@@ -67,8 +67,7 @@ class OrderHandler
             return null;
         }
 
-        $orderDto = new Order();
-        $orderDto->setOrderData($response);
+        $orderDto = new Order($response);
 
         $this->eventDispatcher->dispatch(new AfterOrderCreateEvent($orderDto));
 

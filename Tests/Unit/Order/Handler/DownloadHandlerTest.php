@@ -45,8 +45,7 @@ class OrderDownloadHandlerTest extends TestCase
         $fileExtension = 'pdf';
         $lineItemId = 'item-001';
 
-        $orderDto = new Order();
-        $orderDto->setOrderData([
+        $orderData = [
             'id' => $orderId,
             'lineItems' => [
                 [
@@ -62,7 +61,8 @@ class OrderDownloadHandlerTest extends TestCase
                     ]
                 ]
             ]
-        ]);
+        ];
+        $orderDto = new Order($orderData);
 
         $expectedContent = 'PDF-DATA';
 

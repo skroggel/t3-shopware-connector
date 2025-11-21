@@ -1,5 +1,7 @@
 # Shopware Connector
 
+**WARNING: This Extension is still in development. It may have bugs and breaking changes - use on your own risk!!!**
+
 ## Description
 The Shopware Connector is a TYPO3 extension designed to connect to Shopware 6 store with TYPO3.
 

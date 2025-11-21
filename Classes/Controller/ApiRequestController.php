@@ -14,17 +14,13 @@ namespace Madj2k\ShopwareConnector\Controller;
 
 use JetBrains\PhpStorm\NoReturn;
 use Madj2k\ShopwareConnector\Domain\DTO\Cart;
-use Madj2k\ShopwareConnector\Order\DirectDownloads;
 use Madj2k\ShopwareConnector\Order\OrderManager;
 use Madj2k\ShopwareConnector\Service\ShopwareApiService;
 use Madj2k\ShopwareConnector\Utilities\FilterUtility;
 use Psr\Http\Message\ResponseInterface;
-use TYPO3\CMS\Core\Http\Response;
-use TYPO3\CMS\Core\Http\Stream;
 use TYPO3\CMS\Core\Pagination\ArrayPaginator;
 use TYPO3\CMS\Core\Pagination\SimplePagination;
 use TYPO3\CMS\Extbase\Utility\DebuggerUtility;
-use ZipArchive;
 
 class ApiRequestController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionController
 {
@@ -62,7 +58,7 @@ class ApiRequestController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionContr
      * Do this before every action
      *
      * @return void
-     * @throws \Madj2k\ShopwareConnector\Exception|\Throwable
+     * @throws \Throwable
     */
     public function initializeAction(): void
     {
@@ -143,16 +139,16 @@ class ApiRequestController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionContr
 
         $paginator = new ArrayPaginator($filteredResult['elements'], $page, (int) $this->settings['itemsPerPage']);
         $pagination = new SimplePagination($paginator);
-        $this->view->assign('paginator', $paginator);
-        $this->view->assign('pagination', $pagination);
-
-        $this->view->assign('term', $term);
-        $this->view->assign('allFilters', $allFilters);
-        $this->view->assign('activeFilters', $filters);
-        $this->view->assign('availableFilterOptions', $availableFilterOptions);
-
-        $this->view->assign('allCategories', $allCategories);
-        $this->view->assign('activeCategories', $categories);
+        $this->view->assignMultiple([
+            'paginator' => $paginator,
+            'pagination' => $pagination,
+            'term' => $term,
+            'allFilters' => $allFilters,
+            'activeFilters' => $filters,
+            'availableFilterOptions' => $availableFilterOptions,
+            'allCategories' => $allCategories,
+            'activeCategories' => $categories,
+        ]);
 
         return $this->htmlResponse();
     }
@@ -241,7 +237,7 @@ class ApiRequestController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionContr
         $cartDto = new Cart();
         $cartDto->addLineItem(id: $productId, referencedId: $productId);
 
-        $files = $this->orderManager->processDownloads(cartDto: $cartDto, settings: $this->settings);
+        $files = $this->orderManager->processFreeDownloads(cartDto: $cartDto, settings: $this->settings);
 
         if (empty($files)) {
             header('HTTP/1.1 404 Not Found');

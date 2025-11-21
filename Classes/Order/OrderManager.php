@@ -64,7 +64,7 @@ class OrderManager
      * @throws \Madj2k\ShopwareConnector\Exception
      * @throws \Throwable
      */
-    public function processDownloads(
+    public function processFreeDownloads(
         Cart  $cartDto,
         ?Customer $customerDto = null,
         array $settings = []
@@ -73,7 +73,7 @@ class OrderManager
         // 1. get context, may contain a user-object based on the context-token from the session
         $contextDto = $this->contextProvider->provide();
 
-        // 2. get customer or set guest
+        // 2. register customer or guest
         if (
             (! $customerDto)
             || (! $customerDto->getId())
@@ -81,6 +81,7 @@ class OrderManager
             $customerDto = new Customer();
             $customerDto->populateGuestFromSettings($settings);
         }
+
         $customerDto = $this->customerHandler->register($contextDto, $customerDto);
         if (!$customerDto) {
             return null;
@@ -96,14 +97,16 @@ class OrderManager
         $orderDto = $this->creationHandler->createOrder($customerDto);
         if (
             (!$orderDto)
-            || (!$orderDto->getFirstTransactionId())
+            || (!$orderDto->getTransactions())
         ){
             return null;
         }
 
         // 5. set payment status
-        if (! $this->paymentHandler->setPaymentState($orderDto->getFirstTransactionId())) {
-            return null;
+        foreach ($orderDto->getTransactions() as $transaction) {
+            if (! $this->paymentHandler->setPaymentState($transaction['id'])) {
+                return null;
+            }
         }
 
         // 6. set order status

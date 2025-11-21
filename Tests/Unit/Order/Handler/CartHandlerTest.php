@@ -66,6 +66,14 @@ class CartHandlerTest extends TestCase
             'price' => [],
             'lineItems' => $expectedLineItems,
             'errors' => [],
+            'transactions' => [],
+            'name' => '',
+            'deliveries' => [],
+            'modified' => false,
+            'customerComment' => '',
+            'affiliateCode' => '',
+            'campaignCode' => '',
+            'apiAlias' => ''
         ];
 
         $apiServiceMock = $this->createMock(ShopwareApiService::class);
@@ -82,7 +90,7 @@ class CartHandlerTest extends TestCase
         $this->assertInstanceOf(Cart::class, $result);
         $this->assertTrue($result->hasLineItems());
         $this->assertSame($expectedLineItems, $result->getLineItems());
-        $this->assertEquals($responseData, $result->getCartData());
+        $this->assertEquals($responseData, $result->_toArray());
     }
 
 

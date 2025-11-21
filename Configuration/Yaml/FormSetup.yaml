@@ -1,6 +1,3 @@
-imports:
- - { resource: "EXT:forminator/Configuration/Yaml/FormElements/Hcaptcha.yaml" }
-
 TYPO3:
   CMS:
     Form:

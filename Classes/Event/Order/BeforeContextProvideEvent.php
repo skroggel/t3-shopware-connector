@@ -13,7 +13,6 @@ declare(strict_types=1);
 
 namespace Madj2k\ShopwareConnector\Event\Order;
 
-use Madj2k\ShopwareConnector\Domain\DTO\Context;
 
 /**
  * Class BeforeContextProvideEvent
@@ -27,19 +26,9 @@ class BeforeContextProvideEvent
 {
 
     /**
-     * @param \Madj2k\ShopwareConnector\Domain\DTO\Context $contextDto
      */
-    public function __construct(
-        protected Context $contextDto
-    ) {}
+    public function __construct() {}
 
 
-    /**
-     * @return \Madj2k\ShopwareConnector\Domain\DTO\Context
-     */
-    public function getContextDto(): Context
-    {
-        return $this->contextDto;
-    }
 }
 

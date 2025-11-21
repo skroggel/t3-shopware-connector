@@ -20,37 +20,119 @@ namespace Madj2k\ShopwareConnector\Domain\DTO;
  * @copyright Steffen Kroggel <developer@steffenkroggel.de>
  * @package Madj2k_ShopwareConnector
  * @license http://www.gnu.org/licenses/gpl.html GNU General Public License, version 3 or later
+ * @see https://shopware.stoplight.io/docs/store-api/882a9b9e86b10-fetch-or-create-a-cart
+ *
+ *  ! This is read-only except for the lineItems!
  */
-class Cart
+class Cart extends AbstractDto
 {
 
     /**
-     * @var array
+     * @return string
      */
-    protected array $cartData = [];
+    public function getName(): string
+    {
+        return $this->data['name'] ?? '';
+    }
 
 
     /**
-     * @param array $cartData
-     * @return void
+     * @return string
      */
-    public function setCartData(array $cartData): void
+    public function getToken(): string
     {
-        $this->cartData = $cartData;
+        return $this->data['token'] ?? '';
     }
 
 
     /**
      * @return array
      */
-    public function getCartData(): array
+    public function getPrice(): array
     {
-        return $this->cartData;
+        return $this->data['price'] ?? [];
     }
 
 
     /**
-     * Fügt ein einzelnes Item im API-Format hinzu
+     * @return array
+     */
+    public function getLineItems(): array
+    {
+        return $this->data['lineItems'] ?? [];
+    }
+
+
+    /**
+     * @return array
+     */
+    public function getErrors(): array
+    {
+        return $this->data['errors'] ?? [];
+    }
+
+
+    /**
+     * @return array
+     */
+    public function getDeliveries(): array
+    {
+        return $this->data['deliveries'] ?? [];
+    }
+
+
+    /**
+     * @return array
+     */
+    public function getTransactions(): array
+    {
+        return $this->data['transactions'] ?? [];
+    }
+
+    /**
+     * @return bool
+     */
+    public function getModified(): bool
+    {
+        return $this->data['modified'] ?? false;
+    }
+
+    /**
+     * @return string
+     */
+    public function getCustomerComment(): string
+    {
+        return $this->data['customerComment'] ?? '';
+    }
+
+    /**
+     * @return string
+     */
+    public function getAffiliateCode(): string
+    {
+        return $this->data['affiliateCode'] ?? '';
+    }
+
+    /**
+     * @return string
+     */
+    public function getCampaignCode(): string
+    {
+        return $this->data['campaignCode'] ?? '';
+    }
+
+
+    /**
+     * @return string
+     */
+    public function getApiAlias(): string
+    {
+        return $this->data['apiAlias'] ?? '';
+    }
+
+
+    /**
+     * Adds a single item
      *
      * @param string $id
      * @param string $referencedId
@@ -69,11 +151,11 @@ class Cart
         int $quantity = 1
     ): void {
 
-        if (!isset($this->cartData['lineItems'])) {
-            $this->cartData['lineItems'] = [];
+        if (!isset($this->data['lineItems'])) {
+            $this->data['lineItems'] = [];
         }
 
-        $this->cartData['lineItems'][] = [
+        $this->data['lineItems'][] = [
             'id' => $id,
             'referencedId' => $referencedId,
             'type' => $type,
@@ -92,7 +174,7 @@ class Cart
      */
     public function setLineItems(array $items): void
     {
-        $this->cartData['lineItems'] = [];
+        $this->data['lineItems'] = [];
 
         foreach ($items as $item) {
             $this->addLineItem(
@@ -108,40 +190,20 @@ class Cart
 
 
     /**
-     * @return array
-     */
-    public function getLineItems(): array
-    {
-        return $this->cartData['lineItems'];
-    }
-
-
-    /**
      * @return bool
      */
     public function hasLineItems(): bool
     {
-        return !empty($this->cartData['lineItems']);
+        return !empty($this->data['lineItems']);
     }
 
 
     /**
-     * @return array
-     */
-    public function getTransactions(): array
-    {
-        return $this->cartData['transactions'];
-    }
-
-
-    /**
-     * Gibt das DTO als Array für die Shopware-API zurück
-     *
      * @return array
      */
     public function toApiRequestArray(): array
     {
-        return ['items' => $this->cartData['lineItems']];
+        return ['items' => $this->data['lineItems']];
     }
 
 }

@@ -6,38 +6,12 @@ namespace Madj2k\ShopwareConnector\Domain\DTO;
 /**
  * Class Customer
  *
- * Repräsentiert Kundendaten für die Shopware-API über ein zentrales Daten-Array.
- * Neutral – unabhängig davon, ob Gast oder registriert.
- *
  * @author Steffen Kroggel <developer@steffenkroggel.de>
  * @package Madj2k_ShopwareConnector
+ * @see http://localhost:8000/store-api/account/register
  */
-class Customer
+class Customer extends AbstractDto
 {
-
-    /**
-     * @var array
-     */
-    protected array $customerData = [];
-
-
-    /**
-     * @return array
-     */
-    public function getCustomerData(): array
-    {
-        return $this->customerData;
-    }
-
-
-    /**
-     * @param array $data
-     * @return void
-     */
-    public function setCustomerData(array $data): void
-    {
-        $this->customerData = $data;
-    }
 
 
     /**
@@ -45,266 +19,652 @@ class Customer
      */
     public function getId(): string
     {
-        return $this->customerData['id'] ?? '';
+        return $this->data['id'] ?? '';
     }
 
 
     /**
-     * @param string $id
-     * @return void
-     */
-    public function setId(string $id): void
-    {
-        $this->customerData['id'] = $id;
-    }
-
-
-    /**
+     * Returns customerNumber
+     *
      * @return string
      */
     public function getCustomerNumber(): string
     {
-        return $this->customerData['customerNumber'] ?? '';
+        return $this->data['customerNumber'] ?? '';
     }
 
 
     /**
+     * Sets customerNumber
+     *
      * @param string $customerNumber
      * @return void
      */
     public function setCustomerNumber(string $customerNumber): void
     {
-        $this->customerData['customerNumber'] = $customerNumber;
+        $this->data['customerNumber'] = $customerNumber;
     }
 
 
     /**
-     * @return string
-     */
-    public function getEmail(): string
-    {
-        return $this->customerData['email'] ?? '';
-    }
-
-
-    /**
-     * @param string $email
-     * @return void
-     */
-    public function setEmail(string $email): void
-    {
-        $this->customerData['email'] = $email;
-    }
-
-
-    /**
-     * @return string
-     */
-    public function getCompany(): string
-    {
-        return $this->customerData['company'] ?? '';
-    }
-
-
-    /**
-     * @param string $company
-     * @return void
-     */
-    public function setCompany(string $company): void
-    {
-        $this->customerData['company'] = $company;
-    }
-
-
-    /**
-     * @return string
-     */
-    public function getSalutation(): string
-    {
-        return $this->customerData['salutation'] ?? '';
-    }
-
-
-    /**
-     * @param string $salutation
-     * @return void
-     */
-    public function setSalutation(string $salutation): void
-    {
-        $this->customerData['salutation'] = $salutation;
-    }
-
-
-    /**
+     * Returns salutationId
+     *
      * @return string
      */
     public function getSalutationId(): string
     {
-        return $this->customerData['salutationId'] ?? '';
+        return $this->data['salutationId'] ?? '';
     }
 
 
     /**
+     * Sets salutationId
+     *
      * @param string $salutationId
      * @return void
      */
     public function setSalutationId(string $salutationId): void
     {
-        $this->customerData['salutationId'] = $salutationId;
+        $this->data['salutationId'] = $salutationId;
     }
 
 
     /**
+     * Returns firstName
+     *
      * @return string
      */
     public function getFirstName(): string
     {
-        return $this->customerData['firstName'] ?? '';
+        return $this->data['firstName'] ?? '';
     }
 
 
     /**
+     * Sets firstName
+     *
      * @param string $firstName
      * @return void
      */
     public function setFirstName(string $firstName): void
     {
-        $this->customerData['firstName'] = $firstName;
+        $this->data['firstName'] = $firstName;
     }
 
 
     /**
+     * Returns lastName
+     *
      * @return string
      */
     public function getLastName(): string
     {
-        return $this->customerData['lastName'] ?? '';
+        return $this->data['lastName'] ?? '';
     }
 
 
     /**
+     * Sets lastName
+     *
      * @param string $lastName
      * @return void
      */
     public function setLastName(string $lastName): void
     {
-        $this->customerData['lastName'] = $lastName;
+        $this->data['lastName'] = $lastName;
     }
 
 
     /**
+     * Returns company
+     *
+     * @return string
+     */
+    public function getCompany(): string
+    {
+        return $this->data['company'] ?? '';
+    }
+
+
+    /**
+     * Sets company
+     *
+     * @param string $company
+     * @return void
+     */
+    public function setCompany(string $company): void
+    {
+        $this->data['company'] = $company;
+    }
+
+
+    /**
+     * Returns email
+     *
+     * @return string
+     */
+    public function getEmail(): string
+    {
+        return $this->data['email'] ?? '';
+    }
+
+
+    /**
+     * Sets email
+     *
+     * @param string $email
+     * @return void
+     */
+    public function setEmail(string $email): void
+    {
+        $this->data['email'] = $email;
+    }
+
+
+    /**
+     * Returns password
+     *
+     * @return string
+     */
+    public function getPassword(): string
+    {
+        return $this->data['password'] ?? '';
+    }
+
+
+    /**
+     * Sets password
+     *
+     * @param string $password
+     * @return void
+     */
+    public function setPassword(string $password): void
+    {
+        $this->data['password'] = $password;
+    }
+
+
+    /**
+     * Returns title
+     *
      * @return string
      */
     public function getTitle(): string
     {
-        return $this->customerData['title'] ?? '';
+        return $this->data['title'] ?? '';
     }
 
 
     /**
+     * Sets title
+     *
      * @param string $title
      * @return void
      */
     public function setTitle(string $title): void
     {
-        $this->customerData['title'] = $title;
+        $this->data['title'] = $title;
     }
 
 
     /**
-     * @return string
+     * Returns vatIds
+     *
+     * @return array
      */
-    public function getStreet(): string
+    public function getVatIds(): array
     {
-        return $this->customerData['defaultBillingAddress']['street'] ?? '';
+        return $this->data['vatIds'] ?? [];
     }
 
 
     /**
-     * @param string $street
+     * Sets vatIds
+     *
+     * @param array $vatIds
      * @return void
      */
-    public function setStreet(string $street): void
+    public function setVatIds(array $vatIds): void
     {
-        $this->customerData['defaultBillingAddress']['street'] = $street;
+        $this->data['vatIds'] = $vatIds;
     }
 
 
     /**
+     * Returns affiliateCode
+     *
      * @return string
      */
-    public function getZip(): string
+    public function getAffiliateCode(): string
     {
-        return $this->customerData['defaultBillingAddress']['zip'] ?? '';
+        return $this->data['affiliateCode'] ?? '';
     }
 
 
     /**
-     * @param string $zip
+     * Sets affiliateCode
+     *
+     * @param string $affiliateCode
      * @return void
      */
-    public function setZip(string $zip): void
+    public function setAffiliateCode(string $affiliateCode): void
     {
-        $this->customerData['defaultBillingAddress']['zip'] = $zip;
+        $this->data['affiliateCode'] = $affiliateCode;
     }
 
 
     /**
+     * Returns campaignCode
+     *
      * @return string
      */
-    public function getCity(): string
+    public function getCampaignCode(): string
     {
-        return $this->customerData['defaultBillingAddress']['city'] ?? '';
+        return $this->data['campaignCode'] ?? '';
     }
 
 
     /**
-     * @param string $city
+     * Sets campaignCode
+     *
+     * @param string $campaignCode
      * @return void
      */
-    public function setCity(string $city): void
+    public function setCampaignCode(string $campaignCode): void
     {
-        $this->customerData['defaultBillingAddress']['city'] = $city;
+        $this->data['campaignCode'] = $campaignCode;
     }
 
 
     /**
+     * Returns active
+     *
      * @return bool
      */
-    public function getIsGuest(): bool
+    public function getActive(): bool
     {
-        return (bool) ($this->customerData['isGuest'] ?? false);
+        return $this->data['active'] ?? false;
     }
 
 
     /**
-     * @param bool $isGuest
+     * Sets active
+     *
+     * @param bool $active
      * @return void
      */
-    public function setIsGuest(bool $isGuest): void
+    public function setActive(bool $active): void
     {
-        $this->customerData['isGuest'] = $isGuest;
+        $this->data['active'] = $active;
     }
 
 
     /**
+     * Returns acceptedDataProtection
+     *
+     * @return bool
+     */
+    public function getAcceptedDataProtection(): bool
+    {
+        return $this->data['acceptedDataProtection'] ?? false;
+    }
+
+
+    /**
+     * Sets acceptedDataProtection
+     *
+     * @param bool $acceptedDataProtection
+     * @return void
+     */
+    public function setAcceptedDataProtection(bool $acceptedDataProtection): void
+    {
+        $this->data['acceptedDataProtection'] = $acceptedDataProtection;
+    }
+
+
+    /**
+     * Returns doubleOptInRegistration
+     *
+     * @return bool
+     */
+    public function getDoubleOptInRegistration(): bool
+    {
+        return $this->data['doubleOptInRegistration'] ?? false;
+    }
+
+
+    /**
+     * Sets doubleOptInRegistration
+     *
+     * @param bool $doubleOptInRegistration
+     * @return void
+     */
+    public function setDoubleOptInRegistration(bool $doubleOptInRegistration): void
+    {
+        $this->data['doubleOptInRegistration'] = $doubleOptInRegistration;
+    }
+
+
+    /**
+     * Returns doubleOptInEmailSentDate
+     *
+     * @return string
+     */
+    public function getDoubleOptInEmailSentDate(): string
+    {
+        return $this->data['doubleOptInEmailSentDate'] ?? '';
+    }
+
+
+    /**
+     * Sets doubleOptInEmailSentDate
+     *
+     * @param string $doubleOptInEmailSentDate
+     * @return void
+     */
+    public function setDoubleOptInEmailSentDate(string $doubleOptInEmailSentDate): void
+    {
+        $this->data['doubleOptInEmailSentDate'] = $doubleOptInEmailSentDate;
+    }
+
+
+    /**
+     * Returns doubleOptInConfirmDate
+     *
+     * @return string
+     */
+    public function getDoubleOptInConfirmDate(): string
+    {
+        return $this->data['doubleOptInConfirmDate'] ?? '';
+    }
+
+
+    /**
+     * Sets doubleOptInConfirmDate
+     *
+     * @param string $doubleOptInConfirmDate
+     * @return void
+     */
+    public function setDoubleOptInConfirmDate(string $doubleOptInConfirmDate): void
+    {
+        $this->data['doubleOptInConfirmDate'] = $doubleOptInConfirmDate;
+    }
+
+
+    /**
+     * Returns hash
+     *
+     * @return string
+     */
+    public function getHash(): string
+    {
+        return $this->data['hash'] ?? '';
+    }
+
+
+    /**
+     * Sets hash
+     *
+     * @param string $hash
+     * @return void
+     */
+    public function setHash(string $hash): void
+    {
+        $this->data['hash'] = $hash;
+    }
+
+
+    /**
+     * Returns guest
+     *
+     * @return bool
+     */
+    public function getGuest(): bool
+    {
+        return $this->data['guest'] ?? false;
+    }
+
+
+    /**
+     * Sets guest
+     *
+     * @param bool $guest
+     * @return void
+     */
+    public function setGuest(bool $guest): void
+    {
+        $this->data['guest'] = $guest;
+    }
+
+
+    /**
+     * Returns firstLogin
+     *
+     * @return string
+     */
+    public function getFirstLogin(): string
+    {
+        return $this->data['firstLogin'] ?? '';
+    }
+
+
+
+    /**
+     * Returns lastLogin
+     *
+     * @return string
+     */
+    public function getLastLogin(): string
+    {
+        return $this->data['lastLogin'] ?? '';
+    }
+
+
+    /**
+     * Returns accountType
+     *
      * @return string
      */
     public function getAccountType(): string
     {
-        return $this->customerData['accountType'] ?? '';
+        return $this->data['accountType'] ?? '';
     }
 
 
     /**
-     * @param string $accountType
-     * @return void
+     * Returns birthday
+     *
+     * @return string
      */
-    public function setAccountType(string $accountType): void
+    public function getBirthday(): string
     {
-        $this->customerData['accountType'] = $accountType;
+        return $this->data['birthday'] ?? '';
     }
 
+
+    /**
+     * Sets birthday
+     *
+     * @param string $birthday
+     * @return void
+     */
+    public function setBirthday(string $birthday): void
+    {
+        $this->data['birthday'] = $birthday;
+    }
+
+
+    /**
+     * Returns birthdayDay
+     *
+     * @return string
+     */
+    public function getBirthdayDay(): string
+    {
+        return $this->data['birthdayDay'] ?? '';
+    }
+
+
+    /**
+     * Sets birthdayDay
+     *
+     * @param string $birthdayDay
+     * @return void
+     */
+    public function setBirthdayDay(string $birthdayDay): void
+    {
+        $this->data['birthdayDay'] = $birthdayDay;
+    }
+
+
+    /**
+     * Returns birthdayMonth
+     *
+     * @return string
+     */
+    public function getBirthdayMonth(): string
+    {
+        return $this->data['birthdayMonth'] ?? '';
+    }
+
+
+    /**
+     * Sets birthdayMonth
+     *
+     * @param string $birthdayMonth
+     * @return void
+     */
+    public function setBirthdayMonth(string $birthdayMonth): void
+    {
+        $this->data['birthdayMonth'] = $birthdayMonth;
+    }
+
+
+    /**
+     * Returns birthdayYear
+     *
+     * @return string
+     */
+    public function getBirthdayYear(): string
+    {
+        return $this->data['birthdayYear'] ?? '';
+    }
+
+
+    /**
+     * Sets birthdayYear
+     *
+     * @param string $birthdayYear
+     * @return void
+     */
+    public function setBirthdayYear(string $birthdayYear): void
+    {
+        $this->data['birthdayYear'] = $birthdayYear;
+    }
+
+
+    /**
+     * Returns lastOrderDate
+     *
+     * @return string
+     */
+    public function getLastOrderDate(): string
+    {
+        return $this->data['lastOrderDate'] ?? '';
+    }
+
+
+    /**
+     * Returns orderCount
+     *
+     * @return int
+     */
+    public function getOrderCount(): int
+    {
+        return $this->data['orderCount'] ?? 0;
+    }
+
+
+    /**
+     * Returns orderTotalAmount
+     *
+     * @return int
+     */
+    public function getOrderTotalAmount(): int
+    {
+        return $this->data['orderTotalAmount'] ?? 0;
+    }
+
+
+    /**
+     * Returns reviewCount
+     *
+     * @return int
+     */
+    public function getReviewCount(): int
+    {
+        return $this->data['reviewCount'] ?? 0;
+    }
+
+
+    /**
+     * Returns the defaultBillingAddress
+     *
+     * @return \Madj2k\ShopwareConnector\Domain\DTO\Address
+     */
+    public function getDefaultBillingAddress(): Address
+    {
+        if (isset($this->data['defaultBillingAddress'])) {
+            return new Address($this->data['defaultBillingAddress']);
+        }
+
+        return new Address();
+    }
+
+
+    /**
+     * Returns the defaultShippingAddress
+     *
+     * @return \Madj2k\ShopwareConnector\Domain\DTO\Address
+     */
+    public function getDefaultShippingAddress(): Address
+    {
+        if (isset($this->data['defaultShippingAddress'])) {
+            return new Address($this->data['defaultShippingAddress']);
+        }
+
+        return new Address();
+    }
+
+
+    /**
+     * Returns the activeBillingAddress
+     *
+     * @return \Madj2k\ShopwareConnector\Domain\DTO\Address
+     */
+    public function getActiveBillingAddress(): Address
+    {
+        if (isset($this->data['activeBillingAddress'])) {
+            return new Address($this->data['activeBillingAddress']);
+        }
+
+        return new Address();
+    }
+
+
+    /**
+     * Returns the activeShippingAddress
+     *
+     * @return \Madj2k\ShopwareConnector\Domain\DTO\Address
+     */
+    public function getActiveShippingAddress(): Address
+    {
+        if (isset($this->data['activeShippingAddress'])) {
+            return new Address($this->data['activeShippingAddress']);
+        }
+
+        return new Address();
+    }
 
 
     /**
@@ -315,24 +675,48 @@ class Customer
      */
     public function toApiRegistrationArray(Context $contextDto): array
     {
-        return [
+
+        $data = [
             'email' => $this->getEmail(),
+            'salutationId' => $this->getSalutationId(),
             'firstName' => $this->getFirstName(),
             'lastName' => $this->getLastName(),
-            'guest' => $this->getIsGuest(),
-            'billingAddress' => [
-                'street' => $this->getStreet(),
-                'zipcode' => $this->getZip(),
-                'city' => $this->getCity(),
-                'countryId' => $contextDto->getSalesChannelCountryId(),
-            ],
+            'acceptedDataProtection' => $this->getAcceptedDataProtection(),
             'storefrontUrl' => $contextDto->getSalesChannelDomainUrl(),
+            'billingAddress' => array_merge(
+                $this->getDefaultBillingAddress()->_toArray(ignoreEmpty: true),
+                [
+                    'countryId' => $contextDto->getSalesChannelCountryId(),
+                ]
+            ),
+            'shippingAddress' => array_merge(
+                $this->getDefaultShippingAddress()->_toArray(ignoreEmpty: true),
+                [
+                    'countryId' => $contextDto->getSalesChannelCountryId(),
+                ]
+            ),
+            'guest' => $this->getGuest(),
+            'birthdayDay' => $this->getBirthdayDay(),
+            'birthdayMonth' => $this->getBirthdayMonth(),
+            'birthdayYear' => $this->getBirthdayYear(),
+            'title' => $this->getTitle(),
+            'affiliateCode' => $this->getAffiliateCode(),
+            'campaignCode' => $this->getCampaignCode(),
+            'accountType' => $this->getAccountType(),
+            'company' => $this->getCompany(),
+            'vatIds' => $this->getVatIds(),
         ];
+
+        if (! $this->getGuest()) {
+            $data['password'] = $this->getPassword();
+        }
+
+        return $data;
     }
 
 
     /**
-     * Populate DTO with settings data
+     * Populate DTO with settings data using setters
      *
      * @param array $settings
      * @return void
@@ -341,13 +725,19 @@ class Customer
     {
         $guestSettings = $settings['anonymousGuestUser'] ?? [];
 
-        $this->customerData['firstName'] = $guestSettings['firstName'] ?? 'Max';
-        $this->customerData['lastName'] = $guestSettings['lastName'] ?? 'Mustermann';
-        $this->customerData['email'] = $guestSettings['email'] ?? 'guest@example.com';
-        $this->customerData['street'] = $guestSettings['street'] ?? 'Musterstraße 1';
-        $this->customerData['zip'] = $guestSettings['zip'] ?? '12345';
-        $this->customerData['city'] = $guestSettings['city'] ?? 'Musterstadt';
-        $this->customerData['isGuest'] = true;
+        $this->setFirstName($guestSettings['firstName'] ?? 'Max');
+        $this->setLastName($guestSettings['lastName'] ?? 'Mustermann');
+        $this->setEmail($guestSettings['email'] ?? 'guest@example.com');
+
+        $addressDto = new Address();
+        $addressDto->setFirstName($guestSettings['firstName'] ?? 'Max');
+        $addressDto->setLastName($guestSettings['lastName'] ?? 'Mustermann');
+        $addressDto->setStreet($guestSettings['street'] ?? 'Musterstraße 1');
+        $addressDto->setZipcode($guestSettings['zip'] ?? '12345');
+        $addressDto->setCity($guestSettings['city'] ?? 'Musterstadt');
+        $this->data['defaultBillingAddress'] = $this->data['defaultShippingAddress'] =  $addressDto->_toArray();
+
+        $this->setGuest(true);
     }
 
 }
