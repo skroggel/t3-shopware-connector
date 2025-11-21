@@ -76,7 +76,7 @@ class StatusHandler
         $event = new BeforeOrderStatusSetEvent($orderDto, $targetStatus);
         $this->eventDispatcher->dispatch($event);
 
-        $currentStatus = $orderDto->getOrderState();
+        $currentStatus = $orderDto->getStateMachineStateTechnicalName();
         $steps = $event->getTargetStatus()->transitionStates() ?? [];
 
         foreach ($steps as $transition) {

@@ -1,47 +1,96 @@
 <?php
 defined('TYPO3') or die('Access denied.');
 call_user_func(
-    function (string $extKey) {
+    function (string $extensionKey) {
 
-        $pluginConfig = ['api_request'];
-        foreach ($pluginConfig as $pluginName) {
+        $pluginConfig = [
+            'Full' => [
+                'flexFormFile' => 'Full',
+            ],
+            'List' => [
+                'flexFormFile' => 'List',
+            ],
+            'Detail' => [
+                'flexFormFile' => 'Detail',
+            ],
+            'Download' => [
+                'flexFormFile' => 'Download',
+            ],
+        ];
 
-            $typo3Version = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(\TYPO3\CMS\Core\Information\Typo3Version::class);
-            $version = $typo3Version->getMajorVersion();
+        foreach ($pluginConfig as $pluginName => $pluginSettings) {
 
-            $iconIdentifier =  strtolower(TYPO3\CMS\Core\Utility\GeneralUtility::underscoredToLowerCamelCase($extKey)) .
-                '-plugin-' .  strtolower(TYPO3\CMS\Core\Utility\GeneralUtility::underscoredToLowerCamelCase($pluginName));
+            $pluginTitle = 'LLL:EXT:' . $extensionKey . '/Resources/Private/Language/locallang_be.xlf:plugin.tx_shopwareconnector_' .
+                strtolower($pluginName). '.title';
+
+            $pluginIcon =  'shopwareconnector-plugin-' . strtolower($pluginName);
 
             // register normal plugin
             $pluginSignature = \TYPO3\CMS\Extbase\Utility\ExtensionUtility::registerPlugin(
-                $extKey,
-                \TYPO3\CMS\Core\Utility\GeneralUtility::underscoredToUpperCamelCase($pluginName),
-                'LLL:EXT:' . $extKey . '/Resources/Private/Language/locallang_db.xlf:plugin.' .
-                    \TYPO3\CMS\Core\Utility\GeneralUtility::underscoredToLowerCamelCase($pluginName) . '.title',
-                $iconIdentifier,
-                TYPO3\CMS\Core\Utility\GeneralUtility::underscoredToUpperCamelCase($extKey),
-                'LLL:EXT:' . $extKey . '/Resources/Private/Language/locallang_db.xlf:plugin.' .
-                    TYPO3\CMS\Core\Utility\GeneralUtility::underscoredToLowerCamelCase($pluginName) . '.description'
+                $extensionKey,
+                $pluginName,
+                $pluginTitle,
+                $pluginIcon
             );
 
+            $flexFormFile = $pluginName;
+            $hasFlexForm = true;
+            if (isset($pluginSettings['flexFormFile'])) {
+                $flexFormFile = $pluginSettings['flexFormFile'];
+            }
 
-            // add flexform to plugin
-            $flexFormFile = 'FILE:EXT:' . $extKey . '/Configuration/FlexForms/' .
-                \TYPO3\CMS\Core\Utility\GeneralUtility::underscoredToUpperCamelCase($pluginName) . '.xml';
+            $flexFormFile = 'EXT:'. $extensionKey . '/Configuration/FlexForms/' . $flexFormFile . '.xml';
+            $file = \TYPO3\CMS\Core\Utility\GeneralUtility::getFileAbsFileName($flexFormFile);
+            if (
+                ($file)
+                && (file_exists($file))
+            ) {
 
-            \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addPiFlexFormValue(
-                '*', // wildcard when using third parameter, else use pluginSignature
-                $flexFormFile,
-                $pluginSignature // third parameter adds flexform to content-element below, too!
+                // add flexform to plugin
+                $GLOBALS['TCA']['tt_content']['types'][$pluginSignature]['showitem'] .= 'pi_flexform';
+                \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addPiFlexFormValue(
+                    '*', // wildcard when using third parameter, else use pluginSignature
+                    'FILE:' . $flexFormFile,
+                    $pluginSignature // third parameter adds flexform to content-element below, too!
+                );
+            } else {
+                $hasFlexForm = false;
+            }
+
+            // add content element
+            \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addTcaSelectItem(
+                'tt_content',
+                'CType',
+                [
+                    'label' => $pluginTitle,
+                    'value' => $pluginSignature,
+                    'icon'  => $pluginIcon,
+                    'group' => $extensionKey,
+                ]
             );
+
+            $flexFormTab = '';
+            if ($hasFlexForm) {
+                $flexFormTab = '--div--;LLL:EXT:frontend/Resources/Private/Language/locallang_ttc.xlf:tabs.plugin,
+                    pi_flexform,';
+            }
+
+            $flexFormHeader = '';
+           /*
+                $flexFormHeader = 'header;LLL:EXT:frontend/Resources/Private/Language/locallang_ttc.xlf:header_formlabel,
+                    --linebreak--,
+                    header_layout;LLL:EXT:frontend/Resources/Private/Language/locallang_ttc.xlf:header_layout_formlabel,
+                    --linebreak--,
+                    subheader;LLL:EXT:frontend/Resources/Private/Language/locallang_ttc.xlf:subheader_formlabel,';
+            */
 
             // define TCA-fields
             // $GLOBALS['TCA']['tt_content']['types'][$pluginSignature] = $GLOBALS['TCA']['tt_content']['types']['list'];
             $GLOBALS['TCA']['tt_content']['types'][$pluginSignature]['showitem'] = '
                 --div--;LLL:EXT:core/Resources/Private/Language/Form/locallang_tabs.xlf:general,
                     --palette--;;general,
-                --div--;LLL:EXT:frontend/Resources/Private/Language/locallang_ttc.xlf:tabs.plugin,
-                    pi_flexform,
+                    ' . $flexFormHeader . $flexFormTab . '
+                    pages;LLL:EXT:frontend/Resources/Private/Language/locallang_ttc.xlf:pages.ALT.list_formlabel,
                 --div--;LLL:EXT:core/Resources/Private/Language/Form/locallang_tabs.xlf:language,
                     --palette--;;language,
                 --div--;LLL:EXT:core/Resources/Private/Language/Form/locallang_tabs.xlf:access,
@@ -51,7 +100,6 @@ call_user_func(
                     rowDescription,
                 --div--;LLL:EXT:core/Resources/Private/Language/Form/locallang_tabs.xlf:extended,
             ';
-
         }
     },
     'shopware_connector'

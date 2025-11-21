@@ -14,10 +14,11 @@ namespace Madj2k\ShopwareConnector\Order\Handler;
 
 use Madj2k\ShopwareConnector\Domain\DTO\Context;
 use Madj2k\ShopwareConnector\Domain\DTO\Customer;
-use Madj2k\ShopwareConnector\Event\Order\BeforeCustomerEnsureEvent;
-use Madj2k\ShopwareConnector\Event\Order\AfterCustomerEnsureEvent;
+use Madj2k\ShopwareConnector\Event\Order\BeforeCustomerRegisterEvent;
+use Madj2k\ShopwareConnector\Event\Order\AfterCustomerRegisterEvent;
 use Madj2k\ShopwareConnector\Service\ShopwareApiService;
 use Psr\EventDispatcher\EventDispatcherInterface;
+use TYPO3\CMS\Extbase\Utility\DebuggerUtility;
 
 /**
  * Class OrderCustomerHandler
@@ -48,14 +49,13 @@ class CustomerHandler
     public function register(Context $contextDto, Customer $customerDto): ?Customer
     {
         if (
-            (!empty($contextDto->getCustomer()))
-            && (isset($contextDto->getCustomer()['id']))
+            ($contextDto->getCustomer())
+            && ($contextDto->getCustomer()->getId())
         ){
-            $customerDto->setCustomerData($contextDto->getCustomer());
-            return $customerDto;
+            return $contextDto->getCustomer();
         }
 
-        $this->eventDispatcher->dispatch(new BeforeCustomerEnsureEvent($contextDto, $customerDto));
+        $this->eventDispatcher->dispatch(new BeforeCustomerRegisterEvent($contextDto, $customerDto));
 
         $registrationData = $customerDto->toApiRegistrationArray($contextDto);
         $result = $this->apiService->fetchFromApi('account/register', $registrationData);
@@ -64,9 +64,9 @@ class CustomerHandler
             return null;
         }
 
-        $customerDto->setCustomerData($result);
+        $customerDto = new Customer($result);
 
-        $this->eventDispatcher->dispatch(new AfterCustomerEnsureEvent($customerDto));
+        $this->eventDispatcher->dispatch(new AfterCustomerRegisterEvent($customerDto));
 
         return $customerDto;
     }

@@ -23,7 +23,7 @@ use PHPUnit\Framework\TestCase;
 /**
  * Class OrderManagerTest
  *
- * Tests alle Fehlerpfade der OrderManager::processDownloads Methode
+ * Tests alle Fehlerpfade der OrderManager::processFreeDownloads Methode
  *
  * @author
  * @package
@@ -68,7 +68,7 @@ class OrderManagerTest extends TestCase
      * @throws \Throwable
      */
     #[Test]
-    public function processDownloadsSuccess(): void
+    public function processFreeDownloadsSuccess(): void
     {
         $contextHandler = $this->createMock(ContextHandler::class);
         $customerHandler = $this->createMock(CustomerHandler::class);
@@ -81,8 +81,8 @@ class OrderManagerTest extends TestCase
         $cartDto = new Cart();
         $customerDto = new Customer();
         $contextDto = new Context();
-        $orderDto = new Order();
-        $orderDto->setOrderData(['transactions' => [['id' => 'txn-123']]]);
+        $orderData = ['transactions' => [['id' => 'txn-123']]];
+        $orderDto = new Order($orderData);
 
         $downloads = ['file.pdf' => 'CONTENT'];
 
@@ -104,7 +104,7 @@ class OrderManagerTest extends TestCase
             $downloadHandler
         );
 
-        $result = $manager->processDownloads($cartDto, $customerDto);
+        $result = $manager->processFreeDownloads($cartDto, $customerDto);
 
         $this->assertEquals($downloads, $result);
     }
@@ -122,7 +122,7 @@ class OrderManagerTest extends TestCase
      * @throws \Throwable
      */
     #[Test]
-    public function processDownloadsFailsOnCustomerRegistration(): void
+    public function processFreeDownloadsFailsOnCustomerRegistration(): void
     {
         $contextHandler = $this->createMock(ContextHandler::class);
         $customerHandler = $this->createMock(CustomerHandler::class);
@@ -149,7 +149,7 @@ class OrderManagerTest extends TestCase
             $downloadHandler
         );
 
-        $result = $manager->processDownloads($cartDto, $customerDto);
+        $result = $manager->processFreeDownloads($cartDto, $customerDto);
 
         $this->assertNull($result);
     }
@@ -163,7 +163,7 @@ class OrderManagerTest extends TestCase
      * @throws \Throwable
      */
     #[Test]
-    public function processDownloadsFailsOnCart(): void
+    public function processFreeDownloadsFailsOnCart(): void
     {
         $contextHandler = $this->createMock(ContextHandler::class);
         $customerHandler = $this->createMock(CustomerHandler::class);
@@ -191,7 +191,7 @@ class OrderManagerTest extends TestCase
             $downloadHandler
         );
 
-        $result = $manager->processDownloads($cartDto, $customerDto);
+        $result = $manager->processFreeDownloads($cartDto, $customerDto);
 
         $this->assertNull($result);
     }
@@ -205,7 +205,7 @@ class OrderManagerTest extends TestCase
      * @throws \Throwable
      */
     #[Test]
-    public function processDownloadsFailsOnOrderCreation(): void
+    public function processFreeDownloadsFailsOnOrderCreation(): void
     {
         $contextHandler = $this->createMock(ContextHandler::class);
         $customerHandler = $this->createMock(CustomerHandler::class);
@@ -234,7 +234,7 @@ class OrderManagerTest extends TestCase
             $downloadHandler
         );
 
-        $result = $manager->processDownloads($cartDto, $customerDto);
+        $result = $manager->processFreeDownloads($cartDto, $customerDto);
 
         $this->assertNull($result);
     }
@@ -248,7 +248,7 @@ class OrderManagerTest extends TestCase
      * @throws \Throwable
      */
     #[Test]
-    public function processDownloadsFailsOnMissingTransactionId(): void
+    public function processFreeDownloadsFailsOnMissingTransactionId(): void
     {
         $contextHandler = $this->createMock(ContextHandler::class);
         $customerHandler = $this->createMock(CustomerHandler::class);
@@ -262,8 +262,8 @@ class OrderManagerTest extends TestCase
         $customerDto = new Customer();
         $contextDto = new Context();
 
-        $orderDto = new Order();
-        $orderDto->setOrderData(['transactions' => []]); // → keine Transaction-ID!
+        $orderData = ['transactions' => []];
+        $orderDto = new Order($orderData);
 
         $contextHandler->method('provide')->willReturn($contextDto);
         $customerHandler->method('register')->willReturn($customerDto);
@@ -280,7 +280,7 @@ class OrderManagerTest extends TestCase
             $downloadHandler
         );
 
-        $result = $manager->processDownloads($cartDto, $customerDto);
+        $result = $manager->processFreeDownloads($cartDto, $customerDto);
 
         $this->assertNull($result);
     }
@@ -294,7 +294,7 @@ class OrderManagerTest extends TestCase
      * @throws \Throwable
      */
     #[Test]
-    public function processDownloadsFailsOnPayment(): void
+    public function processFreeDownloadsFailsOnPayment(): void
     {
         $contextHandler = $this->createMock(ContextHandler::class);
         $customerHandler = $this->createMock(CustomerHandler::class);
@@ -308,8 +308,8 @@ class OrderManagerTest extends TestCase
         $customerDto = new Customer();
         $contextDto = new Context();
 
-        $orderDto = new Order();
-        $orderDto->setOrderData(['transactions' => [['id' => 'txn-123']]]);
+        $orderData = ['transactions' => [['id' => 'txn-123']]];
+        $orderDto = new Order($orderData);
 
         $contextHandler->method('provide')->willReturn($contextDto);
         $customerHandler->method('register')->willReturn($customerDto);
@@ -327,7 +327,7 @@ class OrderManagerTest extends TestCase
             $downloadHandler
         );
 
-        $result = $manager->processDownloads($cartDto, $customerDto);
+        $result = $manager->processFreeDownloads($cartDto, $customerDto);
 
         $this->assertNull($result);
     }
@@ -341,7 +341,7 @@ class OrderManagerTest extends TestCase
      * @throws \Throwable
      */
     #[Test]
-    public function processDownloadsFailsOnOrderStatus(): void
+    public function processFreeDownloadsFailsOnOrderStatus(): void
     {
         $contextHandler = $this->createMock(ContextHandler::class);
         $customerHandler = $this->createMock(CustomerHandler::class);
@@ -355,8 +355,8 @@ class OrderManagerTest extends TestCase
         $customerDto = new Customer();
         $contextDto = new Context();
 
-        $orderDto = new Order();
-        $orderDto->setOrderData(['transactions' => [['id' => 'txn-123']]]);
+        $orderData = ['transactions' => [['id' => 'txn-123']]];
+        $orderDto = new Order($orderData);
 
         $contextHandler->method('provide')->willReturn($contextDto);
         $customerHandler->method('register')->willReturn($customerDto);
@@ -375,7 +375,7 @@ class OrderManagerTest extends TestCase
             $downloadHandler
         );
 
-        $result = $manager->processDownloads($cartDto, $customerDto);
+        $result = $manager->processFreeDownloads($cartDto, $customerDto);
 
         $this->assertNull($result);
     }

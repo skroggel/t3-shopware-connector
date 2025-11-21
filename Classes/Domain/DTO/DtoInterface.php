@@ -11,34 +11,37 @@ declare(strict_types=1);
  * The TYPO3 project - inspiring people to share!
  */
 
-namespace Madj2k\ShopwareConnector\Event\Order;
-
-use Madj2k\ShopwareConnector\Domain\DTO\Customer;
+namespace Madj2k\ShopwareConnector\Domain\DTO;
 
 /**
- * Class AfterCustomerEnsureEvent
+ * Interface DtoInterface
  *
  * @author Steffen Kroggel <developer@steffenkroggel.de>
  * @copyright Steffen Kroggel <developer@steffenkroggel.de>
  * @package Madj2k_ShopwareConnector
  * @license http://www.gnu.org/licenses/gpl.html GNU General Public License, version 3 or later
  */
-class AfterCustomerEnsureEvent
+interface DtoInterface
 {
 
     /**
-     * @param \Madj2k\ShopwareConnector\Domain\DTO\Customer $customerDto
+     * constructor with reference to original array
+     *
+     * @param array $data
      */
-    public function __construct(
-        protected Customer $customerDto
-    ) {}
+    public function __construct(array &$data);
 
 
     /**
-     * @return \Madj2k\ShopwareConnector\Domain\DTO\Customer
+     * @param bool $ignoreEmpty
+     * @return array
      */
-    public function getCustomerDto(): Customer
-    {
-        return $this->customerDto;
-    }
+    public function _toArray(bool $ignoreEmpty = false): array;
+
+
+    /**
+     * @return array
+     **/
+    public function _toArrayRaw(): array;
+
 }

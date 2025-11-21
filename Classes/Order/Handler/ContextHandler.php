@@ -49,16 +49,14 @@ class ContextHandler
      */
     public function provide(): ?Context
     {
-        $contextDto = new Context();
-
-        $this->eventDispatcher->dispatch(new BeforeContextProvideEvent($contextDto));
+        $this->eventDispatcher->dispatch(new BeforeContextProvideEvent());
 
         $contextData = $this->apiService->fetchFromApi('context', [], 'GET');
         if (empty($contextData)) {
             return null;
         }
 
-        $contextDto->setContextData($contextData);
+        $contextDto = new Context($contextData);
 
         $this->eventDispatcher->dispatch(new AfterContextProvideEvent($contextDto));
 

@@ -58,7 +58,7 @@ class CartHandler
             return null;
         }
 
-        $cartDto->setCartData($response);
+        $cartDto = new Cart($response);
 
         $this->eventDispatcher->dispatch(new AfterCartAddEvent($cartDto));
 

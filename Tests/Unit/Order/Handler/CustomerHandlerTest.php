@@ -39,7 +39,7 @@ class CustomerHandlerTest extends TestCase
      * @throws \Throwable
      */
     #[Test]
-    public function registerRegistersGuestIfNoneExists(): void
+    public function registerRegistersUserIfNoneExists(): void
     {
         $contextData = [
             'salesChannel' => [
@@ -48,16 +48,15 @@ class CustomerHandlerTest extends TestCase
             ]
         ];
 
-        $contextDto = new Context();
-        $contextDto->setContextData($contextData);
+        $contextDto = new Context($contextData);
 
         $customerDto = new Customer();
         $customerDto->setFirstName('Test');
         $customerDto->setLastName('User');
         $customerDto->setEmail('test@example.com');
-        $customerDto->setStreet('Teststraße 5');
-        $customerDto->setZip('54321');
-        $customerDto->setCity('Teststadt');
+        $customerDto->getDefaultBillingAddress()->setStreet('Teststraße 5');
+        $customerDto->getDefaultShippingAddress()->setZipcode('54321');
+        $customerDto->getDefaultBillingAddress()->setCity('Teststadt');
 
         $apiServiceMock = $this->createMock(ShopwareApiService::class);
         $apiServiceMock->method('fetchFromApi')
@@ -67,65 +66,27 @@ class CustomerHandlerTest extends TestCase
                 'email' => 'test@example.com',
                 'firstName' => 'Test',
                 'lastName' => 'User',
+                'defaultShippingAddress' => [
+                    'street' => 'Teststraße 5',
+                    'zipcode' => '54321',
+                    'city' => 'Teststadt',
+                ]
             ]);
 
         $eventDispatcherMock = $this->createMock(EventDispatcherInterface::class);
 
         $subject = new CustomerHandler($apiServiceMock, $eventDispatcherMock);
 
-        $result = $subject->register($contextDto, $customerDto, true);
+        $result = $subject->register($contextDto, $customerDto);
 
         $this->assertInstanceOf(Customer::class, $result);
         $this->assertSame('customer-001', $result->getId());
         $this->assertSame('test@example.com', $result->getEmail());
+        $this->assertSame('Teststraße 5', $result->getDefaultShippingAddress()->getStreet());
+        $this->assertSame('54321', $result->getDefaultShippingAddress()->getZipcode());
+        $this->assertSame('Teststadt', $result->getDefaultShippingAddress()->getCity());
     }
 
-
-    /**
-     * @return void
-     * @throws \GuzzleHttp\Exception\GuzzleException
-     * @throws \PHPUnit\Framework\MockObject\Exception
-     * @throws \Throwable
-     */
-    #[Test]
-    public function registerRegistersRegularUser(): void
-    {
-        $contextDto = new Context();
-        $contextDto->setContextData([
-            'salesChannel' => [
-                'countryId' => 'abc123',
-                'domains' => [['url' => 'https://shop.example.com']],
-            ]
-        ]);
-
-        $customerDto = new Customer();
-        $customerDto->setFirstName('Registered');
-        $customerDto->setLastName('User');
-        $customerDto->setEmail('registered@example.com');
-        $customerDto->setStreet('Registerstraße 10');
-        $customerDto->setZip('10101');
-        $customerDto->setCity('Registerstadt');
-
-        $apiServiceMock = $this->createMock(ShopwareApiService::class);
-        $apiServiceMock->method('fetchFromApi')
-            ->with('account/register')
-            ->willReturn([
-                'id' => 'registered-id-001',
-                'email' => 'registered@example.com',
-                'firstName' => 'Registered',
-                'lastName' => 'User',
-            ]);
-
-        $eventDispatcherMock = $this->createMock(EventDispatcherInterface::class);
-
-        $subject = new CustomerHandler($apiServiceMock, $eventDispatcherMock);
-
-        $result = $subject->register($contextDto, $customerDto, false);
-
-        $this->assertInstanceOf(Customer::class, $result);
-        $this->assertSame('registered-id-001', $result->getId());
-        $this->assertSame('registered@example.com', $result->getEmail());
-    }
 
 
     /**
@@ -146,9 +107,7 @@ class CustomerHandlerTest extends TestCase
             ]
         ];
 
-        $contextDto = new Context();
-        $contextDto->setContextData($contextData);
-
+        $contextDto = new Context($contextData);
         $customerDto = new Customer();
 
         $apiServiceMock = $this->createMock(ShopwareApiService::class);

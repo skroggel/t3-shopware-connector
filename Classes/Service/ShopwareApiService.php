@@ -129,14 +129,22 @@ class ShopwareApiService implements LoggerAwareInterface
         }
 
         if (
-            str_starts_with($endpoint, 'order/')
+            str_starts_with($endpoint, 'context')
+            || str_starts_with($endpoint, 'order/')
             || str_starts_with($endpoint, 'checkout/')
             || str_starts_with($endpoint, 'account/')
         ) {
             $cacheLifeTime = 0;
         }
 
-        return $this->executeRequest($url, $parameters, $method, $headers, $cacheLifeTime, $returnRawBody);
+        return $this->executeRequest(
+            url: $url,
+            parameters: $parameters,
+            method: $method,
+            headers: $headers,
+            cacheLifetime: $cacheLifeTime,
+            returnRawBody: $returnRawBody
+        );
     }
 
 
@@ -169,7 +177,14 @@ class ShopwareApiService implements LoggerAwareInterface
             $headers['sw-language-id'] = $swLanguageId;
         }
 
-        return $this->executeRequest($url, $parameters, $method, $headers, $cacheLifeTime, $returnRawBody);
+        return $this->executeRequest(
+            url: $url,
+            parameters: $parameters,
+            method: $method,
+            headers: $headers,
+            cacheLifetime: $cacheLifeTime,
+            returnRawBody: $returnRawBody
+        );
     }
 
 

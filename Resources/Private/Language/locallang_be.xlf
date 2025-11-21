@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff version="1.0">
+    <file source-language="en" target-language="de" datatype="plaintext" original="messages" date="2024-08-28T17:42:00Z" product-name="shopware_connector">
+        <header/>
+        <body>
+
+
+			<!-- Plugin -->
+			<trans-unit id="plugin.tx_shopwareconnector_full.title">
+				<source>Shopware Connector - All</source>
+			</trans-unit>
+			<trans-unit id="plugin.tx_shopwareconnector_full.description">
+				<source></source>
+			</trans-unit>
+			<trans-unit id="plugin.tx_shopwareconnector_list.title">
+				<source>Shopware Connector - List</source>
+			</trans-unit>
+			<trans-unit id="plugin.tx_shopwareconnector_list.description">
+				<source></source>
+			</trans-unit>
+			<trans-unit id="plugin.tx_shopwareconnector_detail.title">
+				<source>Shopware Connector - Detail</source>
+			</trans-unit>
+			<trans-unit id="plugin.tx_shopwareconnector_detail.description">
+				<source></source>
+			</trans-unit>
+			<trans-unit id="plugin.tx_shopwareconnector_download.title">
+				<source>Shopware Connector - Download</source>
+			</trans-unit>
+			<trans-unit id="plugin.tx_shopwareconnector_download.description">
+				<source></source>
+			</trans-unit>
+
+        </body>
+    </file>
+</xliff>

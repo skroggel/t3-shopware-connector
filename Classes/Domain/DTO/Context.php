@@ -21,40 +21,15 @@ namespace Madj2k\ShopwareConnector\Domain\DTO;
  * @package Madj2k_ShopwareConnector
  * @license http://www.gnu.org/licenses/gpl.html GNU General Public License, version 3 or later
  */
-class Context
+class Context extends AbstractDto
 {
-
-    /**
-     * @var array
-     */
-    protected array $contextData = [];
-
-
-    /**
-     * @return array
-     */
-    public function getContextData(): array
-    {
-        return $this->contextData;
-    }
-
-
-    /**
-     * @param array $contextData
-     * @return void
-     */
-    public function setContextData(array $contextData): void
-    {
-        $this->contextData = $contextData;
-    }
-
 
     /**
      * @return array|null
      */
     public function getSalesChannel(): ?array
     {
-        return $this->contextData['salesChannel'] ?? null;
+        return $this->data['salesChannel'] ?? null;
     }
 
 
@@ -77,11 +52,15 @@ class Context
 
 
     /**
-     * @return array|null
+     * @return \Madj2k\ShopwareConnector\Domain\DTO\Customer
      */
-    public function getCustomer(): ?array
+    public function getCustomer(): Customer
     {
-        return $this->contextData['customer'] ?? null;
+        if (isset($this->data['customer'])) {
+            return new Customer($this->data['customer']);
+        }
+
+        return new Customer();
     }
 
 }

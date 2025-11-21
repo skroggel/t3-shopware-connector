@@ -42,11 +42,11 @@ class StatusHandlerTest extends TestCase
     #[Test]
     public function testSetStatusReturnsTrueOnSuccessfulTransitions(): void
     {
-        $orderDto = new Order();
-        $orderDto->setOrderData([
+        $orderData = [
             'id' => 'order-123',
             'stateMachineState' => ['technicalName' => OrderStatus::REOPEN->value],
-        ]);
+        ];
+        $orderDto = new Order($orderData);
 
         $apiServiceMock = $this->createMock(ShopwareApiService::class);
         $apiServiceMock->method('fetchFromAdminApi')
@@ -74,11 +74,11 @@ class StatusHandlerTest extends TestCase
     #[Test]
     public function testSetStatusReturnsFalseOnFailedTransition(): void
     {
-        $orderDto = new Order();
-        $orderDto->setOrderData([
+        $orderData = [
             'id' => 'order-123',
             'stateMachineState' => ['technicalName' => 'open'],
-        ]);
+        ];
+        $orderDto = new Order($orderData);
 
         $apiServiceMock = $this->createMock(ShopwareApiService::class);
         $apiServiceMock->method('fetchFromAdminApi')

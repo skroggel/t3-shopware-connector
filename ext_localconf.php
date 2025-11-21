@@ -41,9 +41,48 @@ call_user_func(
         //=================================================================
         \TYPO3\CMS\Extbase\Utility\ExtensionUtility::configurePlugin(
             $extensionKey,
-            'ApiRequest',
+            'Full',
             [
                 \Madj2k\ShopwareConnector\Controller\ApiRequestController::class => 'list,show,download,downloadExecute'
+            ],
+
+            // non-cacheable actions
+            [
+            ],
+            \TYPO3\CMS\Extbase\Utility\ExtensionUtility::PLUGIN_TYPE_CONTENT_ELEMENT
+        );
+
+        \TYPO3\CMS\Extbase\Utility\ExtensionUtility::configurePlugin(
+            $extensionKey,
+            'List',
+            [
+                \Madj2k\ShopwareConnector\Controller\ApiRequestController::class => 'list'
+            ],
+
+            // non-cacheable actions
+            [
+            ],
+            \TYPO3\CMS\Extbase\Utility\ExtensionUtility::PLUGIN_TYPE_CONTENT_ELEMENT
+        );
+
+        \TYPO3\CMS\Extbase\Utility\ExtensionUtility::configurePlugin(
+            $extensionKey,
+            'Detail',
+            [
+                \Madj2k\ShopwareConnector\Controller\ApiRequestController::class => 'show'
+            ],
+
+            // non-cacheable actions
+            [
+            ],
+            \TYPO3\CMS\Extbase\Utility\ExtensionUtility::PLUGIN_TYPE_CONTENT_ELEMENT
+        );
+
+        \TYPO3\CMS\Extbase\Utility\ExtensionUtility::configurePlugin(
+            $extensionKey,
+            'Download',
+            [
+                \Madj2k\ShopwareConnector\Controller\ApiRequestController::class => 'download,downloadExecute'
             ],
 
             // non-cacheable actions
@@ -55,10 +94,14 @@ call_user_func(
         //=================================================================
         // cHash
         //=================================================================
-        $GLOBALS['TYPO3_CONF_VARS']['FE']['cacheHash']['excludedParameters'][] = 'tx_shopwareconnector_apirequest[slug]';
-        $GLOBALS['TYPO3_CONF_VARS']['FE']['cacheHash']['excludedParameters'][] = 'tx_shopwareconnector_apirequest[productNumber]';
-        $GLOBALS['TYPO3_CONF_VARS']['FE']['cacheHash']['excludedParameters'][] = 'tx_shopwareconnector_apirequest[productId]';
-        $GLOBALS['TYPO3_CONF_VARS']['FE']['cacheHash']['excludedParameters'][] = 'tx_shopwareconnector_apirequest[term]';
+        $GLOBALS['TYPO3_CONF_VARS']['FE']['cacheHash']['excludedParameters'][] = 'tx_shopwareconnector_full[slug]';
+        $GLOBALS['TYPO3_CONF_VARS']['FE']['cacheHash']['excludedParameters'][] = 'tx_shopwareconnector_full[productNumber]';
+        $GLOBALS['TYPO3_CONF_VARS']['FE']['cacheHash']['excludedParameters'][] = 'tx_shopwareconnector_full[productId]';
+        $GLOBALS['TYPO3_CONF_VARS']['FE']['cacheHash']['excludedParameters'][] = 'tx_shopwareconnector_full[page]';
+        $GLOBALS['TYPO3_CONF_VARS']['FE']['cacheHash']['excludedParameters'][] = 'tx_shopwareconnector_list[page]';
+        $GLOBALS['TYPO3_CONF_VARS']['FE']['cacheHash']['excludedParameters'][] = 'tx_shopwareconnector_detail[productNumber]';
+        $GLOBALS['TYPO3_CONF_VARS']['FE']['cacheHash']['excludedParameters'][] = 'tx_shopwareconnector_detail[slug]';
+        $GLOBALS['TYPO3_CONF_VARS']['FE']['cacheHash']['excludedParameters'][] = 'tx_shopwareconnector_download[productId]';
 
         //=================================================================
         // Register Logger
